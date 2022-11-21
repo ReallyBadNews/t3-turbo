@@ -3,10 +3,6 @@
   "parserOptions": {
     "project": "./tsconfig.json"
   },
-  "plugins": [
-    "@typescript-eslint"
-  ],
-  "extends": [
-    "plugin:@typescript-eslint/recommended"
-  ]
+  "root": true,
+  "extends": ["badnews"]
 }

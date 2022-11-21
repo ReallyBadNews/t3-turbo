@@ -1,5 +1,5 @@
 {
-  "name": "@acme/api",
+  "name": "@badnews/api",
   "version": "0.1.0",
   "main": "./index.ts",
   "types": "./index.ts",
@@ -8,8 +8,8 @@
     "clean": "rm -rf .turbo node_modules"
   },
   "dependencies": {
-    "@acme/auth": "*",
-    "@acme/db": "*",
+    "@badnews/auth": "*",
+    "@badnews/db": "*",
     "@trpc/client": "10.0.0-rc.4",
     "@trpc/server": "10.0.0-rc.4",
     "superjson": "^1.9.1",

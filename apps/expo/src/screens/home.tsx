@@ -1,6 +1,8 @@
 import React from "react";
 
+import type { EmitterSubscription, KeyboardEventListener } from "react-native";
 import {
+  Keyboard,
   SafeAreaView,
   Text,
   TextInput,
@@ -10,7 +12,7 @@ import {
 
 import { FlashList } from "@shopify/flash-list";
 import type { inferProcedureOutput } from "@trpc/server";
-import type { AppRouter } from "@acme/api";
+import type { AppRouter } from "@badnews/api";
 
 import { trpc } from "../utils/trpc";
 
@@ -36,8 +38,35 @@ const CreatePost: React.FC = () => {
   const [title, onChangeTitle] = React.useState("");
   const [content, onChangeContent] = React.useState("");
 
+  const [keyboardOffset, setKeyboardOffset] = React.useState(0);
+  const onKeyboardShow: KeyboardEventListener = (event) => {
+    return setKeyboardOffset(event.endCoordinates.height);
+  };
+  const onKeyboardHide = () => setKeyboardOffset(0);
+  const keyboardDidShowListener = React.useRef<EmitterSubscription>();
+  const keyboardDidHideListener = React.useRef<EmitterSubscription>();
+
+  React.useEffect(() => {
+    keyboardDidShowListener.current = Keyboard.addListener(
+      "keyboardWillShow",
+      onKeyboardShow
+    );
+    keyboardDidHideListener.current = Keyboard.addListener(
+      "keyboardWillHide",
+      onKeyboardHide
+    );
+
+    return () => {
+      keyboardDidShowListener.current?.remove();
+      keyboardDidHideListener.current?.remove();
+    };
+  }, []);
+
   return (
-    <View className="p-4 border-t-2 border-gray-500 flex flex-col">
+    <View
+      className="p-4 border-t-2 border-gray-500 flex flex-col"
+      style={{ marginBottom: keyboardOffset }}
+    >
       <TextInput
         className="border-2 border-gray-500 rounded p-2 mb-2 text-white"
         onChangeText={onChangeTitle}
