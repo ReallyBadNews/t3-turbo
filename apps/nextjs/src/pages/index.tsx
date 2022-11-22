@@ -9,6 +9,7 @@ const PostCard: React.FC<{
   post: inferProcedureOutput<AppRouter["post"]["all"]>[number];
 }> = ({ post }) => {
   console.log(post);
+
   return (
     <div className="p-4 border-2 border-gray-500 rounded-lg max-w-2xl hover:scale-[101%] transition-all">
       <h2 className="text-2xl font-bold text-[hsl(280,100%,70%)]">
@@ -74,7 +75,7 @@ const AuthShowcase: React.FC = () => {
       )}
       <button
         className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-        onClick={session ? () => signOut() : () => signIn()}
+        onClick={session ? () => signOut() : () => signIn("github")}
       >
         {session ? "Sign out" : "Sign in"}
       </button>
