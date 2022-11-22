@@ -1,21 +1,19 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { signIn, signOut } from "next-auth/react";
-import { trpc } from "../utils/trpc";
 import type { inferProcedureOutput } from "@trpc/server";
 import type { AppRouter } from "@badnews/api";
+import { trpc } from "../utils/trpc";
 
 const PostCard: React.FC<{
   post: inferProcedureOutput<AppRouter["post"]["all"]>[number];
 }> = ({ post }) => {
-  console.log(post);
-
   return (
-    <div className="p-4 border-2 border-gray-500 rounded-lg max-w-2xl hover:scale-[101%] transition-all">
+    <div className="max-w-2xl rounded-lg border-2 border-gray-500 p-4 transition-all hover:scale-[101%]">
       <h2 className="text-2xl font-bold text-[hsl(280,100%,70%)]">
         {post.title}
       </h2>
-      <p>{post.content}</p>
+      <p>{post.description}</p>
     </div>
   );
 };
@@ -34,11 +32,13 @@ const Home: NextPage = () => {
       <main className="flex h-screen flex-col items-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-8">
           <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-            Create <span className="text-[hsl(280,100%,70%)]">T3</span> Turbo
+            Create
+            <span className="text-[hsl(280,100%,70%)]">T3</span>
+            Turbo
           </h1>
           <AuthShowcase />
 
-          <div className="flex justify-center px-4 text-2xl overflow-y-scrol w-full h-[60vh]">
+          <div className="overflow-y-scrol flex h-[60vh] w-full justify-center px-4 text-2xl">
             {postQuery.data ? (
               <div className="flex flex-col gap-4">
                 {postQuery.data?.map((p) => {
@@ -66,11 +66,13 @@ const AuthShowcase: React.FC = () => {
   );
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4">
+    <div className="flex flex-col items-center justify-center">
       {session?.user && (
         <p className="text-center text-2xl text-white">
-          {session && <span>Logged in as {session?.user?.name}</span>}
-          {secretMessage && <span> - {secretMessage}</span>}
+          {session && (
+            <span>{`Logged in as ${session?.user?.name || "no name"}`}</span>
+          )}
+          {secretMessage && <span>{` - ${secretMessage}`}</span>}
         </p>
       )}
       <button

@@ -5,4 +5,5 @@ packages:
   - packages/auth
   - packages/db
   - packages/config/*
+  - packages/utils
   - packages/eslint-config-badnews

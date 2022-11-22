@@ -1,4 +1,5 @@
-import React from "react";
+import type { FC } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import type { EmitterSubscription, KeyboardEventListener } from "react-native";
 import {
@@ -16,18 +17,18 @@ import type { AppRouter } from "@badnews/api";
 
 import { trpc } from "../utils/trpc";
 
-const PostCard: React.FC<{
+const PostCard: FC<{
   post: inferProcedureOutput<AppRouter["post"]["all"]>[number];
 }> = ({ post }) => {
   return (
-    <View className="p-4 border-2 border-gray-500 rounded-lg">
+    <View className="rounded-lg border-2 border-gray-500 p-4">
       <Text className="text-xl font-semibold text-[#cc66ff]">{post.title}</Text>
-      <Text className="text-white">{post.content}</Text>
+      <Text className="text-white">{post.description}</Text>
     </View>
   );
 };
 
-const CreatePost: React.FC = () => {
+const CreatePost: FC = () => {
   const utils = trpc.useContext();
   const { mutate } = trpc.post.create.useMutation({
     async onSuccess() {
@@ -35,18 +36,19 @@ const CreatePost: React.FC = () => {
     },
   });
 
-  const [title, onChangeTitle] = React.useState("");
-  const [content, onChangeContent] = React.useState("");
+  const [url, onChangeURL] = useState("");
+  const [title, onChangeTitle] = useState("");
+  const [description, onChangeDescription] = useState("");
 
-  const [keyboardOffset, setKeyboardOffset] = React.useState(0);
+  const [keyboardOffset, setKeyboardOffset] = useState(0);
   const onKeyboardShow: KeyboardEventListener = (event) => {
     return setKeyboardOffset(event.endCoordinates.height);
   };
   const onKeyboardHide = () => setKeyboardOffset(0);
-  const keyboardDidShowListener = React.useRef<EmitterSubscription>();
-  const keyboardDidHideListener = React.useRef<EmitterSubscription>();
+  const keyboardDidShowListener = useRef<EmitterSubscription>();
+  const keyboardDidHideListener = useRef<EmitterSubscription>();
 
-  React.useEffect(() => {
+  useEffect(() => {
     keyboardDidShowListener.current = Keyboard.addListener(
       "keyboardWillShow",
       onKeyboardShow
@@ -64,29 +66,35 @@ const CreatePost: React.FC = () => {
 
   return (
     <View
-      className="p-4 border-t-2 border-gray-500 flex flex-col"
+      className="flex flex-col border-t-2 border-gray-500 p-4"
       style={{ marginBottom: keyboardOffset }}
     >
       <TextInput
-        className="border-2 border-gray-500 rounded p-2 mb-2 text-white"
+        className="mb-2 rounded border-2 border-gray-500 p-2 text-white"
+        onChangeText={onChangeURL}
+        placeholder="URL"
+      />
+      <TextInput
+        className="mb-2 rounded border-2 border-gray-500 p-2 text-white"
         onChangeText={onChangeTitle}
         placeholder="Title"
       />
       <TextInput
-        className="border-2 border-gray-500 rounded p-2 mb-2 text-white"
-        onChangeText={onChangeContent}
-        placeholder="Content"
+        className="mb-2 rounded border-2 border-gray-500 p-2 text-white"
+        onChangeText={onChangeDescription}
+        placeholder="Description"
       />
       <TouchableOpacity
-        className="bg-[#cc66ff] rounded p-2"
+        className="rounded bg-[#cc66ff] p-2"
         onPress={() => {
           mutate({
             title,
-            content,
+            description,
+            url,
           });
         }}
       >
-        <Text className="text-white font-semibold">Publish post</Text>
+        <Text className="font-semibold text-white">Publish post</Text>
       </TouchableOpacity>
     </View>
   );
@@ -94,13 +102,14 @@ const CreatePost: React.FC = () => {
 
 export const HomeScreen = () => {
   const postQuery = trpc.post.all.useQuery();
-  const [showPost, setShowPost] = React.useState<string | null>(null);
+  const [showPost, setShowPost] = useState<string | null>(null);
 
   return (
-    <SafeAreaView className="bg-gradient-to-b from-[#2e026d] to-[#15162c] bg-[#2e026d]">
+    <SafeAreaView className="bg-[#2e026d] bg-gradient-to-b from-[#2e026d] to-[#15162c]">
       <View className="h-full w-full p-4">
-        <Text className="text-5xl font-bold mx-auto pb-2 text-white">
-          Create <Text className="text-[#cc66ff]">T3</Text> Turbo
+        <Text className="mx-auto pb-2 text-5xl font-bold text-white">
+          {`Turbo `}
+          <Text className="text-[#cc66ff]">Repo</Text>
         </Text>
 
         <View className="py-2">
@@ -110,7 +119,7 @@ export const HomeScreen = () => {
               {showPost}
             </Text>
           ) : (
-            <Text className="italic font-semibold text-white">
+            <Text className="font-semibold italic text-white">
               Press on a post
             </Text>
           )}
