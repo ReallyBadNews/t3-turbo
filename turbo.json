@@ -11,11 +11,12 @@
     },
     "dev": {
       "dependsOn": ["^db-generate"],
+      "env": ["VERCEL_URL", "PORT"],
       "cache": false
     },
     "build": {
       "dependsOn": ["^build", "^db-generate"],
-      "outputs": [".next/**", ".expo/**"]
+      "outputs": [".next/**", ".expo/**", ".dist/**"]
     },
     "lint": {
       "outputs": []
@@ -25,14 +26,18 @@
     },
     "//#clean": {
       "cache": false
+    },
+    "type-check": {
+      "dependsOn": ["^db-generate"],
+      "cache": false
     }
   },
   "globalEnv": [
     "DATABASE_URL",
     "NEXTAUTH_SECRET",
     "NEXTAUTH_URL",
-    "VERCEL_URL",
-    "PORT",
-    "NODE_ENV"
+    "NODE_ENV",
+    "GITHUB_CLIENT_ID",
+    "GITHUB_CLIENT_SECRET"
   ]
 }

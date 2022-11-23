@@ -1,4 +1,5 @@
 // Learn more: https://docs.expo.dev/guides/monorepos/
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { getDefaultConfig } = require("expo/metro-config");
 // eslint-disable-next-line @typescript-eslint/no-var-requires

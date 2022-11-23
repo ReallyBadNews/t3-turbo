@@ -1,1 +1,4 @@
-module.exports = require("@badnews/tailwind-config");
+/** @type {import("tailwindcss").Config} */
+module.exports = {
+  presets: [require("@badnews/tailwind-config")],
+};
