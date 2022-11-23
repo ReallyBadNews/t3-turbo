@@ -19,6 +19,7 @@ export const postRouter = router({
         url: z.string().url(),
         title: z.string(),
         description: z.string(),
+        authorEmail: z.string().email().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -28,6 +29,15 @@ export const postRouter = router({
           title: input.title,
           description: input.description,
           slug: slugify(input.title),
+          ...(input.authorEmail
+            ? {
+                author: {
+                  connect: {
+                    email: input.authorEmail,
+                  },
+                },
+              }
+            : undefined),
         },
       });
     }),

@@ -6,6 +6,7 @@ import Head from "next/head";
 import type { FormEventHandler } from "react";
 import { trpc } from "../utils/trpc";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { slugify } from "@badnews/utils";
 
 const PostCard: React.FC<{
   post: inferProcedureOutput<AppRouter["post"]["all"]>[number];
@@ -42,6 +43,7 @@ const PostCard: React.FC<{
 
 const AddStash = () => {
   const utils = trpc.useContext();
+  const { data: session } = trpc.auth.getSession.useQuery();
 
   const create = trpc.post.create.useMutation({
     async onMutate({ url, title, description }) {
@@ -56,10 +58,10 @@ const AddStash = () => {
           title,
           description,
           host: "localhost",
-          slug: "test",
-          body: "test",
-          mdxBody: "test",
-          authorEmail: "test",
+          slug: slugify(title),
+          body: null,
+          mdxBody: null,
+          authorEmail: session?.user.id ?? null,
         },
       ]);
     },
@@ -77,7 +79,12 @@ const AddStash = () => {
     const title = formData.get("title") as string;
     const description = formData.get("description") as string;
     console.log("[form]", { url, title, description });
-    create.mutate({ url, title, description });
+    create.mutate({
+      url,
+      title,
+      description,
+      authorEmail: session?.user.email ?? undefined,
+    });
   };
 
   return (
