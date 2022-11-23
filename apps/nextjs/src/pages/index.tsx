@@ -1,19 +1,116 @@
-import type { NextPage } from "next";
-import Head from "next/head";
-import { signIn, signOut } from "next-auth/react";
-import type { inferProcedureOutput } from "@trpc/server";
 import type { AppRouter } from "@badnews/api";
+import type { inferProcedureOutput } from "@trpc/server";
+import type { NextPage } from "next";
+import { signIn, signOut } from "next-auth/react";
+import Head from "next/head";
+import type { FormEventHandler } from "react";
 import { trpc } from "../utils/trpc";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const PostCard: React.FC<{
   post: inferProcedureOutput<AppRouter["post"]["all"]>[number];
 }> = ({ post }) => {
+  const utils = trpc.useContext();
+  const deleteStash = trpc.post.delete.useMutation({
+    async onMutate(id) {
+      await utils.post.all.cancel();
+      utils.post.all.setData(undefined, (prev) => {
+        return prev?.filter((s) => s.id !== id);
+      });
+    },
+    async onSettled() {
+      // Sync with server once mutation has settled
+      await utils.post.all.invalidate();
+    },
+    retry: 3,
+  });
+
   return (
-    <div className="max-w-2xl rounded-lg border-2 border-gray-500 p-4 transition-all hover:scale-[101%]">
-      <h2 className="text-2xl font-bold text-[hsl(280,100%,70%)]">
+    <div className="flex flex-col gap-2 rounded-lg border-2 border-gray-500 p-4 transition-all hover:scale-[101%]">
+      <h2 className="text-2xl font-bold leading-none text-[hsl(280,100%,70%)]">
         {post.title}
       </h2>
-      <p>{post.description}</p>
+      <p className="text-base">{post.description}</p>
+      <button
+        className="rounded-lg bg-red-500/70 px-2 py-1 text-sm text-white"
+        onClick={() => deleteStash.mutate(post.id)}
+      >
+        Delete
+      </button>
+    </div>
+  );
+};
+
+const AddStash = () => {
+  const utils = trpc.useContext();
+
+  const create = trpc.post.create.useMutation({
+    async onMutate({ url, title, description }) {
+      await utils.post.all.cancel();
+      utils.post.all.setData(undefined, (old) => [
+        ...(old ?? []),
+        {
+          id: `${Math.random()}`,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          url,
+          title,
+          description,
+          host: "localhost",
+          slug: "test",
+          body: "test",
+          mdxBody: "test",
+          authorEmail: "test",
+        },
+      ]);
+    },
+    onError(err, newPost, ctx) {
+      // If the mutation fails, use the context-value from onMutate
+      console.error("onError", { err, newPost, ctx });
+      utils.post.all.setData(undefined, ctx?.prevData);
+    },
+    async onSettled() {
+      // Sync with server once mutation has settled
+      await utils.post.all.invalidate();
+    },
+    retry: 3,
+  });
+
+  const submitHandler: FormEventHandler = (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target as HTMLFormElement);
+    console.log("[formData]", formData);
+    const url = formData.get("url") as string;
+    const title = formData.get("title") as string;
+    const description = formData.get("description") as string;
+    console.log("[form]", { url, title, description });
+    create.mutate({ url, title, description });
+  };
+
+  return (
+    <div className="flex w-full flex-col gap-2 rounded-lg border-2 border-gray-500 p-4">
+      <form onSubmit={submitHandler}>
+        <div className="flex flex-col gap-2">
+          <label className="text-white" htmlFor="url">
+            URL
+          </label>
+          <input className="text-black" id="url" name="url" />
+          <label className="text-white" htmlFor="title">
+            Title
+          </label>
+          <input className="text-black" id="name" name="title" />
+          <label className="text-white" htmlFor="description">
+            Description
+          </label>
+          <input className="text-black" id="description" name="description" />
+          <button
+            className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
+            type="submit"
+          >
+            Submit
+          </button>
+        </div>
+      </form>
     </div>
   );
 };
@@ -29,28 +126,27 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="flex h-screen flex-col items-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
+      <main className="flex min-h-screen flex-col items-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-8">
           <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-            Create
-            <span className="text-[hsl(280,100%,70%)]">T3</span>
+            {`Create `}
+            <span className="text-[hsl(280,100%,70%)]">{`T3 `}</span>
             Turbo
           </h1>
           <AuthShowcase />
-
-          <div className="overflow-y-scrol flex h-[60vh] w-full justify-center px-4 text-2xl">
-            {postQuery.data ? (
-              <div className="flex flex-col gap-4">
-                {postQuery.data?.map((p) => {
-                  return <PostCard key={p.id} post={p} />;
-                })}
-              </div>
-            ) : (
-              <p>Loading..</p>
-            )}
-          </div>
+          {postQuery.data ? (
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              {postQuery.data?.map((p) => {
+                return <PostCard key={p.id} post={p} />;
+              })}
+            </div>
+          ) : (
+            <p>Loading..</p>
+          )}
+          <AddStash />
         </div>
       </main>
+      <ReactQueryDevtools initialIsOpen={false} />
     </>
   );
 };
