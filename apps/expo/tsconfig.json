@@ -4,5 +4,5 @@
     "strict": true,
     "jsx": "react-native"
   },
-  "include": ["src", "index.ts", "./.eslintrc.cjs"]
+  "include": ["src", "index.ts", "metro.config.js", "./.eslintrc.cjs"]
 }
