@@ -19,6 +19,8 @@ module.exports = {
     "react/jsx-one-expression-per-line": ["error", { allow: "single-child" }],
     "react/prop-types": "off",
     "react/react-in-jsx-scope": "off",
+    "@typescript-eslint/no-unsafe-member-access": "off",
+    "@typescript-eslint/no-unsafe-assignment": "off",
     "@typescript-eslint/no-misused-promises": [
       "error",
       {
