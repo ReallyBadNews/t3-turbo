@@ -9,17 +9,18 @@ const t = initTRPC.context<Context>().create({
   },
 });
 
+/**
+ * Reusable middleware to ensure
+ * users are logged in
+ */
 const isAuthed = t.middleware(({ ctx, next }) => {
-  if (!ctx.session) {
-    throw new TRPCError({
-      code: "UNAUTHORIZED",
-      message: "Not authenticated",
-    });
+  if (!ctx.session || !ctx.session.user) {
+    throw new TRPCError({ code: "UNAUTHORIZED", message: "Not authenticated" });
   }
-
   return next({
     ctx: {
-      session: ctx.session,
+      // infers the `session` as non-nullable
+      session: { ...ctx.session, user: ctx.session.user },
     },
   });
 });

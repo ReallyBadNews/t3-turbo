@@ -22,7 +22,6 @@ const PostCard: React.FC<{
       // Sync with server once mutation has settled
       await utils.post.all.invalidate();
     },
-    retry: 3,
   });
 
   return (
@@ -64,16 +63,10 @@ const AddStash = () => {
         },
       ]);
     },
-    onError(err, newPost, ctx) {
-      // If the mutation fails, use the context-value from onMutate
-      console.error("onError", { err, newPost, ctx });
-      utils.post.all.setData(undefined, ctx?.prevData);
-    },
     async onSettled() {
       // Sync with server once mutation has settled
       await utils.post.all.invalidate();
     },
-    retry: 3,
   });
 
   const submitHandler: FormEventHandler = (event) => {
@@ -89,6 +82,18 @@ const AddStash = () => {
 
   return (
     <div className="flex w-full flex-col gap-2 rounded-lg border-2 border-gray-500 p-4">
+      {create.isLoading ? (
+        <p>Creating stash...</p>
+      ) : (
+        <>
+          {create.isError ? (
+            <p className="text-red-500">{create.error.message}</p>
+          ) : null}
+          {create.isSuccess ? (
+            <p className="text-green-500">Stash created!</p>
+          ) : null}
+        </>
+      )}
       <form onSubmit={submitHandler}>
         <div className="flex flex-col gap-2">
           <label className="text-white" htmlFor="url">
