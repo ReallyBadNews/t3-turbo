@@ -1,4 +1,5 @@
-import type { DefaultSession } from "next-auth";
+import type { DefaultSession, DefaultUser } from "next-auth";
+import type { Role } from "@badnews/db";
 
 /**
  * Module augmentation for `next-auth` types
@@ -10,7 +11,14 @@ import type { DefaultSession } from "next-auth";
 declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
+      /** The user's permissions role. `ADMIN` | `USER`. */
+      role: Role;
       id: string;
     } & DefaultSession["user"];
+  }
+
+  interface User extends DefaultUser {
+    /** The user's permissions role. `ADMIN` | `USER`. */
+    role: Role;
   }
 }
