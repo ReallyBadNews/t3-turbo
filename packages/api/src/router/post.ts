@@ -1,5 +1,5 @@
 import { slugify } from "@badnews/utils";
-import { router, publicProcedure } from "../trpc";
+import { router, publicProcedure, adminProcedure } from "../trpc";
 import { z } from "zod";
 
 export const postRouter = router({
@@ -13,12 +13,13 @@ export const postRouter = router({
   all: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.stash.findMany();
   }),
-  create: publicProcedure
+  create: adminProcedure
     .input(
       z.object({
         url: z.string().url(),
         title: z.string(),
         description: z.string(),
+        body: z.string().optional(),
         authorEmail: z.string().email().optional(),
       })
     )
@@ -29,6 +30,7 @@ export const postRouter = router({
           title: input.title,
           description: input.description,
           slug: slugify(input.title),
+          body: input.body,
           ...(input.authorEmail
             ? {
                 author: {
