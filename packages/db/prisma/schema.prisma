@@ -33,6 +33,48 @@ model Stash {
   @@index([host, slug])
 }
 
+model Pin {
+  id                 String    @id @default(cuid())
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  // State – i.e. "Texas", "Michigan", "Florida"
+  administrativeArea String?   @db.VarChar(128)
+  city               String?   @db.VarChar(128)
+  country            String?   @db.VarChar(128)
+  // Latitude and longitude
+  latitude           Float?
+  longitude          Float?
+  description        String?   @db.VarChar(2048)
+  // Relation to the pin category
+  categoryId         String?
+  category           Category? @relation(fields: [categoryId], references: [id])
+  // Relation to the pin user
+  userId             String?
+  user               User?     @relation(fields: [userId], references: [id])
+  // Relation to the pin image
+  imageId            String?
+  image              Image?    @relation(fields: [imageId], references: [id])
+}
+
+model Category {
+  id      String    @id @default(cuid())
+  name    String    @unique @db.VarChar(128)
+  slug    String    @unique @db.VarChar(128)
+  pins    Pin[]
+  Channel Channel[]
+}
+
+model Channel {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  name        String   @unique @db.VarChar(128)
+  slug        String   @unique @db.VarChar(128)
+  description String   @db.VarChar(2048)
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id])
+}
+
 model Image {
   id          String   @id @default(cuid())
   createdAt   DateTime @default(now())
@@ -49,6 +91,7 @@ model Image {
   alt         String   @db.VarChar(512)
   blurDataURL String   @db.VarChar(512)
   stash       Stash?   @relation(fields: [id], references: [id], onDelete: Cascade)
+  Pin         Pin[]
 
   @@index([src])
 }
@@ -105,6 +148,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   Stash         Stash[]
+  Pin           Pin[]
 
   @@index([email])
 }
