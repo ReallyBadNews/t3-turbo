@@ -98,7 +98,7 @@ importers:
       autoprefixer: ^10.4.13
       eslint: ^8.28.0
       eslint-config-badnews: '*'
-      eslint-config-next: 13.0.5
+      eslint-config-next: ^13.0.5
       next: 13.0.5
       next-auth: ^4.17.0
       postcss: ^8.4.19
