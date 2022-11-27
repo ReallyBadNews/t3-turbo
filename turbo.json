@@ -9,6 +9,9 @@
       "inputs": ["prisma/schema.prisma"],
       "cache": false
     },
+    "db-seed": {
+      "cache": false
+    },
     "dev": {
       "dependsOn": ["^db-generate"],
       "env": ["VERCEL_URL", "PORT"],

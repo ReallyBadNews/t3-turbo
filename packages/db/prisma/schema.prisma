@@ -45,6 +45,7 @@ model Pin {
   latitude           Float?
   longitude          Float?
   description        String?   @db.VarChar(2048)
+  status             Status    @default(APPROVED)
   // Relation to the pin category
   categoryId         String?
   category           Category? @relation(fields: [categoryId], references: [id])
@@ -57,22 +58,24 @@ model Pin {
 }
 
 model Category {
-  id      String    @id @default(cuid())
-  name    String    @unique @db.VarChar(128)
-  slug    String    @unique @db.VarChar(128)
-  pins    Pin[]
-  Channel Channel[]
+  id        String  @id @default(cuid())
+  name      String  @unique @db.VarChar(128)
+  slug      String  @unique @db.VarChar(128)
+  pins      Pin[]
+  channelId String
+  channel   Channel @relation(fields: [channelId], references: [id])
 }
 
 model Channel {
-  id          String   @id @default(cuid())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  name        String   @unique @db.VarChar(128)
-  slug        String   @unique @db.VarChar(128)
-  description String   @db.VarChar(2048)
-  categoryId  String
-  category    Category @relation(fields: [categoryId], references: [id])
+  id          String     @id @default(cuid())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  name        String     @unique @db.VarChar(128)
+  slug        String     @unique @db.VarChar(128)
+  description String     @db.VarChar(2048)
+  icon        String?    @db.VarChar(128)
+  status      Status     @default(APPROVED)
+  categories  Category[]
 }
 
 model Image {
@@ -159,6 +162,13 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+enum Status {
+  APPROVED
+  PENDING
+  HIDDEN
+  DELETED
 }
 
 enum Role {
