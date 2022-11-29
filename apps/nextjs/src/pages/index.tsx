@@ -129,7 +129,6 @@ const AddStash = () => {
 
 const Home: NextPage = () => {
   const postQuery = trpc.post.all.useQuery();
-  const pinQuery = trpc.pin.all.useQuery();
 
   return (
     <>
