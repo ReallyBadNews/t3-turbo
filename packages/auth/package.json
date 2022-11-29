@@ -10,7 +10,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@badnews/db": "*",
+    "@badnews/db": "workspace:*",
     "@next-auth/prisma-adapter": "^1.0.5",
     "next": "13.0.5",
     "next-auth": "^4.17.0",

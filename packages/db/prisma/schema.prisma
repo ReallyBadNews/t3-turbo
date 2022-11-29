@@ -53,7 +53,7 @@ model Pin {
   userId             String?
   user               User?     @relation(fields: [userId], references: [id])
   // Relation to the pin image
-  imageId            String?
+  imageId            String?   @unique
   image              Image?    @relation(fields: [imageId], references: [id])
 }
 
@@ -93,8 +93,8 @@ model Image {
   url         String?  @unique @db.VarChar(512)
   alt         String   @db.VarChar(512)
   blurDataURL String   @db.VarChar(512)
-  stash       Stash?   @relation(fields: [id], references: [id], onDelete: Cascade)
-  Pin         Pin[]
+  stash       Stash?   @relation(fields: [id], references: [id])
+  pin         Pin?
 
   @@index([src])
 }

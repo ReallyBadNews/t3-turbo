@@ -11,7 +11,7 @@
     "db-seed": "turbo db-seed",
     "dev": "turbo dev --parallel",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "lint": "turbo lint && manypkg check",
+    "lint": "turbo lint --parallel && manypkg check",
     "type-check": "turbo type-check"
   },
   "dependencies": {
@@ -19,7 +19,7 @@
     "@typescript-eslint/eslint-plugin": "^5.43.0",
     "@typescript-eslint/parser": "^5.43.0",
     "eslint": "^8.28.0",
-    "eslint-config-badnews": "*",
+    "eslint-config-badnews": "workspace:*",
     "prettier": "^2.8.0",
     "prettier-plugin-tailwindcss": "^0.2.0",
     "turbo": "^1.5.5",

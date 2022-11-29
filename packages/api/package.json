@@ -10,11 +10,12 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@badnews/auth": "*",
-    "@badnews/db": "*",
-    "@badnews/utils": "*",
+    "@badnews/auth": "workspace:*",
+    "@badnews/db": "workspace:*",
+    "@badnews/utils": "workspace:*",
     "@trpc/client": "10.2.0",
     "@trpc/server": "10.2.0",
+    "cloudinary": "^1.32.0",
     "superjson": "^1.9.1",
     "zod": "^3.18.0"
   },
