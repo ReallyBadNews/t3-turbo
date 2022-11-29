@@ -19,7 +19,7 @@
     "@typescript-eslint/eslint-plugin": "^5.43.0",
     "@typescript-eslint/parser": "^5.43.0",
     "eslint": "^8.28.0",
-    "eslint-config-badnews": "workspace:*",
+    "eslint-config-badnews": "*",
     "prettier": "^2.8.0",
     "prettier-plugin-tailwindcss": "^0.2.0",
     "turbo": "^1.5.5",

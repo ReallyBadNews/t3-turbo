@@ -10,9 +10,9 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@badnews/auth": "workspace:*",
-    "@badnews/db": "workspace:*",
-    "@badnews/utils": "workspace:*",
+    "@badnews/auth": "*",
+    "@badnews/db": "*",
+    "@badnews/utils": "*",
     "@trpc/client": "10.2.0",
     "@trpc/server": "10.2.0",
     "cloudinary": "^1.32.0",
