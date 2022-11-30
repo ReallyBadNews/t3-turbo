@@ -1,6 +1,5 @@
 {
   "name": "@badnews/api",
-  "version": "0.1.0",
   "main": "./index.ts",
   "types": "./index.ts",
   "license": "MIT",
@@ -10,9 +9,9 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@badnews/auth": "*",
-    "@badnews/db": "*",
-    "@badnews/utils": "*",
+    "@badnews/auth": "workspace:*",
+    "@badnews/db": "workspace:*",
+    "@badnews/utils": "workspace:*",
     "@trpc/client": "10.4.2",
     "@trpc/server": "10.4.2",
     "cloudinary": "^1.32.0",
