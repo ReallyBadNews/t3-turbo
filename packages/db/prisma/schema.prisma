@@ -1,6 +1,5 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["referentialIntegrity"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -31,6 +30,7 @@ model Stash {
   tags        Tag[]
 
   @@index([host, slug])
+  @@index([authorEmail])
 }
 
 model Pin {
@@ -55,6 +55,9 @@ model Pin {
   // Relation to the pin image
   imageId            String?   @unique
   image              Image?    @relation(fields: [imageId], references: [id])
+
+  @@index([userId])
+  @@index([categoryId])
 }
 
 model Category {
@@ -64,6 +67,8 @@ model Category {
   pins      Pin[]
   channelId String
   channel   Channel @relation(fields: [channelId], references: [id])
+
+  @@index([channelId])
 }
 
 model Channel {
@@ -97,6 +102,7 @@ model Image {
   pin         Pin?
 
   @@index([src])
+  @@index([id])
 }
 
 model Tag {
@@ -127,6 +133,7 @@ model Account {
   user                     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
@@ -136,6 +143,8 @@ model Session {
   user         User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       String?
   role         Role     @default(USER)
+
+  @@index([userId])
 }
 
 model User {

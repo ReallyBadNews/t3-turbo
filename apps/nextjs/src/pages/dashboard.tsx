@@ -258,7 +258,7 @@ const Dashboard: NextPage = () => {
           <div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
             {/* Replace with your content */}
             <div className="rounded-lg bg-white px-5 py-6 shadow sm:px-6">
-              <div className="h-96 rounded-lg border-4 border-dashed border-gray-200 p-4">
+              <div className="rounded-lg border-4 border-dashed border-gray-200 p-4">
                 <PinCard pins={pins.data || []} />
               </div>
             </div>
