@@ -9,13 +9,27 @@
       "inputs": ["prisma/schema.prisma"],
       "cache": false
     },
+    "db-seed": {
+      "cache": false
+    },
     "dev": {
       "dependsOn": ["^db-generate"],
-      "env": ["VERCEL_URL", "PORT"],
+      "env": [
+        "VERCEL_URL",
+        "PORT",
+        "CLOUDINARY_URL",
+        "CLOUDINARY_BASE_PUBLIC_ID"
+      ],
       "cache": false
     },
     "build": {
       "dependsOn": ["^build", "^db-generate"],
+      "env": [
+        "VERCEL_URL",
+        "PORT",
+        "CLOUDINARY_URL",
+        "CLOUDINARY_BASE_PUBLIC_ID"
+      ],
       "outputs": [".next/**", ".expo/**", ".dist/**"]
     },
     "lint": {
@@ -37,6 +51,9 @@
     "NEXTAUTH_SECRET",
     "NEXTAUTH_URL",
     "NODE_ENV",
+    "CI",
+    "VERCEL",
+    "SKIP_ENV_VALIDATION",
     "GITHUB_CLIENT_ID",
     "GITHUB_CLIENT_SECRET"
   ]

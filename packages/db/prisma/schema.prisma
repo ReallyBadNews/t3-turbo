@@ -1,6 +1,5 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["referentialIntegrity"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -14,23 +13,54 @@ model Views {
   count BigInt @default(1)
 }
 
-model Stash {
-  id          String   @id @default(cuid())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  author      User?    @relation(fields: [authorEmail], references: [id])
-  authorEmail String?
-  url         String   @unique @db.VarChar(512)
-  host        String?
-  title       String   @db.VarChar(280)
-  slug        String   @unique @db.VarChar(280)
-  image       Image?
-  description String   @db.VarChar(2048)
-  body        String?  @db.Text
-  mdxBody     String?  @db.Text
-  tags        Tag[]
+model Pin {
+  id                 String    @id @default(cuid())
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  // State – i.e. "Texas", "Michigan", "Florida"
+  administrativeArea String?   @db.VarChar(128)
+  city               String?   @db.VarChar(128)
+  country            String?   @db.VarChar(128)
+  // Latitude and longitude
+  latitude           Float?
+  longitude          Float?
+  description        String?   @db.VarChar(2048)
+  status             Status    @default(APPROVED)
+  // Relation to the pin category
+  categoryId         String?
+  category           Category? @relation(fields: [categoryId], references: [id])
+  // Relation to the pin user
+  userId             String?
+  user               User?     @relation(fields: [userId], references: [id])
+  // Relation to the pin image
+  imageId            String?   @unique
+  image              Image?    @relation(fields: [imageId], references: [id])
 
-  @@index([host, slug])
+  @@index([userId])
+  @@index([categoryId])
+}
+
+model Category {
+  id        String  @id @default(cuid())
+  name      String  @unique @db.VarChar(128)
+  slug      String  @unique @db.VarChar(128)
+  pins      Pin[]
+  channelId String
+  channel   Channel @relation(fields: [channelId], references: [id])
+
+  @@index([channelId])
+}
+
+model Channel {
+  id          String     @id @default(cuid())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  name        String     @unique @db.VarChar(128)
+  slug        String     @unique @db.VarChar(128)
+  description String     @db.VarChar(2048)
+  icon        String?    @db.VarChar(128)
+  status      Status     @default(APPROVED)
+  categories  Category[]
 }
 
 model Image {
@@ -48,16 +78,9 @@ model Image {
   url         String?  @unique @db.VarChar(512)
   alt         String   @db.VarChar(512)
   blurDataURL String   @db.VarChar(512)
-  stash       Stash?   @relation(fields: [id], references: [id], onDelete: Cascade)
+  pin         Pin?
 
   @@index([src])
-}
-
-model Tag {
-  id      String  @id @default(cuid())
-  name    String  @unique
-  slug    String  @unique
-  stashes Stash[]
 }
 
 model Account {
@@ -81,6 +104,7 @@ model Account {
   user                     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
@@ -90,6 +114,8 @@ model Session {
   user         User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       String?
   role         Role     @default(USER)
+
+  @@index([userId])
 }
 
 model User {
@@ -104,7 +130,7 @@ model User {
   role          Role?     @default(USER)
   accounts      Account[]
   sessions      Session[]
-  Stash         Stash[]
+  Pin           Pin[]
 
   @@index([email])
 }
@@ -117,7 +143,15 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+enum Status {
+  APPROVED
+  PENDING
+  HIDDEN
+  DELETED
+}
+
 enum Role {
+  BLOCKED
   USER
   ADMIN
 }

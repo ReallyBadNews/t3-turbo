@@ -4,12 +4,12 @@ import { useEffect, useRef, useState } from "react";
 import type { EmitterSubscription, KeyboardEventListener } from "react-native";
 import {
   Keyboard,
-  SafeAreaView,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { FlashList } from "@shopify/flash-list";
 import type { inferProcedureOutput } from "@trpc/server";

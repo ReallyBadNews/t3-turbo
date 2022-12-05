@@ -1,6 +1,5 @@
 {
   "name": "@badnews/db",
-  "version": "0.1.0",
   "main": "./index.ts",
   "types": "./index.ts",
   "license": "MIT",
@@ -9,14 +8,18 @@
     "with-env": "dotenv -e ../../.env",
     "dev": "pnpm with-env prisma studio --port 5556",
     "db-push": "pnpm with-env prisma db push",
-    "db-generate": "pnpm with-env prisma generate"
+    "db-generate": "pnpm with-env prisma generate",
+    "db-seed": "pnpm with-env tsx seed.ts"
   },
   "dependencies": {
     "@prisma/client": "^4.6.1"
   },
   "devDependencies": {
     "dotenv-cli": "^6.0.0",
+    "plaiceholder": "^2.5.0",
     "prisma": "^4.6.1",
+    "sharp": "^0.31.2",
+    "tsx": "^3.12.1",
     "typescript": "^4.9.3"
   }
 }
