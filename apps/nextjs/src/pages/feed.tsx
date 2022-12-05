@@ -44,6 +44,7 @@ import {
   UserGroupIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import { signIn } from "next-auth/react";
 import { trpc } from "../utils/trpc";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
@@ -285,12 +286,12 @@ export default function Example() {
                       </Transition>
                     </Menu>
 
-                    <a
-                      href="#"
+                    <button
+                      onClick={() => signIn("credentials")}
                       className="ml-6 inline-flex items-center rounded-md border border-transparent bg-rose-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2"
                     >
                       New Post
-                    </a>
+                    </button>
                   </div>
                 </div>
               </div>

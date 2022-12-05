@@ -6,7 +6,11 @@ import { router, publicProcedure, protectedProcedure } from "../trpc";
 export const pinRouter = router({
   all: publicProcedure.query(async ({ ctx }) => {
     return ctx.prisma.pin.findMany({
-      include: { category: true, user: true, image: true },
+      include: {
+        category: true,
+        user: { select: { name: true } },
+        image: true,
+      },
     });
   }),
   byId: publicProcedure.input(z.string()).query(async ({ ctx, input }) => {

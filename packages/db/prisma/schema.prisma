@@ -13,26 +13,6 @@ model Views {
   count BigInt @default(1)
 }
 
-model Stash {
-  id          String   @id @default(cuid())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  author      User?    @relation(fields: [authorEmail], references: [id])
-  authorEmail String?
-  url         String   @unique @db.VarChar(512)
-  host        String?
-  title       String   @db.VarChar(280)
-  slug        String   @unique @db.VarChar(280)
-  image       Image?
-  description String   @db.VarChar(2048)
-  body        String?  @db.Text
-  mdxBody     String?  @db.Text
-  tags        Tag[]
-
-  @@index([host, slug])
-  @@index([authorEmail])
-}
-
 model Pin {
   id                 String    @id @default(cuid())
   createdAt          DateTime  @default(now())
@@ -98,18 +78,9 @@ model Image {
   url         String?  @unique @db.VarChar(512)
   alt         String   @db.VarChar(512)
   blurDataURL String   @db.VarChar(512)
-  stash       Stash?   @relation(fields: [id], references: [id])
   pin         Pin?
 
   @@index([src])
-  @@index([id])
-}
-
-model Tag {
-  id      String  @id @default(cuid())
-  name    String  @unique
-  slug    String  @unique
-  stashes Stash[]
 }
 
 model Account {
@@ -159,7 +130,6 @@ model User {
   role          Role?     @default(USER)
   accounts      Account[]
   sessions      Session[]
-  Stash         Stash[]
   Pin           Pin[]
 
   @@index([email])
@@ -181,6 +151,7 @@ enum Status {
 }
 
 enum Role {
+  BLOCKED
   USER
   ADMIN
 }
