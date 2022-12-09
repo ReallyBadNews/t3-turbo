@@ -1,6 +1,5 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 import { type NextAuthOptions } from "next-auth";
-// import GithubProvider from "next-auth/providers/github";
 
 import { prisma } from "@badnews/db";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
@@ -9,10 +8,6 @@ export const authOptions: NextAuthOptions = {
   // Configure one or more authentication providers
   adapter: PrismaAdapter(prisma),
   providers: [
-    // GithubProvider({
-    //   clientId: process.env.GITHUB_CLIENT_ID as string,
-    //   clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
-    // }),
     CredentialsProvider({
       // The name to display on the sign in form (e.g. 'Sign in with...')
       name: "Arc Subscriptions",
@@ -21,10 +16,14 @@ export const authOptions: NextAuthOptions = {
       // e.g. domain, username, password, 2FA token, etc.
       // You can pass any HTML attribute to the <input> tag through the object.
       credentials: {
-        username: { label: "Username", type: "text", placeholder: "jsmith" },
+        username: {
+          label: "Email",
+          type: "text",
+          placeholder: "jsmith@example.com",
+        },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials, req) {
+      authorize: async (credentials, req) => {
         // You need to provide your own logic here that takes the credentials
         // submitted and returns either a object representing a user or value
         // that is false/null if the credentials are invalid.
@@ -32,7 +31,9 @@ export const authOptions: NextAuthOptions = {
         // You can also use the `req` object to obtain additional parameters
         // (i.e., the request IP address)
         const res = await fetch(
-          `https://${process.env.IDENTITY_SBX}.cdn.arcpublishing.com/identity/public/v1/auth/login`,
+          `https://${
+            process.env.IDENTITY_SBX as string
+          }.cdn.arcpublishing.com/identity/public/v1/auth/login`,
           {
             method: "POST",
             body: JSON.stringify({
@@ -60,7 +61,7 @@ export const authOptions: NextAuthOptions = {
             // email: credentials?.username,
             accessToken: user.accessToken,
             refreshToken: user.refreshToken,
-            name: credentials?.username,
+            email: credentials?.username,
             id: user.uuid,
             role: "USER",
           };
@@ -72,13 +73,11 @@ export const authOptions: NextAuthOptions = {
     // ...add more providers here
   ],
   secret: process.env.NEXTAUTH_JWT_SECRET,
-  jwt: {},
-  session: {
-    strategy: "jwt",
-  },
+  session: { strategy: "jwt" },
+  // jwt: {},
   callbacks: {
-    jwt({ token, user, account }) {
-      console.log("[AUTH] jwt", { token, user, account });
+    jwt: ({ token, user, account, isNewUser, profile }) => {
+      console.log("[AUTH] jwt", { token, user, account, isNewUser, profile });
       if (account && user) {
         return {
           ...token,
@@ -89,8 +88,8 @@ export const authOptions: NextAuthOptions = {
 
       return token;
     },
-    session({ session, token }) {
-      console.log("[AUTH] session", { session, token });
+    session({ session, token, user }) {
+      console.log("[AUTH] session", { session, token, user });
       session.user.accessToken = token.accessToken;
       session.user.refreshToken = token.refreshToken;
       session.user.accessTokenExpires = token.accessTokenExpires;

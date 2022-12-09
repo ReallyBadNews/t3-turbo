@@ -26,6 +26,8 @@ model Pin {
   longitude          Float?
   description        String?   @db.VarChar(2048)
   status             Status    @default(APPROVED)
+  // View Count
+  views              Int       @default(0)
   // Relation to the pin category
   categoryId         String?
   category           Category? @relation(fields: [categoryId], references: [id])
@@ -35,9 +37,24 @@ model Pin {
   // Relation to the pin image
   imageId            String?   @unique
   image              Image?    @relation(fields: [imageId], references: [id])
+  comments           Comment[]
 
   @@index([userId])
   @@index([categoryId])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  body      String   @db.VarChar(2048)
+  pinId     String
+  pin       Pin      @relation(fields: [pinId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([pinId])
+  @@index([userId])
 }
 
 model Category {
@@ -83,41 +100,6 @@ model Image {
   @@index([src])
 }
 
-model Account {
-  id                       String   @id @default(cuid())
-  createdAt                DateTime @default(now())
-  updatedAt                DateTime @updatedAt
-  userId                   String
-  type                     String
-  provider                 String
-  providerAccountId        String
-  refresh_token            String?  @db.VarChar(500)
-  access_token             String?  @db.VarChar(500)
-  refresh_token_expires_in Int?
-  expires_at               Int?
-  token_type               String?
-  scope                    String?
-  id_token                 String?  @db.Text
-  session_state            String?
-  oauth_token_secret       String?
-  oauth_token              String?
-  user                     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
-  @@index([userId])
-}
-
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  expires      DateTime
-  user         User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId       String?
-  role         Role     @default(USER)
-
-  @@index([userId])
-}
-
 model User {
   id            String    @id @default(cuid())
   createdAt     DateTime  @default(now())
@@ -128,19 +110,10 @@ model User {
   emailVerified DateTime?
   image         String?
   role          Role?     @default(USER)
-  accounts      Account[]
-  sessions      Session[]
-  Pin           Pin[]
+  pins          Pin[]
+  comments      Comment[]
 
   @@index([email])
-}
-
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
 }
 
 enum Status {

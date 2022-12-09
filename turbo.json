@@ -28,7 +28,9 @@
         "VERCEL_URL",
         "PORT",
         "CLOUDINARY_URL",
-        "CLOUDINARY_BASE_PUBLIC_ID"
+        "CLOUDINARY_BASE_PUBLIC_ID",
+        "IDENTITY_SBX",
+        "NEXTAUTH_JWT_SECRET"
       ],
       "outputs": [".next/**", ".expo/**", ".dist/**"]
     },
