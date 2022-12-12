@@ -28,6 +28,7 @@ module.exports = {
         checksVoidReturn: false,
       },
     ],
+    "@typescript-eslint/no-shadow": "error",
   },
   settings: {
     react: {

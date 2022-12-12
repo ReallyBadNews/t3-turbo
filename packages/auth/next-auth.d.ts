@@ -11,14 +11,19 @@ import type { Role } from "@badnews/db";
 declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
+      id: string;
       /** The user's permissions role. `ADMIN` | `USER`. */
       role: Role;
-      id: string;
+      image?: {
+        src: string;
+      };
     } & DefaultSession["user"];
   }
 
   interface User extends DefaultUser {
     /** The user's permissions role. `ADMIN` | `USER`. */
     role: Role;
+    accessToken?: string;
+    refreshToken?: string;
   }
 }

@@ -77,7 +77,7 @@ const communities = [
 ];
 const tabs = [
   { name: "Recent", href: "#", current: true },
-  { name: "Most Liked", href: "#", current: false },
+  { name: "Map", href: "#", current: false },
   { name: "Most Answers", href: "#", current: false },
 ];
 const questions = [
@@ -153,6 +153,8 @@ function classNames(...classes: string[]) {
 
 export default function Example() {
   const pins = trpc.pin.all.useQuery();
+  const { data: session } = trpc.auth.getSession.useQuery();
+
   return (
     <>
       {/*
@@ -252,7 +254,7 @@ export default function Example() {
                           <span className="sr-only">Open user menu</span>
                           <img
                             className="h-8 w-8 rounded-full"
-                            src={user.imageUrl}
+                            src={session?.user.image?.src}
                             alt=""
                           />
                         </Menu.Button>
@@ -481,40 +483,42 @@ export default function Example() {
               </div>
               <div className="mt-4">
                 <h1 className="sr-only">Recent questions</h1>
-                <ul role="list" className="space-y-4">
-                  {questions.map((question) => (
+                <ul className="space-y-4">
+                  {pins.data?.map((pin) => (
                     <li
-                      key={question.id}
+                      key={pin.id}
                       className="bg-white px-4 py-6 shadow sm:rounded-lg sm:p-6"
                     >
-                      <article
-                        aria-labelledby={"question-title-" + question.id}
-                      >
-                        <div>
+                      <article aria-labelledby={`question-title-${pin.id}`}>
+                        <img
+                          src={pin.image?.src}
+                          alt=""
+                          className="rounded-md"
+                        />
+                        <div className="mt-4">
                           <div className="flex space-x-3">
                             <div className="flex-shrink-0">
                               <img
                                 className="h-10 w-10 rounded-full"
-                                src={question.author.imageUrl}
+                                src={pin.user?.image?.src}
                                 alt=""
                               />
                             </div>
                             <div className="min-w-0 flex-1">
                               <p className="text-sm font-medium text-gray-900">
                                 <a
-                                  href={question.author.href}
+                                  href={pin.user.href || "#"}
                                   className="hover:underline"
                                 >
-                                  {question.author.name}
+                                  {pin.user?.displayName}
                                 </a>
                               </p>
                               <p className="text-sm text-gray-500">
-                                <a
-                                  href={question.href}
-                                  className="hover:underline"
-                                >
-                                  <time dateTime={question.datetime}>
-                                    {question.date}
+                                <a href={pin.href} className="hover:underline">
+                                  <time
+                                    dateTime={pin.createdAt.toLocaleDateString()}
+                                  >
+                                    {pin.createdAt.toLocaleDateString()}
                                   </time>
                                 </a>
                               </p>
@@ -610,16 +614,11 @@ export default function Example() {
                               </Menu>
                             </div>
                           </div>
-                          <h2
-                            id={"question-title-" + question.id}
-                            className="mt-4 text-base font-medium text-gray-900"
-                          >
-                            {question.title}
-                          </h2>
                         </div>
                         <div
-                          className="mt-2 space-y-4 text-sm text-gray-700"
-                          dangerouslySetInnerHTML={{ __html: question.body }}
+                          className="mt-4 text-sm text-gray-700"
+                          // className="mt-2 space-y-4 text-sm text-gray-700"
+                          dangerouslySetInnerHTML={{ __html: pin.description }}
                         />
                         <div className="mt-6 flex justify-between space-x-8">
                           <div className="flex space-x-6">
@@ -633,7 +632,7 @@ export default function Example() {
                                   aria-hidden="true"
                                 />
                                 <span className="font-medium text-gray-900">
-                                  {question.likes}
+                                  {pin.likedBy.length}
                                 </span>
                                 <span className="sr-only">likes</span>
                               </button>
@@ -648,7 +647,7 @@ export default function Example() {
                                   aria-hidden="true"
                                 />
                                 <span className="font-medium text-gray-900">
-                                  {question.replies}
+                                  {pin.comments.length}
                                 </span>
                                 <span className="sr-only">replies</span>
                               </button>
@@ -663,7 +662,7 @@ export default function Example() {
                                   aria-hidden="true"
                                 />
                                 <span className="font-medium text-gray-900">
-                                  {question.views}
+                                  {pin.views}
                                 </span>
                                 <span className="sr-only">views</span>
                               </button>

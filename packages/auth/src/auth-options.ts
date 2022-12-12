@@ -3,6 +3,8 @@ import { type NextAuthOptions } from "next-auth";
 
 import { prisma } from "@badnews/db";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { isAPIErrorResponse } from "./api-error-response";
+import type { APIErrorResponse, UserIdentity, UserProfile } from "./types";
 
 export const authOptions: NextAuthOptions = {
   // Configure one or more authentication providers
@@ -30,7 +32,7 @@ export const authOptions: NextAuthOptions = {
         // e.g. return { id: 1, name: 'J Smith', email: 'jsmith@example.com' }
         // You can also use the `req` object to obtain additional parameters
         // (i.e., the request IP address)
-        const res = await fetch(
+        const loginRes = await fetch(
           `https://${
             process.env.IDENTITY_SBX as string
           }.cdn.arcpublishing.com/identity/public/v1/auth/login`,
@@ -45,26 +47,81 @@ export const authOptions: NextAuthOptions = {
           }
         );
 
-        const user = (await res.json()) as {
-          accessToken: string;
-          refreshToken: string;
-          uuid: string;
-        };
+        const user = (await loginRes.json()) as APIErrorResponse | UserIdentity;
 
-        console.log("[AUTH] user", user);
+        console.log("[AUTH] subs user", { user });
 
         // If no error and we have user data, return it
-        if (res.ok && user) {
-          return {
-            // ...user,
-            // name: credentials?.username,
-            // email: credentials?.username,
-            accessToken: user.accessToken,
-            refreshToken: user.refreshToken,
-            email: credentials?.username,
-            id: user.uuid,
-            role: "USER",
-          };
+        if (!isAPIErrorResponse(user)) {
+          // find user in db
+          let dbUser = await prisma.user.findUnique({
+            where: {
+              email: credentials?.username,
+            },
+            include: {
+              image: {
+                select: {
+                  src: true,
+                },
+              },
+            },
+          });
+
+          console.log("[AUTH] db user", { dbUser });
+
+          if (dbUser) {
+            return {
+              ...dbUser,
+              accessToken: user.accessToken,
+              refreshToken: user.refreshToken,
+            };
+          }
+
+          // if not found, create user
+          // get user info from subs
+          const profileRes = await fetch(
+            `https://${
+              process.env.IDENTITY_SBX as string
+            }.cdn.arcpublishing.com/identity/public/v1/profile`,
+            {
+              headers: {
+                Authorization: `Bearer ${user.accessToken}`,
+              },
+            }
+          );
+
+          const userProfile = (await profileRes.json()) as
+            | UserProfile
+            | APIErrorResponse;
+
+          console.log("[AUTH] subs user profile", { userProfile });
+
+          if (!isAPIErrorResponse(userProfile)) {
+            // create user in db
+            dbUser = await prisma.user.create({
+              data: {
+                email: userProfile.email || credentials?.username,
+                displayName: userProfile.displayName,
+                firstName: userProfile.firstName,
+                lastName: userProfile.lastName,
+                emailVerified: userProfile.emailVerified,
+                status: userProfile.status || "Active",
+                // image: userProfile.picture,
+                role: "USER",
+              },
+            });
+
+            console.log("[AUTH] subs user created", { dbUser });
+
+            // return user data
+            if (dbUser) {
+              return {
+                ...dbUser,
+                accessToken: user.accessToken,
+                refreshToken: user.refreshToken,
+              };
+            }
+          }
         }
         // Return null if user data could not be retrieved
         return null;
@@ -97,19 +154,4 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
-  // callbacks: {
-  //   jwt({ token, user, account, profile, isNewUser }) {
-  //     if (account && user) {
-  //       return {
-  //         ...token,
-  //         accessToken: user,
-  //       };
-  //     }
-  //   },
-  //   session({ session, user }) {
-  //     session.user.id = user.id;
-  //     session.user.role = user.role; // Add role value to user object so it is passed along with session
-  //     return session;
-  //   },
-  // },
 };

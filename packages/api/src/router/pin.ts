@@ -8,8 +8,19 @@ export const pinRouter = router({
     return ctx.prisma.pin.findMany({
       include: {
         category: true,
-        user: { select: { name: true } },
+        user: { select: { displayName: true, id: true, image: true } },
         image: true,
+        // get the sum of likedBy
+        likedBy: {
+          select: {
+            id: true,
+          },
+        },
+        comments: {
+          select: {
+            id: true,
+          },
+        },
       },
     });
   }),

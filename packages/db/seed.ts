@@ -1,8 +1,9 @@
+/* eslint-disable no-console */
 import { getPlaiceholder } from "plaiceholder";
 import { v2 as cloudinary } from "cloudinary";
 import { prisma } from ".";
 
-import type { Category, Channel, Image, Pin } from "@prisma/client";
+import type { Category, Channel, Comment, Image, Pin } from "@prisma/client";
 
 const DEFAULT_CHANNELS = [
   {
@@ -37,7 +38,7 @@ const DEFAULT_PINS = [
     latitude: 42.330005282145656,
     longitude: -83.05348303745654,
     description: "This is a description",
-    userId: "clan79ilb00006lp4j0tf7ytg",
+    userId: "clbk7u1mh0000qmunws80t8ux",
     categoryId: "clazr3gtq000008l9dxem9tak",
     imageId: "clb179vvh000008icg1v3bk5o",
   },
@@ -49,7 +50,7 @@ const DEFAULT_PINS = [
     latitude: 42.71907152240076,
     longitude: -83.1835650331445,
     description: "Hello world",
-    userId: "clan79ilb00006lp4j0tf7ytg",
+    userId: "clbk7u1mh0000qmunws80t8ux",
     categoryId: "clazwbnep000008ibe3fz4cuo",
     imageId: "clb17y7r8000008mm0domeb5t",
   },
@@ -61,7 +62,7 @@ const DEFAULT_PINS = [
     latitude: 29.690064977995842,
     longitude: -95.5266790802049,
     description: "Hello from KPRC 2",
-    userId: "clan79ilb00006lp4j0tf7ytg",
+    userId: "clbk7u1mh0000qmunws80t8ux",
     categoryId: "clazr3gtq000008l9dxem9tak",
   },
   {
@@ -72,10 +73,19 @@ const DEFAULT_PINS = [
     latitude: 25.985358031040818,
     longitude: -80.17751500968816,
     description: "Hello from KPRC 2",
-    userId: "clan79ilb00006lp4j0tf7ytg",
+    userId: "clbk7u1mh0000qmunws80t8ux",
     categoryId: "clazwbnep000008ibe3fz4cuo",
   },
 ] as Pin[];
+
+const DEFAULT_COMMENTS = [
+  {
+    id: "clbk8yh7g000008m8hbfr9et4",
+    body: "This is a comment",
+    pinId: "clb08mo7y000208l4arnc2u37",
+    userId: "clbk7u1mh0000qmunws80t8ux",
+  },
+] as Comment[];
 
 const DEFAULT_IMAGES = [
   {
@@ -87,6 +97,11 @@ const DEFAULT_IMAGES = [
     id: "clb17y7r8000008mm0domeb5t",
     src: "https://images.unsplash.com/photo-1668875438649-f26a1a16e148?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1335&q=80",
     alt: "Traffic at night",
+  },
+  {
+    id: "clb17z0x0000008m8g1v3bk5o",
+    src: "https://images.unsplash.com/photo-1552058544-f2b08422138a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+    alt: "Profile picture",
   },
 ] as Image[];
 
@@ -105,7 +120,7 @@ async function main() {
       const { base64, img } = await getPlaiceholder(image.src);
       await prisma.image.upsert({
         where: {
-          src: image.src,
+          src: secureURL,
         },
         update: {
           publicId,
@@ -160,6 +175,15 @@ async function main() {
         create: pin,
       });
       console.log(`Created pin with id: ${pin.id}`);
+    }
+
+    for (const comment of DEFAULT_COMMENTS) {
+      await prisma.comment.upsert({
+        where: { id: comment.id },
+        update: comment,
+        create: comment,
+      });
+      console.log(`Created comment with id: ${comment.id}`);
     }
     console.log("Done.");
   } catch (error) {

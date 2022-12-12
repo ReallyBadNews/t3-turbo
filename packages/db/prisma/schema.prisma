@@ -25,7 +25,7 @@ model Pin {
   latitude           Float?
   longitude          Float?
   description        String?   @db.VarChar(2048)
-  status             Status    @default(APPROVED)
+  status             PinStatus @default(APPROVED)
   // View Count
   views              Int       @default(0)
   // Relation to the pin category
@@ -38,6 +38,8 @@ model Pin {
   imageId            String?   @unique
   image              Image?    @relation(fields: [imageId], references: [id])
   comments           Comment[]
+  // liked by users
+  likedBy            User[]    @relation("LikedBy")
 
   @@index([userId])
   @@index([categoryId])
@@ -76,7 +78,7 @@ model Channel {
   slug        String     @unique @db.VarChar(128)
   description String     @db.VarChar(2048)
   icon        String?    @db.VarChar(128)
-  status      Status     @default(APPROVED)
+  status      PinStatus  @default(APPROVED)
   categories  Category[]
 }
 
@@ -96,27 +98,40 @@ model Image {
   alt         String   @db.VarChar(512)
   blurDataURL String   @db.VarChar(512)
   pin         Pin?
+  User        User?
 
   @@index([src])
 }
 
 model User {
-  id            String    @id @default(cuid())
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  name          String?
-  email         String?   @unique
-  password      String?
-  emailVerified DateTime?
-  image         String?
-  role          Role?     @default(USER)
+  id            String     @id @default(cuid())
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  firstName     String?
+  lastName      String?
+  displayName   String?    @unique
+  email         String?    @unique
+  emailVerified Boolean?   @default(false)
+  // TODO: make a one-to-one relation with the image model
+  imageId       String?    @unique
+  image         Image?     @relation(fields: [imageId], references: [id])
+  role          Role       @default(USER)
+  status        UserStatus @default(Active)
   pins          Pin[]
   comments      Comment[]
+  likedPins     Pin[]      @relation("LikedBy")
 
   @@index([email])
 }
 
-enum Status {
+enum UserStatus {
+  Active
+  Disabled
+  Anonymized
+  PendingAnonymize
+}
+
+enum PinStatus {
   APPROVED
   PENDING
   HIDDEN
