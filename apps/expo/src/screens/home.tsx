@@ -18,21 +18,24 @@ import type { AppRouter } from "@badnews/api";
 import { trpc } from "../utils/trpc";
 
 const PostCard: FC<{
-  post: inferProcedureOutput<AppRouter["post"]["all"]>[number];
-}> = ({ post }) => {
+  pin: inferProcedureOutput<AppRouter["pin"]["all"]>[number];
+  // TODO: add eslint rule to autofix this
+}> = ({ pin: pin }) => {
   return (
     <View className="rounded-lg border-2 border-gray-500 p-4">
-      <Text className="text-xl font-semibold text-[#cc66ff]">{post.title}</Text>
-      <Text className="text-white">{post.description}</Text>
+      <Text className="text-xl font-semibold text-[#cc66ff]">
+        {pin.description}
+      </Text>
+      <Text className="text-white">{pin.description}</Text>
     </View>
   );
 };
 
 const CreatePost: FC = () => {
   const utils = trpc.useContext();
-  const { mutate } = trpc.post.create.useMutation({
+  const { mutate } = trpc.pin.create.useMutation({
     async onSuccess() {
-      await utils.post.all.invalidate();
+      await utils.pin.all.invalidate();
     },
   });
 
@@ -101,7 +104,7 @@ const CreatePost: FC = () => {
 };
 
 export const HomeScreen = () => {
-  const postQuery = trpc.post.all.useQuery();
+  const pinQuery = trpc.pin.all.useQuery();
   const [showPost, setShowPost] = useState<string | null>(null);
 
   return (
@@ -126,12 +129,12 @@ export const HomeScreen = () => {
         </View>
 
         <FlashList
-          data={postQuery.data}
+          data={pinQuery.data}
           estimatedItemSize={20}
           ItemSeparatorComponent={() => <View className="h-2" />}
           renderItem={(p) => (
             <TouchableOpacity onPress={() => setShowPost(p.item.id)}>
-              <PostCard post={p.item} />
+              <PostCard pin={p.item} />
             </TouchableOpacity>
           )}
         />
