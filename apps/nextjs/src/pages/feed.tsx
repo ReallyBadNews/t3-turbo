@@ -21,7 +21,7 @@
   }
   ```
 */
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { Menu, Popover, Transition } from "@headlessui/react";
 import {
   ChatBubbleLeftEllipsisIcon,
@@ -47,6 +47,7 @@ import {
 import { signIn, signOut } from "next-auth/react";
 import { trpc } from "../utils/trpc";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { Sidebar } from "../components/sidebar";
 
 const user = {
   name: "Chelsea Hagon",
@@ -152,6 +153,7 @@ function classNames(...classes: string[]) {
 }
 
 export default function Example() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const pins = trpc.pin.all.useQuery();
   const utils = trpc.useContext();
   const { data: session } = trpc.auth.getSession.useQuery();
@@ -335,8 +337,7 @@ export default function Example() {
 
                     {session?.user ? (
                       <button
-                        // onClick={() => create.mutate()}
-                        onClick={() => console.log("create new post")}
+                        onClick={() => setSidebarOpen(true)}
                         className="ml-6 inline-flex items-center rounded-md border border-transparent bg-rose-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2"
                       >
                         New Post
@@ -345,6 +346,7 @@ export default function Example() {
                   </div>
                 </div>
               </div>
+              <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
 
               <Popover.Panel as="nav" className="lg:hidden" aria-label="Global">
                 <div className="mx-auto max-w-3xl space-y-1 px-2 pt-2 pb-3 sm:px-4">
@@ -403,12 +405,14 @@ export default function Example() {
                 </div>
 
                 <div className="mx-auto mt-6 max-w-3xl px-4 sm:px-6">
-                  <a
-                    href="#"
-                    className="flex w-full items-center justify-center rounded-md border border-transparent bg-rose-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-rose-700"
-                  >
-                    New Post
-                  </a>
+                  {session?.user ? (
+                    <button
+                      onClick={() => setSidebarOpen(true)}
+                      className="flex w-full items-center justify-center rounded-md border border-transparent bg-rose-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-rose-700"
+                    >
+                      New Post
+                    </button>
+                  ) : null}
 
                   <div className="mt-6 flex justify-center">
                     <a
