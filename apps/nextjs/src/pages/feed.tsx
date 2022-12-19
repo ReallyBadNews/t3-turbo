@@ -155,28 +155,7 @@ function classNames(...classes: string[]) {
 export default function Example() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pins = trpc.pin.all.useQuery();
-  const utils = trpc.useContext();
   const { data: session } = trpc.auth.getSession.useQuery();
-
-  const create = trpc.pin.create.useMutation({
-    async onMutate() {
-      await utils.pin.all.cancel();
-      utils.pin.all.setData(undefined, (old) => [
-        ...(old ?? []),
-        {
-          id: `${Math.random()}`,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          description: "New pin created",
-          userId: session?.user.id,
-        },
-      ]);
-    },
-    async onSettled() {
-      // Sync with server once mutation has settled
-      await utils.pin.all.invalidate();
-    },
-  });
 
   return (
     <>

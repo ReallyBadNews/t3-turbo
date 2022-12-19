@@ -12,53 +12,23 @@
   }
   ```
 */
-import type { Dispatch, SetStateAction } from "react";
-import { Fragment } from "react";
+import type {
+  ChangeEventHandler,
+  Dispatch,
+  DragEventHandler,
+  FormEventHandler,
+  SetStateAction,
+} from "react";
+import { useState, useRef, Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import {
-  LinkIcon,
-  PlusIcon,
-  QuestionMarkCircleIcon,
-} from "@heroicons/react/20/solid";
+import { LinkIcon, QuestionMarkCircleIcon } from "@heroicons/react/20/solid";
+import { trpc } from "../utils/trpc";
+import type { AppRouter } from "@badnews/api";
+import type { inferProcedureOutput } from "@trpc/server";
+import { cx } from "class-variance-authority";
 
-const team = [
-  {
-    name: "Tom Cook",
-    email: "tom.cook@example.com",
-    href: "#",
-    imageUrl:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-  {
-    name: "Whitney Francis",
-    email: "whitney.francis@example.com",
-    href: "#",
-    imageUrl:
-      "https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-  {
-    name: "Leonard Krasner",
-    email: "leonard.krasner@example.com",
-    href: "#",
-    imageUrl:
-      "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-  {
-    name: "Floyd Miles",
-    email: "floy.dmiles@example.com",
-    href: "#",
-    imageUrl:
-      "https://images.unsplash.com/photo-1463453091185-61582044d556?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-  {
-    name: "Emily Selman",
-    email: "emily.selman@example.com",
-    href: "#",
-    imageUrl:
-      "https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-];
+type AllPinsOutput = inferProcedureOutput<AppRouter["pin"]["all"]>[number];
 
 export function Sidebar({
   open,
@@ -67,9 +37,100 @@ export function Sidebar({
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }) {
+  const [fileInfo, setFileInfo] = useState<File | null>(null);
+  const [dragActive, setDragActive] = useState(false);
+  const photoDropRef = useRef<HTMLDivElement>(null);
+
+  const utils = trpc.useContext();
+  const create = trpc.pin.create.useMutation({
+    async onMutate(newPin) {
+      await utils.pin.all.cancel();
+
+      // Get the ddadta from the queryCache
+      const prevData = utils.pin.all.getData();
+
+      // Optimistically update the data with our new pin
+      utils.pin.all.setData(undefined, (old) => [...(old ?? []), newPin]);
+
+      // Return the previous data so we can revert if something goes wrong
+      return { prevData };
+    },
+    onError(err, newPin, context) {
+      // If the mutation fails, use the context-value from onMutate
+      utils.pin.all.setData(undefined, context?.prevData);
+    },
+    async onSettled() {
+      // Sync with server once mutation has settled
+      await utils.pin.all.invalidate();
+    },
+  });
+
+  const submitHandler: FormEventHandler<HTMLFormElement> = (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+    const title = formData.get("title") as string;
+    const description = formData.get("description") as string;
+
+    if (!fileInfo) {
+      alert("You must upload a photo.");
+      return;
+    }
+
+    console.log("[formData]", {
+      title,
+      description,
+      fileInfo,
+      formData,
+    });
+
+    // create.mutate({
+    //   title,
+    //   description,
+    //   url,
+    //   tags: tags.split(","),
+    //   photo: fileInfo,
+    // });
+
+    closeHandler();
+  };
+
+  const handleFileUpload: ChangeEventHandler<HTMLInputElement> = (event) => {
+    console.log("[event]", event);
+    const file = event.target.files?.[0];
+    if (file) {
+      setFileInfo(file);
+      const image = document.createElement("img");
+      image.src = URL.createObjectURL(file);
+      image.alt = file.name;
+      photoDropRef.current?.replaceChildren(image);
+    }
+  };
+
+  const dropHandler: DragEventHandler<HTMLDivElement> = (event) => {
+    console.log("[event]", event);
+    event.preventDefault();
+    event.stopPropagation();
+    const file = event.dataTransfer.files[0];
+
+    if (file) {
+      setFileInfo(file);
+      const image = document.createElement("img");
+      image.src = URL.createObjectURL(file);
+      image.alt = file.name;
+      photoDropRef.current?.replaceChildren(image);
+    }
+  };
+
+  const closeHandler = () => {
+    setFileInfo(null);
+    setDragActive(false);
+    setOpen(false);
+  };
+
   return (
     <Transition.Root show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={setOpen}>
+      <Dialog as="div" className="relative z-10" onClose={closeHandler}>
         <div className="fixed inset-0" />
 
         <div className="fixed inset-0 overflow-hidden">
@@ -77,15 +138,18 @@ export function Sidebar({
             <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16">
               <Transition.Child
                 as={Fragment}
-                enter="transform transition ease-in-out duration-500 sm:duration-700"
+                enter="transform transition ease-in-out duration-100 sm:duration-300"
                 enterFrom="translate-x-full"
                 enterTo="translate-x-0"
-                leave="transform transition ease-in-out duration-500 sm:duration-700"
+                leave="transform transition ease-in-out duration-100 sm:duration-300"
                 leaveFrom="translate-x-0"
                 leaveTo="translate-x-full"
               >
                 <Dialog.Panel className="pointer-events-auto w-screen max-w-md">
-                  <form className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl">
+                  <form
+                    className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl"
+                    onSubmit={submitHandler}
+                  >
                     <div className="h-0 flex-1 overflow-y-auto">
                       <div className="bg-indigo-700 py-6 px-4 sm:px-6">
                         <div className="flex items-center justify-between">
@@ -96,7 +160,7 @@ export function Sidebar({
                             <button
                               type="button"
                               className="rounded-md bg-indigo-700 text-indigo-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
-                              onClick={() => setOpen(false)}
+                              onClick={closeHandler}
                             >
                               <span className="sr-only">Close panel</span>
                               <XMarkIcon
@@ -118,18 +182,90 @@ export function Sidebar({
                           <div className="space-y-6 pt-6 pb-5">
                             <div>
                               <label
-                                htmlFor="title"
-                                className="block text-sm font-medium text-gray-900"
+                                htmlFor="file-upload"
+                                className="sr-only text-sm font-medium text-gray-700"
                               >
-                                Title
+                                Photo
                               </label>
-                              <div className="mt-1">
-                                <input
-                                  type="text"
-                                  name="title"
-                                  id="title"
-                                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                />
+                              {fileInfo ? (
+                                <>
+                                  <p className="text-xs text-gray-500">
+                                    {`Name: ${fileInfo.name}`}
+                                  </p>
+                                  <p className="mt-1 text-xs text-gray-500">
+                                    {`Size: ${Math.round(
+                                      fileInfo.size / 1000
+                                    )} KB`}
+                                  </p>
+                                  <p className="mt-1 text-xs text-gray-500">
+                                    {`Type: ${fileInfo.type}`}
+                                  </p>
+                                  <p className="mt-1 text-xs text-gray-500">
+                                    {`Last Modified: ${new Date(
+                                      fileInfo.lastModified
+                                    ).toLocaleDateString()}`}
+                                  </p>
+                                </>
+                              ) : null}
+                              <div
+                                ref={photoDropRef}
+                                onDrop={dropHandler}
+                                onDragEnter={(event) => {
+                                  event.preventDefault();
+                                  event.stopPropagation();
+                                  setDragActive(true);
+                                }}
+                                onDragLeave={(event) => {
+                                  event.preventDefault();
+                                  event.stopPropagation();
+                                  setDragActive(false);
+                                }}
+                                onDragOver={(event) => {
+                                  event.preventDefault();
+                                  event.stopPropagation();
+                                }}
+                                className={cx(
+                                  "mt-1 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6",
+                                  dragActive
+                                    ? "border-3 border-indigo-300"
+                                    : undefined
+                                )}
+                              >
+                                <div className="space-y-1 text-center">
+                                  <svg
+                                    className="mx-auto h-12 w-12 text-gray-400"
+                                    stroke="currentColor"
+                                    fill="none"
+                                    viewBox="0 0 48 48"
+                                    aria-hidden="true"
+                                  >
+                                    <path
+                                      d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                                      strokeWidth={2}
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                    />
+                                  </svg>
+                                  <div className="flex text-sm text-gray-600">
+                                    <label
+                                      htmlFor="file-upload"
+                                      className="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
+                                    >
+                                      <span>Upload a file</span>
+                                      <input
+                                        id="file-upload"
+                                        name="file-upload"
+                                        type="file"
+                                        className="sr-only"
+                                        onChange={handleFileUpload}
+                                      />
+                                    </label>
+                                    <p className="pl-1">or drag and drop</p>
+                                  </div>
+                                  <p className="text-xs text-gray-500">
+                                    PNG, JPG, GIF up to 10MB
+                                  </p>
+                                </div>
                               </div>
                             </div>
                             <div>
@@ -147,40 +283,6 @@ export function Sidebar({
                                   className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                   defaultValue={""}
                                 />
-                              </div>
-                            </div>
-                            <div>
-                              <h3 className="text-sm font-medium text-gray-900">
-                                Team Members
-                              </h3>
-                              <div className="mt-2">
-                                <div className="flex space-x-2">
-                                  {team.map((person) => (
-                                    <a
-                                      key={person.email}
-                                      href={person.href}
-                                      className="rounded-full hover:opacity-75"
-                                    >
-                                      <img
-                                        className="inline-block h-8 w-8 rounded-full"
-                                        src={person.imageUrl}
-                                        alt={person.name}
-                                      />
-                                    </a>
-                                  ))}
-                                  <button
-                                    type="button"
-                                    className="inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border-2 border-dashed border-gray-200 bg-white text-gray-400 hover:border-gray-300 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                  >
-                                    <span className="sr-only">
-                                      Add team member
-                                    </span>
-                                    <PlusIcon
-                                      className="h-5 w-5"
-                                      aria-hidden="true"
-                                    />
-                                  </button>
-                                </div>
                               </div>
                             </div>
                             <fieldset>
@@ -297,7 +399,8 @@ export function Sidebar({
                                   aria-hidden="true"
                                 />
                                 <span className="ml-2">
-                                  Learn more about sharing
+                                  By uploading a photo or video, you agree to
+                                  our Terms of Use and Privacy Policy.
                                 </span>
                               </a>
                             </div>
@@ -309,7 +412,7 @@ export function Sidebar({
                       <button
                         type="button"
                         className="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                        onClick={() => setOpen(false)}
+                        onClick={closeHandler}
                       >
                         Cancel
                       </button>
@@ -317,7 +420,7 @@ export function Sidebar({
                         type="submit"
                         className="ml-4 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                       >
-                        Save
+                        Post
                       </button>
                     </div>
                   </form>
