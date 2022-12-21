@@ -14,35 +14,31 @@ model Views {
 }
 
 model Pin {
-  id                 String    @id @default(cuid())
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
+  id                 String     @id @default(cuid())
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
   // State – i.e. "Texas", "Michigan", "Florida"
-  administrativeArea String?   @db.VarChar(128)
-  city               String?   @db.VarChar(128)
-  country            String?   @db.VarChar(128)
+  administrativeArea String?    @db.VarChar(128)
+  city               String?    @db.VarChar(128)
+  country            String?    @db.VarChar(128)
   // Latitude and longitude
   latitude           Float?
   longitude          Float?
-  description        String?   @db.VarChar(2048)
-  status             PinStatus @default(APPROVED)
+  description        String?    @db.VarChar(2048)
+  status             PinStatus  @default(APPROVED)
   // View Count
-  views              Int       @default(0)
-  // Relation to the pin category
-  categoryId         String?
-  category           Category? @relation(fields: [categoryId], references: [id])
-  // Relation to the pin user
+  views              Int        @default(0)
+  communityId        String?
+  community          Community? @relation(fields: [communityId], references: [id])
   userId             String?
-  user               User?     @relation(fields: [userId], references: [id])
-  // Relation to the pin image
-  imageId            String?   @unique
-  image              Image?    @relation(fields: [imageId], references: [id])
+  user               User?      @relation(fields: [userId], references: [id])
+  imageId            String?    @unique
+  image              Image?     @relation(fields: [imageId], references: [id])
   comments           Comment[]
-  // liked by users
-  likedBy            User[]    @relation("LikedBy")
+  likedBy            User[]     @relation("LikedBy")
 
   @@index([userId])
-  @@index([categoryId])
+  @@index([communityId])
 }
 
 model Comment {
@@ -59,27 +55,14 @@ model Comment {
   @@index([userId])
 }
 
-model Category {
-  id        String  @id @default(cuid())
-  name      String  @unique @db.VarChar(128)
-  slug      String  @unique @db.VarChar(128)
-  pins      Pin[]
-  channelId String
-  channel   Channel @relation(fields: [channelId], references: [id])
-
-  @@index([channelId])
-}
-
-model Channel {
-  id          String     @id @default(cuid())
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  name        String     @unique @db.VarChar(128)
-  slug        String     @unique @db.VarChar(128)
-  description String     @db.VarChar(2048)
-  icon        String?    @db.VarChar(128)
-  status      PinStatus  @default(APPROVED)
-  categories  Category[]
+model Community {
+  id          String    @id @default(cuid())
+  name        String    @unique @db.VarChar(128)
+  slug        String    @unique @db.VarChar(128)
+  description String    @db.VarChar(2048)
+  icon        String?   @db.VarChar(128)
+  status      PinStatus @default(APPROVED)
+  pins        Pin[]
 }
 
 model Image {

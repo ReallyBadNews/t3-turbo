@@ -1,13 +1,13 @@
-import { z } from "zod";
-import { getPlaiceholder } from "plaiceholder";
 import { v2 as cloudinary } from "cloudinary";
-import { router, publicProcedure, protectedProcedure } from "../trpc";
+import { getPlaiceholder } from "plaiceholder";
+import { z } from "zod";
+import { protectedProcedure, publicProcedure, router } from "../trpc";
 
 export const pinRouter = router({
   all: publicProcedure.query(async ({ ctx }) => {
     return ctx.prisma.pin.findMany({
       include: {
-        category: true,
+        community: true,
         user: { select: { displayName: true, id: true, image: true } },
         image: true,
         // get the sum of likedBy
@@ -29,17 +29,17 @@ export const pinRouter = router({
       where: {
         id: input,
       },
-      include: { category: true, user: true },
+      include: { community: true, user: true },
     });
   }),
-  byCategory: publicProcedure
+  byCommunity: publicProcedure
     .input(z.string().cuid())
     .query(async ({ ctx, input }) => {
       return ctx.prisma.pin.findMany({
         where: {
-          categoryId: input,
+          communityId: input,
         },
-        include: { category: true, user: true },
+        include: { community: true, user: true },
       });
     }),
   byUser: publicProcedure
@@ -49,14 +49,14 @@ export const pinRouter = router({
         where: {
           userId: input,
         },
-        include: { category: true, user: true },
+        include: { community: true, user: true },
       });
     }),
   create: protectedProcedure
     .input(
       z.object({
         description: z.string(),
-        categoryId: z.string().cuid(),
+        communityId: z.string().cuid(),
         userId: z.string().cuid(),
         imgSrc: z.string(),
         imgAlt: z.string().optional(),
@@ -77,9 +77,9 @@ export const pinRouter = router({
       return ctx.prisma.pin.create({
         data: {
           description: input.description,
-          category: {
+          community: {
             connect: {
-              id: input.categoryId,
+              id: input.communityId,
             },
           },
           user: {
@@ -103,7 +103,7 @@ export const pinRouter = router({
             },
           },
         },
-        include: { category: true, image: true, user: true },
+        include: { community: true, image: true, user: true },
       });
     }),
 });

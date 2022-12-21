@@ -22,24 +22,33 @@ import type {
 import { useState, useRef, Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { LinkIcon, QuestionMarkCircleIcon } from "@heroicons/react/20/solid";
+import {
+  InformationCircleIcon,
+  LinkIcon,
+  QuestionMarkCircleIcon,
+} from "@heroicons/react/20/solid";
 import { trpc } from "../utils/trpc";
 import type { AppRouter } from "@badnews/api";
 import type { inferProcedureOutput } from "@trpc/server";
 import { cx } from "class-variance-authority";
+import { Combobox } from "./Combobox";
+import type { Community } from "@badnews/db";
 
 type AllPinsOutput = inferProcedureOutput<AppRouter["pin"]["all"]>[number];
 
 export function Sidebar({
+  communities,
   open,
   setOpen,
 }: {
+  communities?: Community[];
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }) {
   const [fileInfo, setFileInfo] = useState<File | null>(null);
   const [dragActive, setDragActive] = useState(false);
-  const photoDropRef = useRef<HTMLDivElement>(null);
+  const dropZoneRef = useRef<HTMLFormElement>(null);
+  const photoPreviewRef = useRef<HTMLDivElement>(null);
 
   const utils = trpc.useContext();
   const create = trpc.pin.create.useMutation({
@@ -65,12 +74,14 @@ export function Sidebar({
     },
   });
 
-  const submitHandler: FormEventHandler<HTMLFormElement> = (event) => {
+  const submitHandler: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
-    const title = formData.get("title") as string;
     const description = formData.get("description") as string;
+    const communityName = formData.get("community") as string;
+    const commmunityId = communities?.find((c) => c.name === communityName)
+      ?.id as string;
 
     if (!fileInfo) {
       alert("You must upload a photo.");
@@ -78,18 +89,16 @@ export function Sidebar({
     }
 
     console.log("[formData]", {
-      title,
-      description,
       fileInfo,
-      formData,
+      description,
+      community: commmunityId,
     });
 
-    // create.mutate({
-    //   title,
+    // await create.mutateAsync({
     //   description,
-    //   url,
-    //   tags: tags.split(","),
-    //   photo: fileInfo,
+    //   userId: "",
+    //   imgSrc: fileInfo,
+    //   communityId: commmunityId,
     // });
 
     closeHandler();
@@ -103,11 +112,11 @@ export function Sidebar({
       const image = document.createElement("img");
       image.src = URL.createObjectURL(file);
       image.alt = file.name;
-      photoDropRef.current?.replaceChildren(image);
+      photoPreviewRef.current?.replaceChildren(image);
     }
   };
 
-  const dropHandler: DragEventHandler<HTMLDivElement> = (event) => {
+  const dropHandler: DragEventHandler<HTMLFormElement> = (event) => {
     console.log("[event]", event);
     event.preventDefault();
     event.stopPropagation();
@@ -118,7 +127,7 @@ export function Sidebar({
       const image = document.createElement("img");
       image.src = URL.createObjectURL(file);
       image.alt = file.name;
-      photoDropRef.current?.replaceChildren(image);
+      photoPreviewRef.current?.replaceChildren(image);
     }
   };
 
@@ -147,6 +156,21 @@ export function Sidebar({
               >
                 <Dialog.Panel className="pointer-events-auto w-screen max-w-md">
                   <form
+                    ref={dropZoneRef}
+                    onDrop={dropHandler}
+                    onDragEnter={(event) => {
+                      console.log("[DROP] enter", event);
+                      event.preventDefault();
+                      setDragActive(true);
+                    }}
+                    onDragLeave={(event) => {
+                      console.log("[DROP] leave", event);
+                      event.preventDefault();
+                      setDragActive(false);
+                    }}
+                    onDragOver={(event) => {
+                      event.preventDefault();
+                    }}
                     className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl"
                     onSubmit={submitHandler}
                   >
@@ -187,48 +211,13 @@ export function Sidebar({
                               >
                                 Photo
                               </label>
-                              {fileInfo ? (
-                                <>
-                                  <p className="text-xs text-gray-500">
-                                    {`Name: ${fileInfo.name}`}
-                                  </p>
-                                  <p className="mt-1 text-xs text-gray-500">
-                                    {`Size: ${Math.round(
-                                      fileInfo.size / 1000
-                                    )} KB`}
-                                  </p>
-                                  <p className="mt-1 text-xs text-gray-500">
-                                    {`Type: ${fileInfo.type}`}
-                                  </p>
-                                  <p className="mt-1 text-xs text-gray-500">
-                                    {`Last Modified: ${new Date(
-                                      fileInfo.lastModified
-                                    ).toLocaleDateString()}`}
-                                  </p>
-                                </>
-                              ) : null}
                               <div
-                                ref={photoDropRef}
-                                onDrop={dropHandler}
-                                onDragEnter={(event) => {
-                                  event.preventDefault();
-                                  event.stopPropagation();
-                                  setDragActive(true);
-                                }}
-                                onDragLeave={(event) => {
-                                  event.preventDefault();
-                                  event.stopPropagation();
-                                  setDragActive(false);
-                                }}
-                                onDragOver={(event) => {
-                                  event.preventDefault();
-                                  event.stopPropagation();
-                                }}
+                                ref={photoPreviewRef}
                                 className={cx(
-                                  "mt-1 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6",
+                                  "flex justify-center rounded-md border-2 border-dashed px-6 pt-5 pb-6",
                                   dragActive
-                                    ? "border-3 border-indigo-300"
-                                    : undefined
+                                    ? "border-indigo-300"
+                                    : "border-gray-300"
                                 )}
                               >
                                 <div className="space-y-1 text-center">
@@ -268,6 +257,36 @@ export function Sidebar({
                                 </div>
                               </div>
                             </div>
+                            {fileInfo ? (
+                              <div className="rounded-md bg-blue-50 p-4">
+                                <div className="flex">
+                                  <div className="flex-shrink-0">
+                                    <InformationCircleIcon
+                                      className="h-5 w-5 text-blue-400"
+                                      aria-hidden="true"
+                                    />
+                                  </div>
+                                  <div className="ml-3">
+                                    <p className="text-sm font-medium text-blue-700">
+                                      File info:
+                                    </p>
+                                    <p className="mt-1 text-xs text-blue-700">
+                                      {`Name: ${fileInfo.name}`}
+                                    </p>
+                                    <p className="mt-1 text-xs text-blue-700">
+                                      {`Size: ${Math.round(
+                                        fileInfo.size / 1000
+                                      )} KB`}
+                                    </p>
+                                    <p className="mt-1 text-xs text-blue-700">
+                                      {`Last Modified: ${new Date(
+                                        fileInfo.lastModified
+                                      ).toLocaleDateString()}`}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            ) : null}
                             <div>
                               <label
                                 htmlFor="description"
@@ -285,6 +304,7 @@ export function Sidebar({
                                 />
                               </div>
                             </div>
+                            <Combobox label="Community" options={communities} />
                             <fieldset>
                               <legend className="text-sm font-medium text-gray-900">
                                 Privacy

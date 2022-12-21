@@ -3,31 +3,59 @@ import { getPlaiceholder } from "plaiceholder";
 import { v2 as cloudinary } from "cloudinary";
 import { prisma } from ".";
 
-import type { Category, Channel, Comment, Image, Pin } from "@prisma/client";
+import type { Community, Comment, Image, Pin } from "@prisma/client";
 
-const DEFAULT_CHANNELS = [
-  {
-    id: "clazs7e7p000008lfc7u58v32",
-    name: "Weather",
-    slug: "weather",
-    description: "Weather related pins",
-  },
-] as Channel[];
-
-const DEFAULT_CATEGORRIES = [
+const DEFAULT_COMMUNITIES = [
   {
     id: "clazr3gtq000008l9dxem9tak",
-    name: "Beautiful day",
-    slug: "beautiful-day",
-    channelId: "clazs7e7p000008lfc7u58v32",
+    name: "Pets",
+    slug: "pets",
+    description: "All 4 Pets",
+    icon: "🐶",
+  },
+  {
+    id: "clazx0x0p000108l8b3q7q7qo",
+    name: "Events",
+    slug: "events",
+    description: "Events in your area",
+    icon: "🎉",
   },
   {
     id: "clazwbnep000008ibe3fz4cuo",
-    name: "Thunderstorms",
-    slug: "thunderstorms",
-    channelId: "clazs7e7p000008lfc7u58v32",
+    name: "Weather",
+    slug: "weather",
+    description: "Everything you need to know about the weather",
+    icon: "🌤",
   },
-] as Category[];
+  {
+    id: "clbvawx64000008mlenqoee7k",
+    name: "News",
+    slug: "news",
+    description: "News from around the world",
+    icon: "📰",
+  },
+  {
+    id: "clbvbrev9000108lhggdpcja7",
+    name: "Something Good",
+    slug: "something-good",
+    description:
+      "People from all over keep showing the best that humanity has to offer.  Communities are doing their part to be positive and make others feel good.",
+  },
+  {
+    id: "clbvf225z000108l7g08keliv",
+    name: "Traffic",
+    slug: "traffic",
+    description: "Traffic in your area",
+    icon: "🚗",
+  },
+  {
+    id: "clbvf2z68000208l70j7e8zxs",
+    name: "Food",
+    slug: "food",
+    description: "Food and restaurants in your area",
+    icon: "🍔",
+  },
+] as Community[];
 
 const DEFAULT_PINS = [
   {
@@ -39,7 +67,7 @@ const DEFAULT_PINS = [
     longitude: -83.05348303745654,
     description: "This is a description",
     userId: "clbk7u1mh0000qmunws80t8ux",
-    categoryId: "clazr3gtq000008l9dxem9tak",
+    communityId: "clazr3gtq000008l9dxem9tak",
     imageId: "clb179vvh000008icg1v3bk5o",
   },
   {
@@ -51,7 +79,7 @@ const DEFAULT_PINS = [
     longitude: -83.1835650331445,
     description: "Hello world",
     userId: "clbk7u1mh0000qmunws80t8ux",
-    categoryId: "clazwbnep000008ibe3fz4cuo",
+    communityId: "clazwbnep000008ibe3fz4cuo",
     imageId: "clb17y7r8000008mm0domeb5t",
   },
   {
@@ -63,7 +91,7 @@ const DEFAULT_PINS = [
     longitude: -95.5266790802049,
     description: "Hello from KPRC 2",
     userId: "clbk7u1mh0000qmunws80t8ux",
-    categoryId: "clazr3gtq000008l9dxem9tak",
+    communityId: "clazr3gtq000008l9dxem9tak",
   },
   {
     id: "clb08mo7y000208l4arnc2u37",
@@ -74,7 +102,7 @@ const DEFAULT_PINS = [
     longitude: -80.17751500968816,
     description: "Hello from KPRC 2",
     userId: "clbk7u1mh0000qmunws80t8ux",
-    categoryId: "clazwbnep000008ibe3fz4cuo",
+    communityId: "clazwbnep000008ibe3fz4cuo",
   },
 ] as Pin[];
 
@@ -146,27 +174,16 @@ async function main() {
 
     console.log("Created images");
 
-    for (const channel of DEFAULT_CHANNELS) {
-      await prisma.channel.upsert({
-        where: { id: channel.id },
-        update: channel,
-        create: channel,
+    for (const community of DEFAULT_COMMUNITIES) {
+      await prisma.community.upsert({
+        where: { id: community.id },
+        update: community,
+        create: community,
       });
-      console.log(`Created channel ${channel.name}`);
+      console.log(`Created community ${community.name}`);
     }
 
-    console.log("Channels created");
-
-    for (const category of DEFAULT_CATEGORRIES) {
-      await prisma.category.upsert({
-        where: { id: category.id },
-        update: category,
-        create: category,
-      });
-      console.log(`Created category ${category.name}`);
-    }
-
-    console.log("Categories created");
+    console.log("communities created");
 
     for (const pin of DEFAULT_PINS) {
       await prisma.pin.upsert({

@@ -12,14 +12,14 @@
     "@badnews/auth": "workspace:*",
     "@badnews/db": "workspace:*",
     "@badnews/utils": "workspace:*",
-    "@trpc/client": "10.4.2",
-    "@trpc/server": "10.4.2",
-    "cloudinary": "^1.32.0",
-    "superjson": "^1.9.1",
-    "zod": "^3.18.0"
+    "@trpc/client": "10.6.0",
+    "@trpc/server": "10.6.0",
+    "cloudinary": "^1.33.0",
+    "superjson": "^1.12.1",
+    "zod": "^3.20.2"
   },
   "devDependencies": {
-    "eslint": "^8.28.0",
-    "typescript": "^4.9.3"
+    "eslint": "^8.30.0",
+    "typescript": "^4.9.4"
   }
 }

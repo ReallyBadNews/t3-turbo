@@ -66,64 +66,64 @@ const userNavigation = [
   { name: "Settings", href: "#" },
   { name: "Sign out", onClick: signOut },
 ];
-const communities = [
-  { name: "Movies", href: "#" },
-  { name: "Food", href: "#" },
-  { name: "Sports", href: "#" },
-  { name: "Animals", href: "#" },
-  { name: "Science", href: "#" },
-  { name: "Dinosaurs", href: "#" },
-  { name: "Talents", href: "#" },
-  { name: "Gaming", href: "#" },
-];
+// const communities = [
+//   { name: "Movies", href: "#" },
+//   { name: "Food", href: "#" },
+//   { name: "Sports", href: "#" },
+//   { name: "Animals", href: "#" },
+//   { name: "Science", href: "#" },
+//   { name: "Dinosaurs", href: "#" },
+//   { name: "Talents", href: "#" },
+//   { name: "Gaming", href: "#" },
+// ];
 const tabs = [
   { name: "Recent", href: "#", current: true },
   { name: "Map", href: "#", current: false },
   { name: "Most Answers", href: "#", current: false },
 ];
-const questions = [
-  {
-    id: "81614",
-    likes: "29",
-    replies: "11",
-    views: "2.7k",
-    author: {
-      name: "Dries Vincent",
-      imageUrl:
-        "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-      href: "#",
-    },
-    date: "December 9 at 11:43 AM",
-    datetime: "2020-12-09T11:43:00",
-    href: "#",
-    title: "What would you have done differently if you ran Jurassic Park?",
-    body: `
-      <p>Jurassic Park was an incredible idea and a magnificent feat of engineering, but poor protocols and a disregard for human safety killed what could have otherwise been one of the best businesses of our generation.</p>
-      <p>Ultimately, I think that if you wanted to run the park successfully and keep visitors safe, the most important thing to prioritize would be&hellip;</p>
-    `,
-  },
-  {
-    id: "12345",
-    likes: "69",
-    replies: "48",
-    views: "2.2k",
-    author: {
-      name: "Dries Vincent",
-      imageUrl:
-        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-      href: "#",
-    },
-    date: "December 11 at 11:43 AM",
-    datetime: "2020-12-11T11:43:00",
-    href: "#",
-    title: "Yo mama so fat?",
-    body: `
-      <p>Jurassic Park was an incredible idea and a magnificent feat of engineering, but poor protocols and a disregard for human safety killed what could have otherwise been one of the best businesses of our generation.</p>
-      <p>Ultimately, I think that if you wanted to run the park successfully and keep visitors safe, the most important thing to prioritize would be&hellip;</p>
-    `,
-  },
-  // More questions...
-];
+// const questions = [
+//   {
+//     id: "81614",
+//     likes: "29",
+//     replies: "11",
+//     views: "2.7k",
+//     author: {
+//       name: "Dries Vincent",
+//       imageUrl:
+//         "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+//       href: "#",
+//     },
+//     date: "December 9 at 11:43 AM",
+//     datetime: "2020-12-09T11:43:00",
+//     href: "#",
+//     title: "What would you have done differently if you ran Jurassic Park?",
+//     body: `
+//       <p>Jurassic Park was an incredible idea and a magnificent feat of engineering, but poor protocols and a disregard for human safety killed what could have otherwise been one of the best businesses of our generation.</p>
+//       <p>Ultimately, I think that if you wanted to run the park successfully and keep visitors safe, the most important thing to prioritize would be&hellip;</p>
+//     `,
+//   },
+//   {
+//     id: "12345",
+//     likes: "69",
+//     replies: "48",
+//     views: "2.2k",
+//     author: {
+//       name: "Dries Vincent",
+//       imageUrl:
+//         "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+//       href: "#",
+//     },
+//     date: "December 11 at 11:43 AM",
+//     datetime: "2020-12-11T11:43:00",
+//     href: "#",
+//     title: "Yo mama so fat?",
+//     body: `
+//       <p>Jurassic Park was an incredible idea and a magnificent feat of engineering, but poor protocols and a disregard for human safety killed what could have otherwise been one of the best businesses of our generation.</p>
+//       <p>Ultimately, I think that if you wanted to run the park successfully and keep visitors safe, the most important thing to prioritize would be&hellip;</p>
+//     `,
+//   },
+//   // More questions...
+// ];
 const whoToFollow = [
   {
     name: "Leonard Krasner",
@@ -155,6 +155,7 @@ function classNames(...classes: string[]) {
 export default function Example() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pins = trpc.pin.all.useQuery();
+  const communities = trpc.community.all.useQuery();
   const { data: session } = trpc.auth.getSession.useQuery();
 
   return (
@@ -325,7 +326,11 @@ export default function Example() {
                   </div>
                 </div>
               </div>
-              <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
+              <Sidebar
+                open={sidebarOpen}
+                setOpen={setSidebarOpen}
+                communities={communities.data}
+              />
 
               <Popover.Panel as="nav" className="lg:hidden" aria-label="Global">
                 <div className="mx-auto max-w-3xl space-y-1 px-2 pt-2 pb-3 sm:px-4">
@@ -451,10 +456,10 @@ export default function Example() {
                     className="mt-3 space-y-2"
                     aria-labelledby="communities-headline"
                   >
-                    {communities.map((community) => (
+                    {communities.data?.map((community) => (
                       <a
                         key={community.name}
-                        href={community.href}
+                        href={community.slug}
                         className="group flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900"
                       >
                         <span className="truncate">{community.name}</span>

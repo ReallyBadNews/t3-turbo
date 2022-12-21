@@ -12,14 +12,14 @@
     "db-seed": "pnpm with-env tsx seed.ts"
   },
   "dependencies": {
-    "@prisma/client": "^4.6.1"
+    "@prisma/client": "^4.7.1"
   },
   "devDependencies": {
     "dotenv-cli": "^6.0.0",
     "plaiceholder": "^2.5.0",
-    "prisma": "^4.6.1",
+    "prisma": "^4.7.1",
     "sharp": "^0.31.2",
     "tsx": "^3.12.1",
-    "typescript": "^4.9.3"
+    "typescript": "^4.9.4"
   }
 }
