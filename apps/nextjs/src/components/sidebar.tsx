@@ -158,18 +158,15 @@ export function Sidebar({
                   <form
                     ref={dropZoneRef}
                     onDrop={dropHandler}
-                    onDragEnter={(event) => {
-                      console.log("[DROP] enter", event);
-                      event.preventDefault();
-                      setDragActive(true);
-                    }}
                     onDragLeave={(event) => {
                       console.log("[DROP] leave", event);
                       event.preventDefault();
                       setDragActive(false);
                     }}
                     onDragOver={(event) => {
+                      console.log("[DROP] ovver", event);
                       event.preventDefault();
+                      setDragActive(true);
                     }}
                     className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl"
                     onSubmit={submitHandler}
