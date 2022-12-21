@@ -112,6 +112,7 @@ export function Sidebar({
       const image = document.createElement("img");
       image.src = URL.createObjectURL(file);
       image.alt = file.name;
+      image.className = "rounded";
       photoPreviewRef.current?.replaceChildren(image);
     }
   };
@@ -127,6 +128,7 @@ export function Sidebar({
       const image = document.createElement("img");
       image.src = URL.createObjectURL(file);
       image.alt = file.name;
+      image.className = "rounded";
       photoPreviewRef.current?.replaceChildren(image);
     }
   };
@@ -159,12 +161,10 @@ export function Sidebar({
                     ref={dropZoneRef}
                     onDrop={dropHandler}
                     onDragLeave={(event) => {
-                      console.log("[DROP] leave", event);
                       event.preventDefault();
                       setDragActive(false);
                     }}
                     onDragOver={(event) => {
-                      console.log("[DROP] ovver", event);
                       event.preventDefault();
                       setDragActive(true);
                     }}
@@ -209,7 +209,6 @@ export function Sidebar({
                                 Photo
                               </label>
                               <div
-                                ref={photoPreviewRef}
                                 className={cx(
                                   "flex justify-center rounded-md border-2 border-dashed px-6 pt-5 pb-6",
                                   dragActive
@@ -217,7 +216,13 @@ export function Sidebar({
                                     : "border-gray-300"
                                 )}
                               >
-                                <div className="space-y-1 text-center">
+                                <div className="text-cente flex flex-col items-center space-y-1">
+                                  <div
+                                    ref={photoPreviewRef}
+                                    className={cx(
+                                      fileInfo ? undefined : "hidden"
+                                    )}
+                                  />
                                   <svg
                                     className="mx-auto h-12 w-12 text-gray-400"
                                     stroke="currentColor"
