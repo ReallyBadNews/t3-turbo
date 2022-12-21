@@ -22,6 +22,9 @@ export const pinRouter = router({
           },
         },
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
   }),
   byId: publicProcedure.input(z.string()).query(async ({ ctx, input }) => {
@@ -63,16 +66,27 @@ export const pinRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      console.log("[pinRouter.create] input", { input });
       const { secure_url: secureURL, public_id: publicId } =
-        await cloudinary.uploader.upload(input.imgSrc, {
-          // public_id: updatePayload.slug,
-          folder: process.env.CLOUDINARY_BASE_PUBLIC_ID || "kenny/pins",
-          overwrite: true,
-          invalidate: true,
-          unique_filename: false,
-        });
+        await cloudinary.uploader
+          .upload(input.imgSrc, {
+            // public_id: updatePayload.slug,
+            folder: process.env.CLOUDINARY_BASE_PUBLIC_ID || "kenny/pins",
+            overwrite: true,
+            invalidate: true,
+            unique_filename: false,
+          })
+          .catch((err) => {
+            console.error("[pinRouter.create] cloudinary error", err);
+            throw err;
+          });
 
-      const { base64, img } = await getPlaiceholder(input.imgSrc);
+      console.log("[pinRouter.create] cloudinary", {
+        secureURL,
+        publicId,
+      });
+
+      const { base64, img } = await getPlaiceholder(secureURL);
 
       return ctx.prisma.pin.create({
         data: {

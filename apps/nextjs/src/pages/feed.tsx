@@ -543,7 +543,8 @@ export default function Example() {
                             <div className="min-w-0 flex-1">
                               <p className="text-sm font-medium text-gray-900">
                                 <a
-                                  href={pin.user.href || "#"}
+                                  // TODO: Fix this
+                                  href={pin.user?.href || "#"}
                                   className="hover:underline"
                                 >
                                   {pin.user?.displayName}

@@ -106,7 +106,7 @@ export const authOptions: NextAuthOptions = {
                 lastName: userProfile.lastName,
                 emailVerified: userProfile.emailVerified,
                 status: userProfile.status || "Active",
-                // image: userProfile.picture,
+                // image: userProfile.picture as string,
                 role: "USER",
               },
             });
@@ -140,6 +140,7 @@ export const authOptions: NextAuthOptions = {
           ...token,
           accessToken: user.accessToken,
           refreshToken: user.refreshToken,
+          id: user.id,
         };
       }
 
@@ -150,6 +151,7 @@ export const authOptions: NextAuthOptions = {
       session.user.accessToken = token.accessToken;
       session.user.refreshToken = token.refreshToken;
       session.user.accessTokenExpires = token.accessTokenExpires;
+      session.user.id = token.id;
 
       return session;
     },

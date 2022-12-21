@@ -50,7 +50,12 @@ export const Combobox = ({ label, options }: ComboboxProps) => {
         });
 
   return (
-    <HUICombobox as="div" value={selectedOption} onChange={setSelectedOption}>
+    <HUICombobox
+      as="div"
+      value={selectedOption}
+      onChange={setSelectedOption}
+      name="community"
+    >
       <HUICombobox.Label className="block text-sm font-medium text-gray-700">
         {label}
       </HUICombobox.Label>

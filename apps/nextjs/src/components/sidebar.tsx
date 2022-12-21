@@ -47,27 +47,29 @@ export function Sidebar({
 }) {
   const [fileInfo, setFileInfo] = useState<File | null>(null);
   const [dragActive, setDragActive] = useState(false);
+  const fileUploadRef = useRef<HTMLInputElement>(null);
   const dropZoneRef = useRef<HTMLFormElement>(null);
   const photoPreviewRef = useRef<HTMLDivElement>(null);
 
+  const { data: session } = trpc.auth.getSession.useQuery();
   const utils = trpc.useContext();
   const create = trpc.pin.create.useMutation({
-    async onMutate(newPin) {
-      await utils.pin.all.cancel();
+    // async onMutate(newPin) {
+    //   await utils.pin.all.cancel();
 
-      // Get the ddadta from the queryCache
-      const prevData = utils.pin.all.getData();
+    //   // Get the ddadta from the queryCache
+    //   const prevData = utils.pin.all.getData();
 
-      // Optimistically update the data with our new pin
-      utils.pin.all.setData(undefined, (old) => [...(old ?? []), newPin]);
+    //   // Optimistically update the data with our new pin
+    //   utils.pin.all.setData(undefined, (old) => [...(old ?? []), newPin]);
 
-      // Return the previous data so we can revert if something goes wrong
-      return { prevData };
-    },
-    onError(err, newPin, context) {
-      // If the mutation fails, use the context-value from onMutate
-      utils.pin.all.setData(undefined, context?.prevData);
-    },
+    //   // Return the previous data so we can revert if something goes wrong
+    //   return { prevData };
+    // },
+    // onError(err, newPin, context) {
+    //   // If the mutation fails, use the context-value from onMutate
+    //   utils.pin.all.setData(undefined, context?.prevData);
+    // },
     async onSettled() {
       // Sync with server once mutation has settled
       await utils.pin.all.invalidate();
@@ -77,35 +79,49 @@ export function Sidebar({
   const submitHandler: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
 
+    if (!fileInfo) {
+      alert("You must upload a photo.");
+      return;
+    }
+
+    if (!session) {
+      alert("You must be logged in to create a pin.");
+      return;
+    }
+
     const formData = new FormData(event.currentTarget);
     const description = formData.get("description") as string;
     const communityName = formData.get("community") as string;
     const commmunityId = communities?.find((c) => c.name === communityName)
       ?.id as string;
 
-    if (!fileInfo) {
-      alert("You must upload a photo.");
-      return;
-    }
+    // const file = URL.createObjectURL(fileInfo);
+    // convert `fileInfo` to a base64 string
+    const file = await new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(fileInfo);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
 
     console.log("[formData]", {
-      fileInfo,
+      file,
       description,
+      communityName,
       community: commmunityId,
     });
 
-    // await create.mutateAsync({
-    //   description,
-    //   userId: "",
-    //   imgSrc: fileInfo,
-    //   communityId: commmunityId,
-    // });
+    await create.mutateAsync({
+      description,
+      userId: session?.user.id,
+      imgSrc: file,
+      communityId: commmunityId,
+    });
 
     closeHandler();
   };
 
   const handleFileUpload: ChangeEventHandler<HTMLInputElement> = (event) => {
-    console.log("[event]", event);
     const file = event.target.files?.[0];
     if (file) {
       setFileInfo(file);
@@ -113,30 +129,43 @@ export function Sidebar({
       image.src = URL.createObjectURL(file);
       image.alt = file.name;
       image.className = "rounded";
-      photoPreviewRef.current?.replaceChildren(image);
+      photoPreviewRef.current?.replaceWith(image);
     }
   };
 
   const dropHandler: DragEventHandler<HTMLFormElement> = (event) => {
-    console.log("[event]", event);
+    const uploadInput = fileUploadRef.current;
     event.preventDefault();
     event.stopPropagation();
-    const file = event.dataTransfer.files[0];
 
-    if (file) {
-      setFileInfo(file);
-      const image = document.createElement("img");
-      image.src = URL.createObjectURL(file);
-      image.alt = file.name;
-      image.className = "rounded";
-      photoPreviewRef.current?.replaceChildren(image);
+    if (uploadInput && event.dataTransfer.files) {
+      uploadInput.files = event.dataTransfer.files;
+    }
+
+    if (event.dataTransfer.items) {
+      // Use DataTransferItemList interface to access the file, only get the first file
+      const file = event.dataTransfer.items[0]?.getAsFile();
+
+      if (file) {
+        setFileInfo(file);
+        const image = document.createElement("img");
+        image.src = URL.createObjectURL(file);
+        image.alt = file.name;
+        image.className = "rounded";
+        photoPreviewRef.current?.replaceWith(image);
+      }
     }
   };
 
   const closeHandler = () => {
-    setFileInfo(null);
     setDragActive(false);
     setOpen(false);
+
+    // delay the duration of the animation before setting the file info to null
+    setTimeout(() => {
+      setFileInfo(null);
+      photoPreviewRef.current?.replaceChildren();
+    }, 300);
   };
 
   return (
@@ -249,6 +278,7 @@ export function Sidebar({
                                         type="file"
                                         className="sr-only"
                                         onChange={handleFileUpload}
+                                        ref={fileUploadRef}
                                       />
                                     </label>
                                     <p className="pl-1">or drag and drop</p>
