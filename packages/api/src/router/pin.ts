@@ -120,4 +120,13 @@ export const pinRouter = router({
         include: { community: true, image: true, user: true },
       });
     }),
+  delete: protectedProcedure
+    .input(z.string().cuid())
+    .mutation(async ({ ctx, input }) => {
+      return ctx.prisma.pin.delete({
+        where: {
+          id: input,
+        },
+      });
+    }),
 });
