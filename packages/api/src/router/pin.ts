@@ -5,27 +5,40 @@ import { protectedProcedure, publicProcedure, router } from "../trpc";
 
 export const pinRouter = router({
   all: publicProcedure.query(async ({ ctx }) => {
-    return ctx.prisma.pin.findMany({
-      include: {
+    const pins = await ctx.prisma.pin.findMany({
+      select: {
+        // count number of likes
+        _count: {
+          select: { likedBy: true },
+        },
+        id: true,
+        administrativeArea: true,
+        country: true,
+        description: true,
+        latitude: true,
+        longitude: true,
+        city: true,
+        comments: true,
         community: true,
-        user: { select: { displayName: true, id: true, image: true } },
         image: true,
-        // get the sum of likedBy
-        likedBy: {
+        createdAt: true,
+        updatedAt: true,
+        user: {
           select: {
             id: true,
+            image: true,
+            displayName: true,
           },
         },
-        comments: {
-          select: {
-            id: true,
-          },
-        },
+        views: true,
+        status: true,
       },
       orderBy: {
         createdAt: "desc",
       },
     });
+
+    return pins;
   }),
   byId: publicProcedure.input(z.string()).query(async ({ ctx, input }) => {
     return ctx.prisma.pin.findUnique({
@@ -126,6 +139,29 @@ export const pinRouter = router({
       return ctx.prisma.pin.delete({
         where: {
           id: input,
+        },
+      });
+    }),
+  like: protectedProcedure
+    .input(z.string().cuid())
+    .mutation(async ({ ctx, input }) => {
+      return ctx.prisma.pin.update({
+        where: {
+          id: input,
+        },
+        data: {
+          likedBy: {
+            connect: {
+              id: ctx.session.user.id,
+            },
+          },
+        },
+        include: {
+          likedBy: {
+            select: {
+              id: true,
+            },
+          },
         },
       });
     }),

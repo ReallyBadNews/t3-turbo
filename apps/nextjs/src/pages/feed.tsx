@@ -157,6 +157,48 @@ export default function Example() {
   const pins = trpc.pin.all.useQuery();
   const communities = trpc.community.all.useQuery();
   const { data: session } = trpc.auth.getSession.useQuery();
+  const utils = trpc.useContext();
+
+  const likePin = trpc.pin.like.useMutation({
+    async onSettled() {
+      // Sync with server once mutation has settled
+      await utils.pin.all.invalidate();
+    },
+    async onMutate(id) {
+      // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
+      await utils.pin.all.cancel();
+
+      // Get the data from the queryCache
+      const prevData = utils.pin.all.getData();
+
+      // find the pin and increment the likes by one
+      // Then optimistically update the data with the new like
+      utils.pin.all.setData(undefined, (old) => {
+        return old?.map((pin) => {
+          if (pin.id === id) {
+            return {
+              ...pin,
+              _count: {
+                likedBy: pin._count.likedBy + 1,
+              },
+            };
+          }
+          return pin;
+        });
+      });
+
+      // Return the previous data so we can revert if something goes wrong
+      return { prevData };
+    },
+    onError(err, newPin, context) {
+      // If the mutation fails, use the context-value from onMutate
+      utils.pin.all.setData(undefined, context?.prevData);
+    },
+  });
+
+  const likeHandler = (id: string) => {
+    likePin.mutate(id);
+  };
 
   return (
     <>
@@ -655,7 +697,9 @@ export default function Example() {
                         <div
                           className="mt-4 text-sm text-gray-700"
                           // className="mt-2 space-y-4 text-sm text-gray-700"
-                          dangerouslySetInnerHTML={{ __html: pin.description }}
+                          dangerouslySetInnerHTML={{
+                            __html: pin.description || "",
+                          }}
                         />
                         <div className="mt-6 flex justify-between space-x-8">
                           <div className="flex space-x-6">
@@ -667,9 +711,10 @@ export default function Example() {
                                 <HandThumbUpIcon
                                   className="h-5 w-5"
                                   aria-hidden="true"
+                                  onClick={() => likeHandler(pin.id)}
                                 />
                                 <span className="font-medium text-gray-900">
-                                  {pin.likedBy.length}
+                                  {pin._count.likedBy}
                                 </span>
                                 <span className="sr-only">likes</span>
                               </button>
