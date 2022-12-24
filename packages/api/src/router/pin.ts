@@ -4,6 +4,62 @@ import { z } from "zod";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 
 export const pinRouter = router({
+  infinite: publicProcedure
+    .input(
+      z.object({
+        limit: z.number().min(1).max(100).nullish(),
+        cursor: z.string().cuid().nullish(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const limit = input.limit ?? 50;
+      const { cursor } = input;
+
+      const pins = await ctx.prisma.pin.findMany({
+        take: limit + 1, // get an extra item at the end which we'll use as the next cursor
+        cursor: cursor ? { id: cursor } : undefined,
+        orderBy: {
+          createdAt: "desc",
+        },
+        select: {
+          // count number of likes
+          _count: {
+            select: { likedBy: true },
+          },
+          id: true,
+          administrativeArea: true,
+          country: true,
+          description: true,
+          latitude: true,
+          longitude: true,
+          city: true,
+          comments: true,
+          community: true,
+          image: true,
+          createdAt: true,
+          updatedAt: true,
+          user: {
+            select: {
+              id: true,
+              image: true,
+              displayName: true,
+            },
+          },
+          views: true,
+          status: true,
+        },
+      });
+
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (pins.length > limit) {
+        const nextPins = pins.pop();
+        nextCursor = nextPins?.id ?? undefined;
+      }
+      return {
+        pins,
+        nextCursor,
+      };
+    }),
   all: publicProcedure.query(async ({ ctx }) => {
     const pins = await ctx.prisma.pin.findMany({
       select: {
