@@ -74,32 +74,29 @@ export const pinRouter = router({
         description: z.string(),
         communityId: z.string().cuid(),
         userId: z.string().cuid(),
-        imgSrc: z.string(),
+        imgSrc: z.string().optional(),
         imgAlt: z.string().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      console.log("[pinRouter.create] input", { input });
-      const { secure_url: secureURL, public_id: publicId } =
-        await cloudinary.uploader
-          .upload(input.imgSrc, {
+      const cloudinaryResp = input.imgSrc
+        ? await cloudinary.uploader.upload(input.imgSrc, {
             // public_id: updatePayload.slug,
             folder: process.env.CLOUDINARY_BASE_PUBLIC_ID || "kenny/pins",
             overwrite: true,
             invalidate: true,
             unique_filename: false,
           })
-          .catch((err) => {
-            console.error("[pinRouter.create] cloudinary error", err);
-            throw err;
-          });
+        : undefined;
 
-      console.log("[pinRouter.create] cloudinary", {
-        secureURL,
-        publicId,
-      });
+      const { secure_url: secureURL, public_id: publicId } =
+        cloudinaryResp || {};
 
-      const { base64, img } = await getPlaiceholder(secureURL);
+      const plaiceholder = secureURL
+        ? await getPlaiceholder(secureURL)
+        : undefined;
+
+      const { base64, img } = plaiceholder || {};
 
       return ctx.prisma.pin.create({
         data: {
@@ -114,21 +111,25 @@ export const pinRouter = router({
               id: input.userId,
             },
           },
-          image: {
-            connectOrCreate: {
-              where: {
-                src: input.imgSrc,
-              },
-              create: {
-                publicId,
-                src: secureURL,
-                width: img.width,
-                height: img.height,
-                blurDataURL: base64,
-                alt: input.imgAlt || "Pin image",
-              },
-            },
-          },
+          ...(img && secureURL && publicId && base64
+            ? {
+                image: {
+                  connectOrCreate: {
+                    where: {
+                      src: input.imgSrc,
+                    },
+                    create: {
+                      publicId,
+                      src: secureURL,
+                      width: img.width,
+                      height: img.height,
+                      blurDataURL: base64,
+                      alt: input.imgAlt || "Pin image",
+                    },
+                  },
+                },
+              }
+            : undefined),
         },
         include: { community: true, image: true, user: true },
       });

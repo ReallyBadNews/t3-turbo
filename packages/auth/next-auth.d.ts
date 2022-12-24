@@ -25,5 +25,8 @@ declare module "next-auth" {
     role: Role;
     accessToken?: string;
     refreshToken?: string;
+    image: {
+      src: string;
+    } | null;
   }
 }

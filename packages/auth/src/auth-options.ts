@@ -1,6 +1,9 @@
+import { v2 as cloudinary } from "cloudinary";
+import { getPlaiceholder } from "plaiceholder";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { type NextAuthOptions } from "next-auth";
 
+import type { Image } from "@badnews/db";
 import { prisma } from "@badnews/db";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { isAPIErrorResponse } from "./api-error-response";
@@ -77,8 +80,11 @@ export const authOptions: NextAuthOptions = {
             };
           }
 
-          // if not found, create user
-          // get user info from subs
+          /**
+           * If the user is not found in the database, we need to fetch their
+           * profile from the Arc Identity API and create a new user.
+           * @see https://docs.arcxp.com/alc?id=kb_article_view&sysparm_article=KB0010622
+           */
           const profileRes = await fetch(
             `https://${
               process.env.IDENTITY_SBX as string
@@ -97,6 +103,59 @@ export const authOptions: NextAuthOptions = {
           console.log("[AUTH] subs user profile", { userProfile });
 
           if (!isAPIErrorResponse(userProfile)) {
+            let userPhoto: Image | null = null;
+            /**
+             * if the user has a profile picture, upload it to cloudinary
+             * and add it to the db
+             */
+            if (userProfile.picture) {
+              try {
+                console.log(
+                  "[AUTH] subs user profile picture",
+                  "uploading...",
+                  {
+                    env: process.env.CLOUDINARY_BASE_PUBLIC_ID,
+                    cloudinaryUrl: process.env.CLOUDINARY_URL,
+                    photo: userProfile.picture,
+                  }
+                );
+                const { secure_url: secureURL, public_id: publicId } =
+                  await cloudinary.uploader.upload(userProfile.picture, {
+                    // public_id: updatePayload.slug,
+                    folder:
+                      process.env.CLOUDINARY_BASE_PUBLIC_ID || "kenny/pins",
+                    overwrite: true,
+                    invalidate: true,
+                    unique_filename: false,
+                  });
+
+                console.log("[AUTH] subs user profile picture", {
+                  secureURL,
+                  publicId,
+                });
+
+                const { base64, img } = await getPlaiceholder(secureURL);
+
+                console.log("[AUTH] subs user profile picture", {
+                  base64,
+                  img,
+                });
+
+                userPhoto = await prisma.image.create({
+                  data: {
+                    src: secureURL,
+                    alt: "user profile picture",
+                    publicId,
+                    blurDataURL: base64,
+                    width: img.width,
+                    height: img.height,
+                  },
+                });
+              } catch (err) {
+                console.error("[AUTH] subs user profile picture", err);
+              }
+            }
+
             // create user in db
             dbUser = await prisma.user.create({
               data: {
@@ -106,8 +165,17 @@ export const authOptions: NextAuthOptions = {
                 lastName: userProfile.lastName,
                 emailVerified: userProfile.emailVerified,
                 status: userProfile.status || "Active",
-                // image: userProfile.picture as string,
+                ...(userPhoto
+                  ? { image: { connect: { id: userPhoto.id } } }
+                  : undefined),
                 role: "USER",
+              },
+              include: {
+                image: {
+                  select: {
+                    src: true,
+                  },
+                },
               },
             });
 

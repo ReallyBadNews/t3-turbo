@@ -171,8 +171,10 @@ export default function Example() {
       // Get the data from the queryCache
       const prevData = utils.pin.all.getData();
 
-      // find the pin and increment the likes by one
-      // Then optimistically update the data with the new like
+      /**
+       * find the pin and increment the likes by one
+       * Then optimistically update the data with the new like
+       */
       utils.pin.all.setData(undefined, (old) => {
         return old?.map((pin) => {
           if (pin.id === id) {

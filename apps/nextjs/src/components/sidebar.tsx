@@ -79,11 +79,6 @@ export function Sidebar({
   const submitHandler: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
 
-    if (!fileInfo) {
-      alert("You must upload a photo.");
-      return;
-    }
-
     if (!session) {
       alert("You must be logged in to create a pin.");
       return;
@@ -97,12 +92,14 @@ export function Sidebar({
 
     // const file = URL.createObjectURL(fileInfo);
     // convert `fileInfo` to a base64 string
-    const file = await new Promise<string>((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(fileInfo);
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = (error) => reject(error);
-    });
+    const file = fileInfo
+      ? await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(fileInfo);
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = (error) => reject(error);
+        })
+      : undefined;
 
     console.log("[formData]", {
       file,
