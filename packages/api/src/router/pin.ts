@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { v2 as cloudinary } from "cloudinary";
 import { getPlaiceholder } from "plaiceholder";
 import { z } from "zod";
@@ -193,6 +194,30 @@ export const pinRouter = router({
   delete: protectedProcedure
     .input(z.string().cuid())
     .mutation(async ({ ctx, input }) => {
+      /**
+       * Delete the pin if the user is the owner of the pin
+       * then delete the image from cloudinary
+       */
+      const pin = await ctx.prisma.pin.findUnique({
+        where: {
+          id: input,
+        },
+        include: {
+          image: true,
+        },
+      });
+
+      if (pin?.userId !== ctx.session.user.id) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You are not authorized to delete this pin",
+        });
+      }
+
+      if (pin?.image?.publicId) {
+        await cloudinary.uploader.destroy(pin.image.publicId);
+      }
+
       return ctx.prisma.pin.delete({
         where: {
           id: input,

@@ -209,6 +209,7 @@ export const authOptions: NextAuthOptions = {
           accessToken: user.accessToken,
           refreshToken: user.refreshToken,
           id: user.id,
+          name: user.displayName,
         };
       }
 
@@ -220,6 +221,7 @@ export const authOptions: NextAuthOptions = {
       session.user.refreshToken = token.refreshToken;
       session.user.accessTokenExpires = token.accessTokenExpires;
       session.user.id = token.id;
+      session.user.name = token.name;
 
       return session;
     },

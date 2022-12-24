@@ -34,6 +34,7 @@ import {
   PlusIcon,
   ShareIcon,
   StarIcon,
+  TrashIcon,
 } from "@heroicons/react/20/solid";
 import {
   ArrowTrendingUpIcon,
@@ -155,6 +156,14 @@ function classNames(...classes: string[]) {
 export default function Example() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pins = trpc.pin.all.useQuery();
+  const pinsQuery = trpc.pin.infinite.useInfiniteQuery(
+    { limit: 5 },
+    {
+      getPreviousPageParam(lastPage) {
+        return lastPage.nextCursor;
+      },
+    }
+  );
   const communities = trpc.community.all.useQuery();
   const { data: session } = trpc.auth.getSession.useQuery();
   const utils = trpc.useContext();
@@ -198,9 +207,12 @@ export default function Example() {
     },
   });
 
-  const likeHandler = (id: string) => {
-    likePin.mutate(id);
-  };
+  const deletePin = trpc.pin.delete.useMutation({
+    async onSettled() {
+      // Sync with server once mutation has settled
+      await utils.pin.all.invalidate();
+    },
+  });
 
   return (
     <>
@@ -303,7 +315,7 @@ export default function Example() {
                             <img
                               className="h-8 w-8 rounded-full"
                               src={session?.user.image?.src}
-                              alt=""
+                              alt={`Avatar of ${session?.user.name || "user"}}`}
                             />
                           </Menu.Button>
                         </div>
@@ -394,63 +406,88 @@ export default function Example() {
                     </a>
                   ))}
                 </div>
-                <div className="border-t border-gray-200 pt-4">
-                  <div className="mx-auto flex max-w-3xl items-center px-4 sm:px-6">
-                    <div className="flex-shrink-0">
-                      <img
-                        className="h-10 w-10 rounded-full"
-                        src={user.imageUrl}
-                        alt=""
-                      />
-                    </div>
-                    <div className="ml-3">
-                      <div className="text-base font-medium text-gray-800">
-                        {user.name}
+                {session?.user ? (
+                  <>
+                    <div className="border-t border-gray-200 pt-4">
+                      <div className="mx-auto flex max-w-3xl items-center px-4 sm:px-6">
+                        <div className="flex-shrink-0">
+                          <img
+                            className="h-10 w-10 rounded-full"
+                            src={session?.user.image?.src}
+                            alt={`Avatar of ${session?.user.name || "user"}}`}
+                          />
+                        </div>
+                        <div className="ml-3">
+                          <div className="text-base font-medium text-gray-800">
+                            {session?.user.name}
+                          </div>
+                          <div className="text-sm font-medium text-gray-500">
+                            {session?.user.email}
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          className="ml-auto flex-shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2"
+                        >
+                          <span className="sr-only">View notifications</span>
+                          <BellIcon className="h-6 w-6" aria-hidden="true" />
+                        </button>
                       </div>
-                      <div className="text-sm font-medium text-gray-500">
-                        {user.email}
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      className="ml-auto flex-shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2"
-                    >
-                      <span className="sr-only">View notifications</span>
-                      <BellIcon className="h-6 w-6" aria-hidden="true" />
-                    </button>
-                  </div>
-                  <div className="mx-auto mt-3 max-w-3xl space-y-1 px-2 sm:px-4">
-                    {userNavigation.map((item) => (
-                      <a
-                        key={item.name}
-                        href={item.href}
-                        className="block rounded-md py-2 px-3 text-base font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-900"
-                      >
-                        {item.name}
-                      </a>
-                    ))}
-                  </div>
-                </div>
+                      <div className="mx-auto mt-3 max-w-3xl space-y-1 px-2 sm:px-4">
+                        {userNavigation.map((item) => {
+                          if (item.onClick) {
+                            return (
+                              <button
+                                key={item.name}
+                                onClick={() => item.onClick()}
+                                className="block w-full rounded-md py-2 px-3 text-left text-base font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-900"
+                              >
+                                {item.name}
+                              </button>
+                            );
+                          }
 
-                <div className="mx-auto mt-6 max-w-3xl px-4 sm:px-6">
-                  {session?.user ? (
+                          return (
+                            <a
+                              key={item.name}
+                              href={item.href}
+                              className="block rounded-md py-2 px-3 text-base font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-900"
+                            >
+                              {item.name}
+                            </a>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    <div className="mx-auto mt-6 max-w-3xl px-4 sm:px-6">
+                      <button
+                        onClick={() => setSidebarOpen(true)}
+                        className="flex w-full items-center justify-center rounded-md border border-transparent bg-rose-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-rose-700"
+                      >
+                        New Post
+                      </button>
+
+                      <div className="mt-6 flex justify-center">
+                        <a
+                          href="#"
+                          className="text-base font-medium text-gray-900 hover:underline"
+                        >
+                          Go Premium
+                        </a>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="mx-auto mt-6 max-w-3xl px-4 sm:px-6">
                     <button
-                      onClick={() => setSidebarOpen(true)}
+                      onClick={() => signIn()}
                       className="flex w-full items-center justify-center rounded-md border border-transparent bg-rose-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-rose-700"
                     >
-                      New Post
+                      Sign in
                     </button>
-                  ) : null}
-
-                  <div className="mt-6 flex justify-center">
-                    <a
-                      href="#"
-                      className="text-base font-medium text-gray-900 hover:underline"
-                    >
-                      Go Premium
-                    </a>
                   </div>
-                </div>
+                )}
               </Popover.Panel>
             </>
           )}
@@ -689,6 +726,30 @@ export default function Example() {
                                           </a>
                                         )}
                                       </Menu.Item>
+                                      {/* only show delete option on user's pins */}
+                                      {session?.user.id === pin.user?.id ? (
+                                        <Menu.Item>
+                                          {({ active }) => (
+                                            <button
+                                              onClick={() =>
+                                                deletePin.mutate(pin.id)
+                                              }
+                                              className={classNames(
+                                                active
+                                                  ? "bg-gray-100 text-gray-900"
+                                                  : "text-gray-700",
+                                                "flex w-full px-4 py-2 text-sm"
+                                              )}
+                                            >
+                                              <TrashIcon
+                                                className="mr-3 h-5 w-5 text-gray-400"
+                                                aria-hidden="true"
+                                              />
+                                              <span>Delete</span>
+                                            </button>
+                                          )}
+                                        </Menu.Item>
+                                      ) : null}
                                     </div>
                                   </Menu.Items>
                                 </Transition>
@@ -713,7 +774,7 @@ export default function Example() {
                                 <HandThumbUpIcon
                                   className="h-5 w-5"
                                   aria-hidden="true"
-                                  onClick={() => likeHandler(pin.id)}
+                                  onClick={() => likePin.mutate(pin.id)}
                                 />
                                 <span className="font-medium text-gray-900">
                                   {pin._count.likedBy}

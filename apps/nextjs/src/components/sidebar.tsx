@@ -108,7 +108,7 @@ export function Sidebar({
       community: commmunityId,
     });
 
-    create.mutate({
+    await create.mutateAsync({
       description,
       userId: session?.user.id,
       imgSrc: file,
