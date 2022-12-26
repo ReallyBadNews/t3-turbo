@@ -16,6 +16,7 @@ module.exports = {
   ],
   rules: {
     "prettier/prettier": "error",
+    // "arrow-body-style": ["error", "always"],
     "@typescript-eslint/consistent-type-imports": "warn",
     "no-console": ["warn", { allow: ["warn", "error"] }],
     "react/jsx-one-expression-per-line": ["error", { allow: "single-child" }],
