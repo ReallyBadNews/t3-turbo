@@ -50,33 +50,18 @@ import { trpc } from "../utils/trpc";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Sidebar } from "../components/sidebar";
 
-const user = {
-  name: "Chelsea Hagon",
-  email: "chelsea.hagon@example.com",
-  imageUrl:
-    "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-};
 const navigation = [
   { name: "Home", href: "#", icon: HomeIcon, current: true },
   { name: "Popular", href: "#", icon: FireIcon, current: false },
   { name: "Communities", href: "#", icon: UserGroupIcon, current: false },
   { name: "Trending", href: "#", icon: ArrowTrendingUpIcon, current: false },
+  { name: "Favorites", href: "#", icon: StarIcon, current: false },
 ];
 const userNavigation = [
   { name: "Your Profile", href: "#" },
   { name: "Settings", href: "#" },
   { name: "Sign out", onClick: signOut },
 ];
-// const communities = [
-//   { name: "Movies", href: "#" },
-//   { name: "Food", href: "#" },
-//   { name: "Sports", href: "#" },
-//   { name: "Animals", href: "#" },
-//   { name: "Science", href: "#" },
-//   { name: "Dinosaurs", href: "#" },
-//   { name: "Talents", href: "#" },
-//   { name: "Gaming", href: "#" },
-// ];
 const tabs = [
   { name: "Recent", href: "#", current: true },
   { name: "Map", href: "#", current: false },
@@ -165,6 +150,7 @@ export default function Example() {
     }
   );
   const communities = trpc.community.all.useQuery();
+
   const { data: session } = trpc.auth.getSession.useQuery();
   const utils = trpc.useContext();
 
@@ -183,8 +169,29 @@ export default function Example() {
       /**
        * find the pin and increment the likes by one
        * Then optimistically update the data with the new like
+       * If the pin is already liked, subtract one from the likes
        */
       utils.pin.all.setData(undefined, (old) => {
+        // if the user has already liked the pin, subtract one from the likes
+        if (
+          old
+            ?.find((pin) => pin.id === id)
+            ?.likedBy.find((user) => user.id === session?.user.id)
+        ) {
+          return old?.map((pin) => {
+            if (pin.id === id) {
+              return {
+                ...pin,
+                _count: {
+                  likedBy: pin._count.likedBy - 1,
+                },
+              };
+            }
+
+            return pin;
+          });
+        }
+
         return old?.map((pin) => {
           if (pin.id === id) {
             return {
@@ -194,6 +201,7 @@ export default function Example() {
               },
             };
           }
+
           return pin;
         });
       });
@@ -537,15 +545,23 @@ export default function Example() {
                     className="mt-3 space-y-2"
                     aria-labelledby="communities-headline"
                   >
-                    {communities.data?.map((community) => (
-                      <a
-                        key={community.name}
-                        href={community.slug}
-                        className="group flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900"
-                      >
-                        <span className="truncate">{community.name}</span>
-                      </a>
-                    ))}
+                    <a
+                      href="/communities/all"
+                      className="group flex items-center rounded-md bg-gray-200 px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50 hover:text-gray-900"
+                    >
+                      <span className="truncate">All</span>
+                    </a>
+                    {communities.data?.map((community) => {
+                      return (
+                        <a
+                          key={community.name}
+                          href={community.slug}
+                          className="group flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                        >
+                          <span className="truncate">{community.name}</span>
+                        </a>
+                      );
+                    })}
                   </div>
                 </div>
               </nav>

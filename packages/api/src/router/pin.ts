@@ -89,6 +89,11 @@ export const pinRouter = router({
         },
         views: true,
         status: true,
+        likedBy: {
+          select: {
+            id: true,
+          },
+        },
       },
       orderBy: {
         createdAt: "desc",
@@ -227,6 +232,45 @@ export const pinRouter = router({
   like: protectedProcedure
     .input(z.string().cuid())
     .mutation(async ({ ctx, input }) => {
+      /**
+       * Like the pin if the user hasn't already liked it
+       * if the user has liked it already, remove the like
+       */
+      const pin = await ctx.prisma.pin.findUnique({
+        where: {
+          id: input,
+        },
+        include: {
+          likedBy: {
+            select: {
+              id: true,
+            },
+          },
+        },
+      });
+
+      if (pin?.likedBy?.some((user) => user.id === ctx.session.user.id)) {
+        return ctx.prisma.pin.update({
+          where: {
+            id: input,
+          },
+          data: {
+            likedBy: {
+              disconnect: {
+                id: ctx.session.user.id,
+              },
+            },
+          },
+          include: {
+            likedBy: {
+              select: {
+                id: true,
+              },
+            },
+          },
+        });
+      }
+
       return ctx.prisma.pin.update({
         where: {
           id: input,
