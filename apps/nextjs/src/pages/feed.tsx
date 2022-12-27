@@ -21,7 +21,6 @@
   }
   ```
 */
-import { Fragment, useState } from "react";
 import { Menu, Popover, Transition } from "@headlessui/react";
 import {
   ChatBubbleLeftEllipsisIcon,
@@ -45,10 +44,12 @@ import {
   UserGroupIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { signIn, signOut } from "next-auth/react";
-import { trpc } from "../utils/trpc";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { cx } from "class-variance-authority";
+import { signIn, signOut } from "next-auth/react";
+import { Fragment, useState } from "react";
 import { Sidebar } from "../components/sidebar";
+import { trpc } from "../utils/trpc";
 
 const navigation = [
   { name: "Home", href: "#", icon: HomeIcon, current: true },
@@ -133,10 +134,6 @@ const trendingPosts = [
   },
   // More posts...
 ];
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
 
 export default function Example() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -237,7 +234,7 @@ export default function Example() {
         <Popover
           as="header"
           className={({ open }) =>
-            classNames(
+            cx(
               open ? "fixed inset-0 z-40 overflow-y-auto" : "",
               "bg-white shadow-sm lg:static lg:overflow-y-visible"
             )
@@ -344,7 +341,7 @@ export default function Example() {
                                     return (
                                       <button
                                         onClick={() => item.onClick()}
-                                        className={classNames(
+                                        className={cx(
                                           active ? "bg-gray-100" : "",
                                           "block w-full py-2 px-4 text-left text-sm text-gray-700"
                                         )}
@@ -356,7 +353,7 @@ export default function Example() {
                                   return (
                                     <a
                                       href={item.href}
-                                      className={classNames(
+                                      className={cx(
                                         active ? "bg-gray-100" : "",
                                         "block py-2 px-4 text-sm text-gray-700"
                                       )}
@@ -403,7 +400,7 @@ export default function Example() {
                       key={item.name}
                       href={item.href}
                       aria-current={item.current ? "page" : undefined}
-                      className={classNames(
+                      className={cx(
                         item.current
                           ? "bg-gray-100 text-gray-900"
                           : "hover:bg-gray-50",
@@ -513,7 +510,7 @@ export default function Example() {
                     <a
                       key={item.name}
                       href={item.href}
-                      className={classNames(
+                      className={cx(
                         item.current
                           ? "bg-gray-200 text-gray-900"
                           : "text-gray-700 hover:bg-gray-50",
@@ -522,7 +519,7 @@ export default function Example() {
                       aria-current={item.current ? "page" : undefined}
                     >
                       <item.icon
-                        className={classNames(
+                        className={cx(
                           item.current
                             ? "text-gray-500"
                             : "text-gray-400 group-hover:text-gray-500",
@@ -575,7 +572,7 @@ export default function Example() {
                   <select
                     id="question-tabs"
                     className="block w-full rounded-md border-gray-300 text-base font-medium text-gray-900 shadow-sm focus:border-rose-500 focus:ring-rose-500"
-                    defaultValue={tabs.find((tab) => tab.current).name}
+                    defaultValue={tabs.find((tab) => tab.current)?.name}
                   >
                     {tabs.map((tab) => (
                       <option key={tab.name}>{tab.name}</option>
@@ -592,7 +589,7 @@ export default function Example() {
                         key={tab.name}
                         href={tab.href}
                         aria-current={tab.current ? "page" : undefined}
-                        className={classNames(
+                        className={cx(
                           tab.current
                             ? "text-gray-900"
                             : "text-gray-500 hover:text-gray-700",
@@ -604,7 +601,7 @@ export default function Example() {
                         <span>{tab.name}</span>
                         <span
                           aria-hidden="true"
-                          className={classNames(
+                          className={cx(
                             tab.current ? "bg-rose-500" : "bg-transparent",
                             "absolute inset-x-0 bottom-0 h-0.5"
                           )}
@@ -623,12 +620,14 @@ export default function Example() {
                       className="bg-white px-4 py-6 shadow sm:rounded-lg sm:p-6"
                     >
                       <article aria-labelledby={`question-title-${pin.id}`}>
-                        <img
-                          src={pin.image?.src}
-                          alt=""
-                          className="rounded-md"
-                        />
-                        <div className="mt-5">
+                        {pin.image ? (
+                          <img
+                            src={pin.image.src}
+                            alt=""
+                            className="rounded-md"
+                          />
+                        ) : null}
+                        <div className={cx(pin.image ? "mt-5" : null)}>
                           <div className="flex space-x-3">
                             <div className="flex-shrink-0">
                               <img
@@ -687,13 +686,12 @@ export default function Example() {
                                     <div className="py-1">
                                       <Menu.Item>
                                         {({ active }) => (
-                                          <a
-                                            href="#"
-                                            className={classNames(
+                                          <button
+                                            className={cx(
                                               active
                                                 ? "bg-gray-100 text-gray-900"
                                                 : "text-gray-700",
-                                              "flex px-4 py-2 text-sm"
+                                              "flex w-full px-4 py-2 text-sm"
                                             )}
                                           >
                                             <StarIcon
@@ -701,14 +699,14 @@ export default function Example() {
                                               aria-hidden="true"
                                             />
                                             <span>Add to favorites</span>
-                                          </a>
+                                          </button>
                                         )}
                                       </Menu.Item>
                                       <Menu.Item>
                                         {({ active }) => (
                                           <a
                                             href="#"
-                                            className={classNames(
+                                            className={cx(
                                               active
                                                 ? "bg-gray-100 text-gray-900"
                                                 : "text-gray-700",
@@ -727,7 +725,7 @@ export default function Example() {
                                         {({ active }) => (
                                           <a
                                             href="#"
-                                            className={classNames(
+                                            className={cx(
                                               active
                                                 ? "bg-gray-100 text-gray-900"
                                                 : "text-gray-700",
@@ -750,7 +748,7 @@ export default function Example() {
                                               onClick={() =>
                                                 deletePin.mutate(pin.id)
                                               }
-                                              className={classNames(
+                                              className={cx(
                                                 active
                                                   ? "bg-gray-100 text-gray-900"
                                                   : "text-gray-700",
@@ -783,14 +781,15 @@ export default function Example() {
                         <div className="mt-6 flex justify-between space-x-8">
                           <div className="flex space-x-6">
                             <span className="inline-flex items-center text-sm">
+                              {/* TODO: apply a background to the button if a pin is already liked */}
                               <button
                                 type="button"
                                 className="inline-flex space-x-2 text-gray-400 hover:text-gray-500"
+                                onClick={() => likePin.mutate(pin.id)}
                               >
                                 <HandThumbUpIcon
                                   className="h-5 w-5"
                                   aria-hidden="true"
-                                  onClick={() => likePin.mutate(pin.id)}
                                 />
                                 <span className="font-medium text-gray-900">
                                   {pin._count.likedBy}
