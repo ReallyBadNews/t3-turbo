@@ -31,9 +31,9 @@ model Pin {
   communityId        String?
   community          Community? @relation(fields: [communityId], references: [id])
   userId             String?
-  user               User?      @relation(fields: [userId], references: [id])
+  user               User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
   imageId            String?    @unique
-  image              Image?     @relation(fields: [imageId], references: [id])
+  image              Image?     @relation(fields: [imageId], references: [id], onDelete: Cascade)
   comments           Comment[]
   likedBy            User[]     @relation("LikedBy")
 

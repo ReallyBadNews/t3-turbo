@@ -221,6 +221,12 @@ export const pinRouter = router({
 
       if (pin?.image?.publicId) {
         await cloudinary.uploader.destroy(pin.image.publicId);
+
+        await ctx.prisma.image.delete({
+          where: {
+            id: pin.image.id,
+          },
+        });
       }
 
       return ctx.prisma.pin.delete({
