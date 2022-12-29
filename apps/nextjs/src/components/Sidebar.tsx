@@ -87,10 +87,10 @@ export function Sidebar({
     const formData = new FormData(event.currentTarget);
     const description = formData.get("description") as string;
     const communityName = formData.get("community") as string;
-    const commmunityId = communities?.find((c) => c.name === communityName)
-      ?.id as string;
+    const commmunityId = communities?.find(
+      (community) => community.name === communityName
+    )?.id as string;
 
-    // const file = URL.createObjectURL(fileInfo);
     // convert `fileInfo` to a base64 string
     const file = fileInfo
       ? await new Promise<string>((resolve, reject) => {
@@ -100,13 +100,6 @@ export function Sidebar({
           reader.onerror = (error) => reject(error);
         })
       : undefined;
-
-    console.log("[formData]", {
-      file,
-      description,
-      communityName,
-      community: commmunityId,
-    });
 
     await create.mutateAsync({
       description,
