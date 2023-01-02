@@ -21,7 +21,7 @@
   }
   ```
 */
-import { Menu, Popover, Transition } from "@headlessui/react";
+import { Menu, Transition } from "@headlessui/react";
 import {
   ChatBubbleLeftEllipsisIcon,
   CodeBracketIcon,
@@ -29,7 +29,6 @@ import {
   EyeIcon,
   FlagIcon,
   HandThumbUpIcon,
-  MagnifyingGlassIcon,
   PlusIcon,
   ShareIcon,
   StarIcon,
@@ -37,20 +36,12 @@ import {
 } from "@heroicons/react/20/solid";
 import {
   ArrowTrendingUpIcon,
-  Bars3Icon,
-  BellIcon,
   FireIcon,
   HomeIcon,
   UserGroupIcon,
-  XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { cx } from "class-variance-authority";
-import { signIn, signOut } from "next-auth/react";
-import Link from "next/link";
-import { Fragment, useState } from "react";
-import { Layout } from "../components/Layout";
-import { Sidebar } from "../components/Sidebar";
+import { Fragment } from "react";
 import { trpc } from "../utils/trpc";
 
 const navigation = [
@@ -59,11 +50,6 @@ const navigation = [
   { name: "Communities", href: "#", icon: UserGroupIcon, current: false },
   { name: "Trending", href: "#", icon: ArrowTrendingUpIcon, current: false },
   { name: "Favorites", href: "#", icon: StarIcon, current: false },
-];
-const userNavigation = [
-  { name: "Your Profile", href: "/profile" },
-  { name: "Settings", href: "/settings" },
-  { name: "Sign out", onClick: signOut },
 ];
 const tabs = [
   { name: "Recent", href: "#", current: true },
@@ -95,7 +81,6 @@ const trendingPosts = [
 ];
 
 export default function Example() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const pins = trpc.pin.all.useQuery();
   const pinsQuery = trpc.pin.infinite.useInfiniteQuery(
     { limit: 5 },
