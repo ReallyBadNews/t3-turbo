@@ -7,7 +7,7 @@
     "build": "next build",
     "clean": "rm -rf .next .turbo node_modules",
     "start": "next start",
-    "lint": "TIMING=1 next lint",
+    "lint": "SKIP_ENV_VALIDATION=1 TIMING=1 next lint",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
