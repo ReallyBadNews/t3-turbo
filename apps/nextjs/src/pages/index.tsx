@@ -42,6 +42,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { cx } from "class-variance-authority";
 import { Fragment } from "react";
+import { Image } from "../components/Image";
 import { trpc } from "../utils/trpc";
 
 const navigation = [
@@ -294,15 +295,27 @@ export default function Example() {
               >
                 <article aria-labelledby={`question-title-${pin.id}`}>
                   {pin.image ? (
-                    <img src={pin.image.src} alt="" className="rounded-md" />
+                    <Image
+                      src={pin.image.publicId}
+                      width={pin.image.width}
+                      height={pin.image.height}
+                      blurDataURL={pin.image.blurDataURL}
+                      placeholder="blur"
+                      alt=""
+                      className="rounded-md"
+                    />
                   ) : null}
                   <div className={cx(pin.image ? "mt-5" : null)}>
                     <div className="flex space-x-3">
                       <div className="flex-shrink-0">
-                        <img
+                        <Image
                           className="h-10 w-10 rounded-full"
-                          src={pin.user?.image?.src}
+                          src={pin.user?.image?.publicId}
+                          width={40}
+                          height={40}
+                          blurDataURL={pin.user?.image?.blurDataURL}
                           alt=""
+                          placeholder="blur"
                         />
                       </div>
                       <div className="min-w-0 flex-1">
