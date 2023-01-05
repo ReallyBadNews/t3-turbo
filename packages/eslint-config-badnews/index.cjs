@@ -1,6 +1,6 @@
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
-  plugins: ["@typescript-eslint", "jsx-a11y", "prettier"],
+  plugins: ["@typescript-eslint", "jsx-a11y"],
   extends: [
     "turbo",
     "eslint:recommended",
@@ -12,10 +12,9 @@ module.exports = {
     "plugin:jsx-a11y/recommended",
     "plugin:import/recommended",
     "plugin:import/typescript",
-    "plugin:prettier/recommended",
+    "prettier",
   ],
   rules: {
-    "prettier/prettier": "error",
     // "arrow-body-style": ["error", "always"],
     "@typescript-eslint/consistent-type-imports": "warn",
     "no-console": ["warn", { allow: ["warn", "error"] }],

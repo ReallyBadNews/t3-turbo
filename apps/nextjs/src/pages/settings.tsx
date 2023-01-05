@@ -3,10 +3,9 @@ import {
   KeyIcon,
   SquaresPlusIcon,
   UserCircleIcon,
-  UserGroupIcon,
+  UserGroupIcon
 } from "@heroicons/react/24/outline";
 import { cx } from "class-variance-authority";
-import { Layout } from "../components/Layout";
 
 const navigation = [
   { name: "Account", href: "#", icon: UserCircleIcon, current: true },

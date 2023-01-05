@@ -142,19 +142,19 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                     </Popover.Button>
                   </div>
                   <div className="hidden lg:flex lg:items-center lg:justify-end xl:col-span-4">
-                    <a
+                    <Link
                       href="#"
                       className="text-sm font-medium text-gray-900 hover:underline"
                     >
                       Go Premium
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                       href="#"
                       className="ml-5 flex-shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2"
                     >
                       <span className="sr-only">View notifications</span>
                       <BellIcon className="h-6 w-6" aria-hidden="true" />
-                    </a>
+                    </Link>
 
                     {/* Profile dropdown */}
                     {session?.user ? (
@@ -319,12 +319,12 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                       </button>
 
                       <div className="mt-6 flex justify-center">
-                        <a
+                        <Link
                           href="#"
                           className="text-base font-medium text-gray-900 hover:underline"
                         >
                           Go Premium
-                        </a>
+                        </Link>
                       </div>
                     </div>
                   </>

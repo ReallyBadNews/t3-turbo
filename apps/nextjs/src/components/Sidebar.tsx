@@ -28,13 +28,13 @@ import {
   QuestionMarkCircleIcon,
 } from "@heroicons/react/20/solid";
 import { trpc } from "../utils/trpc";
-import type { AppRouter } from "@badnews/api";
-import type { inferProcedureOutput } from "@trpc/server";
+// import type { AppRouter } from "@badnews/api";
+// import type { inferProcedureOutput } from "@trpc/server";
 import { cx } from "class-variance-authority";
 import { Combobox } from "./Combobox";
 import type { Community } from "@badnews/db";
 
-type AllPinsOutput = inferProcedureOutput<AppRouter["pin"]["all"]>[number];
+// type AllPinsOutput = inferProcedureOutput<AppRouter["pin"]["all"]>[number];
 
 export function Sidebar({
   communities,
