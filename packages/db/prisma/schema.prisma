@@ -73,7 +73,7 @@ model Image {
   width       Int
   type        String?  @db.VarChar(128)
   // public_id value from Cloudinary
-  publicId    String?  @unique @db.VarChar(512)
+  publicId    String   @unique @db.VarChar(512)
   // secure_url value from Cloudinary
   src         String   @unique @db.VarChar(512)
   // original source of the image
