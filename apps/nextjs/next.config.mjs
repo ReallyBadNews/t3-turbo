@@ -11,19 +11,16 @@ import { withPlaiceholder } from "@plaiceholder/next";
 const config = {
   reactStrictMode: true,
   swcMinify: true,
-  experimental: {
-    // Enables hot-reload and easy integration for local packages
-    transpilePackages: [
-      "@badnews/api",
-      "@badnews/auth",
-      "@badnews/db",
-      "@badnews/utils",
-    ],
-  },
-  // We already do linting on GH actions
-  eslint: {
-    ignoreDuringBuilds: !!process.env.CI,
-  },
+  /** Enables hot reloading for local packages without a build step */
+  transpilePackages: [
+    "@badnews/api",
+    "@badnews/auth",
+    "@badnews/db",
+    "@badnews/utils",
+  ],
+  /** We already do linting and typechecking as separate tasks in CI */
+  eslint: { ignoreDuringBuilds: !!process.env.CI },
+  typescript: { ignoreBuildErrors: !!process.env.CI },
 };
 
 export default withPlaiceholder(config);
