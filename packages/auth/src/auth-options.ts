@@ -65,6 +65,7 @@ export const authOptions: NextAuthOptions = {
               image: {
                 select: {
                   src: true,
+                  publicId: true,
                 },
               },
             },
@@ -174,6 +175,7 @@ export const authOptions: NextAuthOptions = {
                 image: {
                   select: {
                     src: true,
+                    publicId: true,
                   },
                 },
               },

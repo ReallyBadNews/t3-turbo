@@ -22,7 +22,11 @@
   ```
 */
 import { Menu, Popover, Transition } from "@headlessui/react";
-import { MagnifyingGlassIcon, StarIcon } from "@heroicons/react/20/solid";
+import {
+  MagnifyingGlassIcon,
+  StarIcon,
+  UserIcon,
+} from "@heroicons/react/20/solid";
 import {
   ArrowTrendingUpIcon,
   Bars3Icon,
@@ -40,6 +44,7 @@ import type { FC, ReactNode } from "react";
 import { Fragment, useState } from "react";
 import { Sidebar } from "../components/Sidebar";
 import { trpc } from "../utils/trpc";
+import { Image } from "../components/Image";
 
 const navigation = [
   { name: "Home", href: "#", icon: HomeIcon, current: true },
@@ -162,11 +167,22 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                         <div>
                           <Menu.Button className="flex rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2">
                             <span className="sr-only">Open user menu</span>
-                            <img
-                              className="h-8 w-8 rounded-full"
-                              src={session?.user.image?.src}
-                              alt={`Avatar of ${session?.user.name || "user"}}`}
-                            />
+                            {session.user.image?.publicId ? (
+                              <Image
+                                className="h-8 w-8 rounded-full"
+                                src={session.user.image.publicId}
+                                width={32}
+                                height={32}
+                                alt={`Avatar of ${
+                                  session?.user.name || "user"
+                                }}`}
+                              />
+                            ) : (
+                              <UserIcon
+                                className="h-8 w-8 rounded-full"
+                                aria-hidden="true"
+                              />
+                            )}
                           </Menu.Button>
                         </div>
                         <Transition
@@ -261,11 +277,20 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                     <div className="border-t border-gray-200 pt-4">
                       <div className="mx-auto flex max-w-3xl items-center px-4 sm:px-6">
                         <div className="flex-shrink-0">
-                          <img
-                            className="h-10 w-10 rounded-full"
-                            src={session?.user.image?.src}
-                            alt={`Avatar of ${session?.user.name || "user"}}`}
-                          />
+                          {session.user.image?.publicId ? (
+                            <Image
+                              className="h-10 w-10 rounded-full"
+                              src={session?.user.image.publicId}
+                              height={40}
+                              width={40}
+                              alt={`Avatar of ${session?.user.name || "user"}}`}
+                            />
+                          ) : (
+                            <UserIcon
+                              className="h-10 w-10 rounded-full"
+                              aria-hidden="true"
+                            />
+                          )}
                         </div>
                         <div className="ml-3">
                           <div className="text-base font-medium text-gray-800">
