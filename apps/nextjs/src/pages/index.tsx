@@ -41,7 +41,8 @@ import {
   UserGroupIcon,
 } from "@heroicons/react/24/outline";
 import { cx } from "class-variance-authority";
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
+import { useInView } from "react-intersection-observer";
 import { Image } from "../components/Image";
 import { trpc } from "../utils/trpc";
 
@@ -81,15 +82,20 @@ const trendingPosts = [
   // More posts...
 ];
 
-export default function Example() {
-  const pins = trpc.pin.all.useQuery();
-  const pinsQuery = trpc.pin.infinite.useInfiniteQuery(
-    { limit: 5 },
-    {
-      getPreviousPageParam(lastPage) {
-        return lastPage.nextCursor;
-      },
-    }
+export default function PinsHomepage() {
+  const { ref, inView } = useInView();
+
+  const {
+    data,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    status,
+  } = trpc.pin.infinite.useInfiniteQuery(
+    { limit: 10 },
+    { getNextPageParam: (lastPage) => lastPage.nextCursor }
   );
   const communities = trpc.community.all.useQuery();
 
@@ -163,6 +169,17 @@ export default function Example() {
       await utils.pin.all.invalidate();
     },
   });
+
+  useEffect(() => {
+    const fetchPage = async () => {
+      await fetchNextPage();
+    };
+    if (inView) {
+      fetchPage().catch((err) => {
+        console.error(err);
+      });
+    }
+  }, [fetchNextPage, inView]);
 
   return (
     <>
@@ -288,236 +305,282 @@ export default function Example() {
         <div className="mt-4">
           <h1 className="sr-only">Recent questions</h1>
           <ul className="space-y-4">
-            {pins.data?.map((pin) => (
-              <li
-                key={pin.id}
-                className="bg-white px-4 py-6 shadow sm:rounded-lg sm:p-6"
-              >
-                <article aria-labelledby={`question-title-${pin.id}`}>
-                  {pin.image ? (
-                    <Image
-                      src={pin.image.publicId}
-                      width={pin.image.width}
-                      height={pin.image.height}
-                      blurDataURL={pin.image.blurDataURL}
-                      placeholder="blur"
-                      alt=""
-                      className="rounded-md"
-                    />
-                  ) : null}
-                  <div className={cx(pin.image ? "mt-5" : null)}>
-                    <div className="flex space-x-3">
-                      <div className="flex-shrink-0">
-                        <Image
-                          className="h-10 w-10 rounded-full"
-                          src={pin.user?.image?.publicId}
-                          width={40}
-                          height={40}
-                          blurDataURL={pin.user?.image?.blurDataURL}
-                          alt=""
-                          placeholder="blur"
-                        />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-sm font-medium text-gray-900">
-                          <a
-                            // TODO: Fix this
-                            href={pin.user?.href || "#"}
-                            className="hover:underline"
-                          >
-                            {pin.user?.displayName}
-                          </a>
-                        </p>
-                        <p className="text-sm text-gray-500">
-                          <a href={pin.href} className="hover:underline">
-                            <time dateTime={pin.createdAt.toLocaleDateString()}>
-                              {pin.createdAt.toLocaleDateString()}
-                            </time>
-                          </a>
-                        </p>
-                      </div>
-                      <div className="flex flex-shrink-0 self-center">
-                        <Menu
-                          as="div"
-                          className="relative inline-block text-left"
-                        >
-                          <div>
-                            <Menu.Button className="-m-2 flex items-center rounded-full p-2 text-gray-400 hover:text-gray-600">
-                              <span className="sr-only">Open options</span>
-                              <EllipsisVerticalIcon
-                                className="h-5 w-5"
-                                aria-hidden="true"
-                              />
-                            </Menu.Button>
-                          </div>
-
-                          <Transition
-                            as={Fragment}
-                            enter="transition ease-out duration-100"
-                            enterFrom="transform opacity-0 scale-95"
-                            enterTo="transform opacity-100 scale-100"
-                            leave="transition ease-in duration-75"
-                            leaveFrom="transform opacity-100 scale-100"
-                            leaveTo="transform opacity-0 scale-95"
-                          >
-                            <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                              <div className="py-1">
-                                <Menu.Item>
-                                  {({ active }) => (
-                                    <button
-                                      className={cx(
-                                        active
-                                          ? "bg-gray-100 text-gray-900"
-                                          : "text-gray-700",
-                                        "flex w-full px-4 py-2 text-sm"
-                                      )}
-                                    >
-                                      <StarIcon
-                                        className="mr-3 h-5 w-5 text-gray-400"
-                                        aria-hidden="true"
-                                      />
-                                      <span>Add to favorites</span>
-                                    </button>
-                                  )}
-                                </Menu.Item>
-                                <Menu.Item>
-                                  {({ active }) => (
-                                    <a
-                                      href="#"
-                                      className={cx(
-                                        active
-                                          ? "bg-gray-100 text-gray-900"
-                                          : "text-gray-700",
-                                        "flex px-4 py-2 text-sm"
-                                      )}
-                                    >
-                                      <CodeBracketIcon
-                                        className="mr-3 h-5 w-5 text-gray-400"
-                                        aria-hidden="true"
-                                      />
-                                      <span>Embed</span>
-                                    </a>
-                                  )}
-                                </Menu.Item>
-                                <Menu.Item>
-                                  {({ active }) => (
-                                    <a
-                                      href="#"
-                                      className={cx(
-                                        active
-                                          ? "bg-gray-100 text-gray-900"
-                                          : "text-gray-700",
-                                        "flex px-4 py-2 text-sm"
-                                      )}
-                                    >
-                                      <FlagIcon
-                                        className="mr-3 h-5 w-5 text-gray-400"
-                                        aria-hidden="true"
-                                      />
-                                      <span>Report content</span>
-                                    </a>
-                                  )}
-                                </Menu.Item>
-                                {/* only show delete option on user's pins */}
-                                {session?.user.id === pin.user?.id ? (
-                                  <Menu.Item>
-                                    {({ active }) => (
-                                      <button
-                                        onClick={() => deletePin.mutate(pin.id)}
-                                        className={cx(
-                                          active
-                                            ? "bg-gray-100 text-gray-900"
-                                            : "text-gray-700",
-                                          "flex w-full px-4 py-2 text-sm"
-                                        )}
-                                      >
-                                        <TrashIcon
-                                          className="mr-3 h-5 w-5 text-gray-400"
-                                          aria-hidden="true"
-                                        />
-                                        <span>Delete</span>
-                                      </button>
-                                    )}
-                                  </Menu.Item>
-                                ) : null}
+            {status === "loading" ? (
+              <p>Loading...</p>
+            ) : status === "error" ? (
+              <p>{`Error: ${error.message}`}</p>
+            ) : (
+              <>
+                {data.pages.map((group, index) => (
+                  <Fragment key={index}>
+                    {group.pins.map((pin) => (
+                      <li
+                        key={pin.id}
+                        className="bg-white px-4 py-6 shadow sm:rounded-lg sm:p-6"
+                      >
+                        <article aria-labelledby={`question-title-${pin.id}`}>
+                          {pin.image ? (
+                            <Image
+                              src={pin.image.publicId}
+                              width={pin.image.width}
+                              height={pin.image.height}
+                              blurDataURL={pin.image.blurDataURL}
+                              placeholder="blur"
+                              alt=""
+                              className="rounded-md"
+                            />
+                          ) : null}
+                          <div className={cx(pin.image ? "mt-5" : null)}>
+                            <div className="flex space-x-3">
+                              <div className="flex-shrink-0">
+                                <Image
+                                  className="h-10 w-10 rounded-full"
+                                  src={pin.user?.image?.publicId}
+                                  width={40}
+                                  height={40}
+                                  blurDataURL={pin.user?.image?.blurDataURL}
+                                  alt=""
+                                  placeholder="blur"
+                                />
                               </div>
-                            </Menu.Items>
-                          </Transition>
-                        </Menu>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    className="mt-4 text-sm text-gray-700"
-                    // className="mt-2 space-y-4 text-sm text-gray-700"
-                    dangerouslySetInnerHTML={{
-                      __html: pin.description || "",
-                    }}
-                  />
-                  <div className="mt-6 flex justify-between space-x-8">
-                    <div className="flex space-x-6">
-                      <span className="inline-flex items-center text-sm">
-                        {/* TODO: apply a background to the button if a pin is already liked */}
-                        <button
-                          type="button"
-                          className="inline-flex space-x-2 text-gray-400 hover:text-gray-500"
-                          onClick={() => likePin.mutate(pin.id)}
-                        >
-                          <HandThumbUpIcon
-                            className="h-5 w-5"
-                            aria-hidden="true"
+                              <div className="min-w-0 flex-1">
+                                <p className="text-sm font-medium text-gray-900">
+                                  <a
+                                    // TODO: Fix this
+                                    href={pin.user?.href || "#"}
+                                    className="hover:underline"
+                                  >
+                                    {pin.user?.displayName}
+                                  </a>
+                                </p>
+                                <p className="text-sm text-gray-500">
+                                  <a
+                                    href={pin.href}
+                                    className="hover:underline"
+                                  >
+                                    <time
+                                      dateTime={pin.createdAt.toLocaleDateString()}
+                                    >
+                                      {pin.createdAt.toLocaleDateString()}
+                                    </time>
+                                  </a>
+                                </p>
+                              </div>
+                              <div className="flex flex-shrink-0 self-center">
+                                <Menu
+                                  as="div"
+                                  className="relative inline-block text-left"
+                                >
+                                  <div>
+                                    <Menu.Button className="-m-2 flex items-center rounded-full p-2 text-gray-400 hover:text-gray-600">
+                                      <span className="sr-only">
+                                        Open options
+                                      </span>
+                                      <EllipsisVerticalIcon
+                                        className="h-5 w-5"
+                                        aria-hidden="true"
+                                      />
+                                    </Menu.Button>
+                                  </div>
+
+                                  <Transition
+                                    as={Fragment}
+                                    enter="transition ease-out duration-100"
+                                    enterFrom="transform opacity-0 scale-95"
+                                    enterTo="transform opacity-100 scale-100"
+                                    leave="transition ease-in duration-75"
+                                    leaveFrom="transform opacity-100 scale-100"
+                                    leaveTo="transform opacity-0 scale-95"
+                                  >
+                                    <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                      <div className="py-1">
+                                        <Menu.Item>
+                                          {({ active }) => (
+                                            <button
+                                              className={cx(
+                                                active
+                                                  ? "bg-gray-100 text-gray-900"
+                                                  : "text-gray-700",
+                                                "flex w-full px-4 py-2 text-sm"
+                                              )}
+                                            >
+                                              <StarIcon
+                                                className="mr-3 h-5 w-5 text-gray-400"
+                                                aria-hidden="true"
+                                              />
+                                              <span>Add to favorites</span>
+                                            </button>
+                                          )}
+                                        </Menu.Item>
+                                        <Menu.Item>
+                                          {({ active }) => (
+                                            <a
+                                              href="#"
+                                              className={cx(
+                                                active
+                                                  ? "bg-gray-100 text-gray-900"
+                                                  : "text-gray-700",
+                                                "flex px-4 py-2 text-sm"
+                                              )}
+                                            >
+                                              <CodeBracketIcon
+                                                className="mr-3 h-5 w-5 text-gray-400"
+                                                aria-hidden="true"
+                                              />
+                                              <span>Embed</span>
+                                            </a>
+                                          )}
+                                        </Menu.Item>
+                                        <Menu.Item>
+                                          {({ active }) => (
+                                            <a
+                                              href="#"
+                                              className={cx(
+                                                active
+                                                  ? "bg-gray-100 text-gray-900"
+                                                  : "text-gray-700",
+                                                "flex px-4 py-2 text-sm"
+                                              )}
+                                            >
+                                              <FlagIcon
+                                                className="mr-3 h-5 w-5 text-gray-400"
+                                                aria-hidden="true"
+                                              />
+                                              <span>Report content</span>
+                                            </a>
+                                          )}
+                                        </Menu.Item>
+                                        {/* only show delete option on user's pins */}
+                                        {session?.user.id === pin.user?.id ? (
+                                          <Menu.Item>
+                                            {({ active }) => (
+                                              <button
+                                                onClick={() =>
+                                                  deletePin.mutate(pin.id)
+                                                }
+                                                className={cx(
+                                                  active
+                                                    ? "bg-gray-100 text-gray-900"
+                                                    : "text-gray-700",
+                                                  "flex w-full px-4 py-2 text-sm"
+                                                )}
+                                              >
+                                                <TrashIcon
+                                                  className="mr-3 h-5 w-5 text-gray-400"
+                                                  aria-hidden="true"
+                                                />
+                                                <span>Delete</span>
+                                              </button>
+                                            )}
+                                          </Menu.Item>
+                                        ) : null}
+                                      </div>
+                                    </Menu.Items>
+                                  </Transition>
+                                </Menu>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            className="mt-4 text-sm text-gray-700"
+                            // className="mt-2 space-y-4 text-sm text-gray-700"
+                            dangerouslySetInnerHTML={{
+                              __html: pin.description || "",
+                            }}
                           />
-                          <span className="font-medium text-gray-900">
-                            {pin._count.likedBy}
-                          </span>
-                          <span className="sr-only">likes</span>
-                        </button>
-                      </span>
-                      <span className="inline-flex items-center text-sm">
-                        <button
-                          type="button"
-                          className="inline-flex space-x-2 text-gray-400 hover:text-gray-500"
-                        >
-                          <ChatBubbleLeftEllipsisIcon
-                            className="h-5 w-5"
-                            aria-hidden="true"
-                          />
-                          <span className="font-medium text-gray-900">
-                            {pin.comments.length}
-                          </span>
-                          <span className="sr-only">replies</span>
-                        </button>
-                      </span>
-                      <span className="inline-flex items-center text-sm">
-                        <button
-                          type="button"
-                          className="inline-flex space-x-2 text-gray-400 hover:text-gray-500"
-                        >
-                          <EyeIcon className="h-5 w-5" aria-hidden="true" />
-                          <span className="font-medium text-gray-900">
-                            {pin.views}
-                          </span>
-                          <span className="sr-only">views</span>
-                        </button>
-                      </span>
-                    </div>
-                    <div className="flex text-sm">
-                      <span className="inline-flex items-center text-sm">
-                        <button
-                          type="button"
-                          className="inline-flex space-x-2 text-gray-400 hover:text-gray-500"
-                        >
-                          <ShareIcon className="h-5 w-5" aria-hidden="true" />
-                          <span className="font-medium text-gray-900">
-                            Share
-                          </span>
-                        </button>
-                      </span>
-                    </div>
-                  </div>
-                </article>
-              </li>
-            ))}
+                          <div className="mt-6 flex justify-between space-x-8">
+                            <div className="flex space-x-6">
+                              <span className="inline-flex items-center text-sm">
+                                {/* TODO: apply a background to the button if a pin is already liked */}
+                                <button
+                                  type="button"
+                                  className="inline-flex space-x-2 text-gray-400 hover:text-gray-500"
+                                  onClick={() => likePin.mutate(pin.id)}
+                                >
+                                  <HandThumbUpIcon
+                                    className="h-5 w-5"
+                                    aria-hidden="true"
+                                  />
+                                  <span className="font-medium text-gray-900">
+                                    {pin._count.likedBy}
+                                  </span>
+                                  <span className="sr-only">likes</span>
+                                </button>
+                              </span>
+                              <span className="inline-flex items-center text-sm">
+                                <button
+                                  type="button"
+                                  className="inline-flex space-x-2 text-gray-400 hover:text-gray-500"
+                                >
+                                  <ChatBubbleLeftEllipsisIcon
+                                    className="h-5 w-5"
+                                    aria-hidden="true"
+                                  />
+                                  <span className="font-medium text-gray-900">
+                                    {pin.comments.length}
+                                  </span>
+                                  <span className="sr-only">replies</span>
+                                </button>
+                              </span>
+                              <span className="inline-flex items-center text-sm">
+                                <button
+                                  type="button"
+                                  className="inline-flex space-x-2 text-gray-400 hover:text-gray-500"
+                                >
+                                  <EyeIcon
+                                    className="h-5 w-5"
+                                    aria-hidden="true"
+                                  />
+                                  <span className="font-medium text-gray-900">
+                                    {pin.views}
+                                  </span>
+                                  <span className="sr-only">views</span>
+                                </button>
+                              </span>
+                            </div>
+                            <div className="flex text-sm">
+                              <span className="inline-flex items-center text-sm">
+                                <button
+                                  type="button"
+                                  className="inline-flex space-x-2 text-gray-400 hover:text-gray-500"
+                                >
+                                  <ShareIcon
+                                    className="h-5 w-5"
+                                    aria-hidden="true"
+                                  />
+                                  <span className="font-medium text-gray-900">
+                                    Share
+                                  </span>
+                                </button>
+                              </span>
+                            </div>
+                          </div>
+                        </article>
+                      </li>
+                    ))}
+                  </Fragment>
+                ))}
+                {isFetching && !isFetchingNextPage ? (
+                  <li className="bg-white px-4 py-6 shadow sm:rounded-lg sm:p-6">
+                    Background Updating...
+                  </li>
+                ) : (
+                  <li className="bg-white px-4 py-6 shadow sm:rounded-lg sm:p-6">
+                    <button
+                      ref={ref}
+                      onClick={() => fetchNextPage()}
+                      disabled={!hasNextPage || isFetchingNextPage}
+                    >
+                      {isFetchingNextPage
+                        ? "Loading more..."
+                        : hasNextPage
+                        ? "Load Newer"
+                        : "Nothing more to load"}
+                    </button>
+                  </li>
+                )}
+              </>
+            )}
           </ul>
         </div>
       </main>

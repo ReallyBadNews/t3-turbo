@@ -73,6 +73,7 @@ export function Sidebar({
     async onSettled() {
       // Sync with server once mutation has settled
       await utils.pin.all.invalidate();
+      await utils.pin.infinite.invalidate();
     },
   });
 

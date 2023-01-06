@@ -111,6 +111,7 @@ importers:
       postcss: ^8.4.20
       react: 18.2.0
       react-dom: 18.2.0
+      react-intersection-observer: ^9.4.1
       sharp: ^0.31.2
       tailwindcss: ^3.2.4
       typescript: ^4.9.4
@@ -136,6 +137,7 @@ importers:
       plaiceholder: 2.5.0_sharp@0.31.3
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+      react-intersection-observer: 9.4.1_react@18.2.0
       sharp: 0.31.3
       zod: 3.20.2
     devDependencies:
@@ -2792,7 +2794,7 @@ packages:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
-      '@tanstack/react-query': 4.20.4_slnhbjkuf3cktqrwdgz34rrasq
+      '@tanstack/react-query': 4.20.4_biqbaboplfbrettd7655fr4n2y
       '@trpc/client': 10.7.0_@trpc+server@10.7.0
       '@trpc/server': 10.7.0
       react: 18.2.0
@@ -8746,6 +8748,14 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
+    dev: false
+
+  /react-intersection-observer/9.4.1_react@18.2.0:
+    resolution: {integrity: sha512-IXpIsPe6BleFOEHKzKh5UjwRUaz/JYS0lT/HPsupWEQou2hDqjhLMStc5zyE3eQVT4Fk3FufM8Fw33qW1uyeiw==}
+    peerDependencies:
+      react: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /react-is/16.13.1:
