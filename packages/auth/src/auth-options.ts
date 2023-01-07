@@ -199,9 +199,8 @@ export const authOptions: NextAuthOptions = {
     }),
     // ...add more providers here
   ],
-  secret: process.env.NEXTAUTH_JWT_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
   session: { strategy: "jwt" },
-  // jwt: {},
   callbacks: {
     jwt: ({ token, user, account, isNewUser, profile }) => {
       console.log("[AUTH] jwt", { token, user, account, isNewUser, profile });

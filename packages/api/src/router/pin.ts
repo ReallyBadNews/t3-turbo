@@ -48,6 +48,11 @@ export const pinRouter = router({
           },
           views: true,
           status: true,
+          likedBy: {
+            select: {
+              id: true,
+            },
+          },
         },
       });
 
