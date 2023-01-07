@@ -154,6 +154,64 @@ export default function PinsHomepage() {
         });
       });
 
+      /**
+       * find the pin and increment the likes by one in the infinite query
+       * Then optimistically update the data with the new like
+       * If the pin is already liked, subtract one from the likes
+       */
+      utils.pin.infinite.setInfiniteData({ limit: 10 }, (old) => {
+        if (!old) {
+          return {
+            pages: [],
+            pageParams: [],
+          };
+        }
+
+        return {
+          ...old,
+          pages: old.pages.map((page) => {
+            // if the user has already liked the pin, subtract one from the likes
+            if (
+              page.pins
+                .find((pin) => pin.id === id)
+                ?.likedBy?.find((user) => user.id === session?.user.id)
+            ) {
+              return {
+                ...page,
+                pins: page.pins.map((pin) => {
+                  if (pin.id === id) {
+                    return {
+                      ...pin,
+                      _count: {
+                        likedBy: pin._count.likedBy - 1,
+                      },
+                    };
+                  }
+
+                  return pin;
+                }),
+              };
+            } else {
+              return {
+                ...page,
+                pins: page.pins.map((pin) => {
+                  if (pin.id === id) {
+                    return {
+                      ...pin,
+                      _count: {
+                        likedBy: pin._count.likedBy + 1,
+                      },
+                    };
+                  }
+
+                  return pin;
+                }),
+              };
+            }
+          }),
+        };
+      });
+
       // Return the previous data so we can revert if something goes wrong
       return { prevData };
     },
@@ -561,11 +619,11 @@ export default function PinsHomepage() {
                   </Fragment>
                 ))}
                 {isFetching && !isFetchingNextPage ? (
-                  <li className="bg-white px-4 py-6 shadow sm:rounded-lg sm:p-6">
+                  <li className="bg-white px-4 py-6 text-center shadow sm:rounded-lg sm:p-6">
                     Background Updating...
                   </li>
                 ) : (
-                  <li className="bg-white px-4 py-6 shadow sm:rounded-lg sm:p-6">
+                  <li className="bg-white px-4 py-6 text-center shadow sm:rounded-lg sm:p-6">
                     <button
                       ref={ref}
                       onClick={() => fetchNextPage()}
