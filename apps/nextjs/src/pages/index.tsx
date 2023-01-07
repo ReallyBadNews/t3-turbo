@@ -21,7 +21,7 @@
   }
   ```
 */
-import { Menu, Transition } from "@headlessui/react";
+import { Menu, Tab, Transition } from "@headlessui/react";
 import {
   ChatBubbleLeftEllipsisIcon,
   CodeBracketIcon,
@@ -41,6 +41,7 @@ import {
   UserGroupIcon,
 } from "@heroicons/react/24/outline";
 import { cx } from "class-variance-authority";
+import Link from "next/link";
 import { Fragment, useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import { Image } from "../components/Image";
@@ -54,9 +55,9 @@ const navigation = [
   { name: "Favorites", href: "#", icon: StarIcon, current: false },
 ];
 const tabs = [
-  { name: "Recent", href: "#", current: true },
-  { name: "Map", href: "#", current: false },
-  { name: "Most Answers", href: "#", current: false },
+  { name: "Recent", href: "/recent", current: true },
+  { name: "Popular", href: "/popular", current: false },
+  { name: "Map", href: "/map", current: false },
 ];
 const whoToFollow = [
   {
@@ -328,43 +329,51 @@ export default function PinsHomepage() {
               ))}
             </select>
           </div>
-          <div className="hidden sm:block">
-            <nav
+          <Tab.Group as="div" className="hidden sm:block">
+            <Tab.List
+              as="nav"
               className="isolate flex divide-x divide-gray-200 rounded-lg shadow"
               aria-label="Tabs"
             >
               {tabs.map((tab, tabIdx) => (
-                <a
-                  key={tab.name}
-                  href={tab.href}
-                  aria-current={tab.current ? "page" : undefined}
-                  className={cx(
-                    tab.current
-                      ? "text-gray-900"
-                      : "text-gray-500 hover:text-gray-700",
-                    tabIdx === 0 ? "rounded-l-lg" : "",
-                    tabIdx === tabs.length - 1 ? "rounded-r-lg" : "",
-                    "group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-6 text-center text-sm font-medium hover:bg-gray-50 focus:z-10"
+                <Tab as={Fragment} key={tab.name}>
+                  {({ selected }) => (
+                    <span
+                      className={cx(
+                        selected
+                          ? "text-gray-900"
+                          : "text-gray-500 hover:text-gray-700",
+                        tabIdx === 0 ? "rounded-l-lg" : "",
+                        tabIdx === tabs.length - 1 ? "rounded-r-lg" : "",
+                        "group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-6 text-center text-sm font-medium hover:bg-gray-50 focus:z-10"
+                      )}
+                    >
+                      <span>{tab.name}</span>
+                      <span
+                        aria-hidden="true"
+                        className={cx(
+                          selected ? "bg-rose-500" : "bg-transparent",
+                          "absolute inset-x-0 bottom-0 h-0.5"
+                        )}
+                      />
+                    </span>
                   )}
-                >
-                  <span>{tab.name}</span>
-                  <span
-                    aria-hidden="true"
-                    className={cx(
-                      tab.current ? "bg-rose-500" : "bg-transparent",
-                      "absolute inset-x-0 bottom-0 h-0.5"
-                    )}
-                  />
-                </a>
+                </Tab>
               ))}
-            </nav>
-          </div>
+            </Tab.List>
+          </Tab.Group>
         </div>
         <div className="mt-4">
           <h1 className="sr-only">Recent questions</h1>
           <ul className="space-y-4">
             {status === "loading" ? (
-              <p>Loading...</p>
+              // map over 7 items to create the loading skeleton
+              Array.from({ length: 7 }).map((_, index) => (
+                <li
+                  key={index}
+                  className="min-h-[188px] bg-white px-4 py-6 shadow sm:rounded-lg sm:p-6"
+                />
+              ))
             ) : status === "error" ? (
               <p>{`Error: ${error.message}`}</p>
             ) : (
