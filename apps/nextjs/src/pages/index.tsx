@@ -168,21 +168,26 @@ export default function PinsHomepage() {
           };
         }
 
+        const pinLikeByUser = data?.pages.some((page) => {
+          return page.pins
+            .find((pin) => pin.id === id)
+            ?.likedBy?.find((user) => user.id === session?.user.id);
+        });
+
         return {
           ...old,
           pages: old.pages.map((page) => {
             // if the user has already liked the pin, subtract one from the likes
-            if (
-              page.pins
-                .find((pin) => pin.id === id)
-                ?.likedBy?.find((user) => user.id === session?.user.id)
-            ) {
+            if (pinLikeByUser) {
               return {
                 ...page,
                 pins: page.pins.map((pin) => {
                   if (pin.id === id) {
                     return {
                       ...pin,
+                      likedBy: pin.likedBy.filter(
+                        (user) => user.id !== session?.user.id
+                      ),
                       _count: {
                         likedBy: pin._count.likedBy - 1,
                       },
@@ -199,6 +204,14 @@ export default function PinsHomepage() {
                   if (pin.id === id) {
                     return {
                       ...pin,
+                      likedBy: [
+                        ...pin.likedBy,
+                        {
+                          id:
+                            session?.user.id ||
+                            Math.floor(Math.random() * 10000).toString(),
+                        },
+                      ],
                       _count: {
                         likedBy: pin._count.likedBy + 1,
                       },
