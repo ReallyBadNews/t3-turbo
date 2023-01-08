@@ -229,16 +229,51 @@ export default function PinsHomepage() {
       // Return the previous data so we can revert if something goes wrong
       return { prevData };
     },
-    onError(err, newPin, context) {
+    onError(err, newPin) {
       // If the mutation fails, use the context-value from onMutate
-      utils.pin.all.setData(undefined, context?.prevData);
+      utils.pin.infinite.setInfiniteData({ limit: 10 }, (old) => {
+        if (!old) {
+          return {
+            pages: [],
+            pageParams: [],
+          };
+        }
+
+        return {
+          ...old,
+          pages: old.pages.map((page) => {
+            return {
+              ...page,
+              pins: page.pins.map((pin) => {
+                if (pin.id === newPin) {
+                  return {
+                    ...pin,
+                    likedBy: pin.likedBy.filter(
+                      (user) => user.id !== session?.user.id
+                    ),
+                    _count: {
+                      likedBy: pin._count.likedBy - 1,
+                    },
+                  };
+                }
+
+                return pin;
+              }),
+            };
+          }),
+        };
+      });
+    },
+    onSuccess: async () => {
+      // Invalidate and refetch
+      await utils.pin.infinite.invalidate();
     },
   });
 
   const deletePin = trpc.pin.delete.useMutation({
     async onSettled() {
       // Sync with server once mutation has settled
-      await utils.pin.all.invalidate();
+      await utils.pin.infinite.invalidate();
     },
   });
 
@@ -327,217 +362,154 @@ export default function PinsHomepage() {
         </nav>
       </div>
       <main className="lg:col-span-9 xl:col-span-6">
-        <div className="px-4 sm:px-0">
-          <div className="sm:hidden">
-            <label htmlFor="question-tabs" className="sr-only">
-              Select a tab
-            </label>
-            <select
-              id="question-tabs"
-              className="block w-full rounded-md border-gray-300 text-base font-medium text-gray-900 shadow-sm focus:border-rose-500 focus:ring-rose-500"
-              defaultValue={tabs.find((tab) => tab.current)?.name}
-            >
-              {tabs.map((tab) => (
-                <option key={tab.name}>{tab.name}</option>
-              ))}
-            </select>
-          </div>
-          <Tab.Group as="div" className="hidden sm:block">
-            <Tab.List
-              as="nav"
-              className="isolate flex divide-x divide-gray-200 rounded-lg shadow"
-              aria-label="Tabs"
-            >
-              {tabs.map((tab, tabIdx) => (
-                <Tab as={Fragment} key={tab.name}>
-                  {({ selected }) => (
-                    <span
-                      className={cx(
-                        selected
-                          ? "text-gray-900"
-                          : "text-gray-500 hover:text-gray-700",
-                        tabIdx === 0 ? "rounded-l-lg" : "",
-                        tabIdx === tabs.length - 1 ? "rounded-r-lg" : "",
-                        "group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-6 text-center text-sm font-medium hover:bg-gray-50 focus:z-10"
-                      )}
-                    >
-                      <span>{tab.name}</span>
-                      <span
-                        aria-hidden="true"
-                        className={cx(
-                          selected ? "bg-rose-500" : "bg-transparent",
-                          "absolute inset-x-0 bottom-0 h-0.5"
-                        )}
-                      />
-                    </span>
-                  )}
-                </Tab>
-              ))}
-            </Tab.List>
-          </Tab.Group>
+        {/* <div className="px-4 sm:px-0"> */}
+        <div className="sm:hidden">
+          <label htmlFor="question-tabs" className="sr-only">
+            Select a tab
+          </label>
+          <select
+            id="question-tabs"
+            className="block w-full rounded-md border-gray-300 text-base font-medium text-gray-900 shadow-sm focus:border-rose-500 focus:ring-rose-500"
+            defaultValue={tabs.find((tab) => tab.current)?.name}
+          >
+            {tabs.map((tab) => (
+              <option key={tab.name}>{tab.name}</option>
+            ))}
+          </select>
         </div>
-        <div className="mt-4">
-          <h1 className="sr-only">Recent questions</h1>
-          <ul className="space-y-4">
-            {status === "loading" ? (
-              // map over 7 items to create the loading skeleton
-              Array.from({ length: 7 }).map((_, index) => (
-                <li
-                  key={index}
-                  className="min-h-[188px] bg-white px-4 py-6 shadow sm:rounded-lg sm:p-6"
-                />
-              ))
-            ) : status === "error" ? (
-              <p>{`Error: ${error.message}`}</p>
-            ) : (
-              <>
-                {data.pages.map((group, index) => (
-                  <Fragment key={index}>
-                    {group.pins.map((pin) => (
-                      <li
-                        key={pin.id}
-                        className="bg-white px-4 py-6 shadow sm:rounded-lg sm:p-6"
-                      >
-                        <article aria-labelledby={`question-title-${pin.id}`}>
-                          {pin.image ? (
-                            <Image
-                              src={pin.image.publicId}
-                              width={pin.image.width}
-                              height={pin.image.height}
-                              blurDataURL={pin.image.blurDataURL}
-                              placeholder="blur"
-                              alt=""
-                              className="rounded-md"
-                            />
-                          ) : null}
-                          <div className={cx(pin.image ? "mt-5" : null)}>
-                            <div className="flex space-x-3">
-                              <div className="flex-shrink-0">
-                                <Image
-                                  className="h-10 w-10 rounded-full"
-                                  src={pin.user?.image?.publicId}
-                                  width={40}
-                                  height={40}
-                                  blurDataURL={pin.user?.image?.blurDataURL}
-                                  alt=""
-                                  placeholder="blur"
-                                />
-                              </div>
-                              <div className="min-w-0 flex-1">
-                                <p className="text-sm font-medium text-gray-900">
-                                  <a
-                                    // TODO: Fix this
-                                    href={pin.user?.href || "#"}
-                                    className="hover:underline"
-                                  >
-                                    {pin.user?.displayName}
-                                  </a>
-                                </p>
-                                <p className="text-sm text-gray-500">
-                                  <a
-                                    href={pin.href}
-                                    className="hover:underline"
-                                  >
-                                    <time
-                                      dateTime={pin.createdAt.toLocaleDateString()}
+        <Tab.Group as="div" className="hidden px-4 sm:block sm:px-0">
+          <Tab.List
+            as="nav"
+            className="isolate flex divide-x divide-gray-200 rounded-lg shadow"
+            aria-label="Tabs"
+          >
+            {tabs.map((tab, tabIdx) => (
+              <Tab as={Fragment} key={tab.name}>
+                {({ selected }) => (
+                  <span
+                    className={cx(
+                      selected
+                        ? "text-gray-900"
+                        : "text-gray-500 hover:text-gray-700",
+                      tabIdx === 0 ? "rounded-l-lg" : "",
+                      tabIdx === tabs.length - 1 ? "rounded-r-lg" : "",
+                      "group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-6 text-center text-sm font-medium hover:bg-gray-50 focus:z-10"
+                    )}
+                  >
+                    <span>{tab.name}</span>
+                    <span
+                      aria-hidden="true"
+                      className={cx(
+                        selected ? "bg-rose-500" : "bg-transparent",
+                        "absolute inset-x-0 bottom-0 h-0.5"
+                      )}
+                    />
+                  </span>
+                )}
+              </Tab>
+            ))}
+          </Tab.List>
+          <Tab.Panels as="div" className="mt-4">
+            <h1 className="sr-only">Recent questions</h1>
+            <Tab.Panel as="ul" className="space-y-4">
+              {status === "loading" ? (
+                // map over 7 items to create the loading skeleton
+                Array.from({ length: 7 }).map((_, index) => (
+                  <li
+                    key={index}
+                    className="min-h-[188px] bg-white px-4 py-6 shadow sm:rounded-lg sm:p-6"
+                  />
+                ))
+              ) : status === "error" ? (
+                <p>{`Error: ${error.message}`}</p>
+              ) : (
+                <>
+                  {data.pages.map((group, index) => (
+                    <Fragment key={index}>
+                      {group.pins.map((pin) => (
+                        <li
+                          key={pin.id}
+                          className="bg-white px-4 py-6 shadow sm:rounded-lg sm:p-6"
+                        >
+                          <article aria-labelledby={`question-title-${pin.id}`}>
+                            {pin.image ? (
+                              <Image
+                                src={pin.image.publicId}
+                                width={pin.image.width}
+                                height={pin.image.height}
+                                blurDataURL={pin.image.blurDataURL}
+                                placeholder="blur"
+                                alt=""
+                                className="rounded-md"
+                              />
+                            ) : null}
+                            <div className={cx(pin.image ? "mt-5" : null)}>
+                              <div className="flex space-x-3">
+                                <div className="flex-shrink-0">
+                                  <Image
+                                    className="h-10 w-10 rounded-full"
+                                    src={pin.user?.image?.publicId}
+                                    width={40}
+                                    height={40}
+                                    blurDataURL={pin.user?.image?.blurDataURL}
+                                    alt=""
+                                    placeholder="blur"
+                                  />
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                  <p className="text-sm font-medium text-gray-900">
+                                    <a
+                                      // TODO: Fix this
+                                      href={pin.user?.href || "#"}
+                                      className="hover:underline"
                                     >
-                                      {pin.createdAt.toLocaleDateString()}
-                                    </time>
-                                  </a>
-                                </p>
-                              </div>
-                              <div className="flex flex-shrink-0 self-center">
-                                <Menu
-                                  as="div"
-                                  className="relative inline-block text-left"
-                                >
-                                  <div>
-                                    <Menu.Button className="-m-2 flex items-center rounded-full p-2 text-gray-400 hover:text-gray-600">
-                                      <span className="sr-only">
-                                        Open options
-                                      </span>
-                                      <EllipsisVerticalIcon
-                                        className="h-5 w-5"
-                                        aria-hidden="true"
-                                      />
-                                    </Menu.Button>
-                                  </div>
-
-                                  <Transition
-                                    as={Fragment}
-                                    enter="transition ease-out duration-100"
-                                    enterFrom="transform opacity-0 scale-95"
-                                    enterTo="transform opacity-100 scale-100"
-                                    leave="transition ease-in duration-75"
-                                    leaveFrom="transform opacity-100 scale-100"
-                                    leaveTo="transform opacity-0 scale-95"
+                                      {pin.user?.displayName}
+                                    </a>
+                                  </p>
+                                  <p className="text-sm text-gray-500">
+                                    <a
+                                      href={pin.href}
+                                      className="hover:underline"
+                                    >
+                                      <time
+                                        dateTime={pin.createdAt.toLocaleDateString()}
+                                      >
+                                        {pin.createdAt.toLocaleDateString()}
+                                      </time>
+                                    </a>
+                                  </p>
+                                </div>
+                                <div className="flex flex-shrink-0 self-center">
+                                  <Menu
+                                    as="div"
+                                    className="relative inline-block text-left"
                                   >
-                                    <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                      <div className="py-1">
-                                        <Menu.Item>
-                                          {({ active }) => (
-                                            <button
-                                              className={cx(
-                                                active
-                                                  ? "bg-gray-100 text-gray-900"
-                                                  : "text-gray-700",
-                                                "flex w-full px-4 py-2 text-sm"
-                                              )}
-                                            >
-                                              <StarIcon
-                                                className="mr-3 h-5 w-5 text-gray-400"
-                                                aria-hidden="true"
-                                              />
-                                              <span>Add to favorites</span>
-                                            </button>
-                                          )}
-                                        </Menu.Item>
-                                        <Menu.Item>
-                                          {({ active }) => (
-                                            <a
-                                              href="#"
-                                              className={cx(
-                                                active
-                                                  ? "bg-gray-100 text-gray-900"
-                                                  : "text-gray-700",
-                                                "flex px-4 py-2 text-sm"
-                                              )}
-                                            >
-                                              <CodeBracketIcon
-                                                className="mr-3 h-5 w-5 text-gray-400"
-                                                aria-hidden="true"
-                                              />
-                                              <span>Embed</span>
-                                            </a>
-                                          )}
-                                        </Menu.Item>
-                                        <Menu.Item>
-                                          {({ active }) => (
-                                            <a
-                                              href="#"
-                                              className={cx(
-                                                active
-                                                  ? "bg-gray-100 text-gray-900"
-                                                  : "text-gray-700",
-                                                "flex px-4 py-2 text-sm"
-                                              )}
-                                            >
-                                              <FlagIcon
-                                                className="mr-3 h-5 w-5 text-gray-400"
-                                                aria-hidden="true"
-                                              />
-                                              <span>Report content</span>
-                                            </a>
-                                          )}
-                                        </Menu.Item>
-                                        {/* only show delete option on user's pins */}
-                                        {session?.user.id === pin.user?.id ? (
+                                    <div>
+                                      <Menu.Button className="-m-2 flex items-center rounded-full p-2 text-gray-400 hover:text-gray-600">
+                                        <span className="sr-only">
+                                          Open options
+                                        </span>
+                                        <EllipsisVerticalIcon
+                                          className="h-5 w-5"
+                                          aria-hidden="true"
+                                        />
+                                      </Menu.Button>
+                                    </div>
+
+                                    <Transition
+                                      as={Fragment}
+                                      enter="transition ease-out duration-100"
+                                      enterFrom="transform opacity-0 scale-95"
+                                      enterTo="transform opacity-100 scale-100"
+                                      leave="transition ease-in duration-75"
+                                      leaveFrom="transform opacity-100 scale-100"
+                                      leaveTo="transform opacity-0 scale-95"
+                                    >
+                                      <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                        <div className="py-1">
                                           <Menu.Item>
                                             {({ active }) => (
                                               <button
-                                                onClick={() =>
-                                                  deletePin.mutate(pin.id)
-                                                }
                                                 className={cx(
                                                   active
                                                     ? "bg-gray-100 text-gray-900"
@@ -545,124 +517,186 @@ export default function PinsHomepage() {
                                                   "flex w-full px-4 py-2 text-sm"
                                                 )}
                                               >
-                                                <TrashIcon
+                                                <StarIcon
                                                   className="mr-3 h-5 w-5 text-gray-400"
                                                   aria-hidden="true"
                                                 />
-                                                <span>Delete</span>
+                                                <span>Add to favorites</span>
                                               </button>
                                             )}
                                           </Menu.Item>
-                                        ) : null}
-                                      </div>
-                                    </Menu.Items>
-                                  </Transition>
-                                </Menu>
+                                          <Menu.Item>
+                                            {({ active }) => (
+                                              <a
+                                                href="#"
+                                                className={cx(
+                                                  active
+                                                    ? "bg-gray-100 text-gray-900"
+                                                    : "text-gray-700",
+                                                  "flex px-4 py-2 text-sm"
+                                                )}
+                                              >
+                                                <CodeBracketIcon
+                                                  className="mr-3 h-5 w-5 text-gray-400"
+                                                  aria-hidden="true"
+                                                />
+                                                <span>Embed</span>
+                                              </a>
+                                            )}
+                                          </Menu.Item>
+                                          <Menu.Item>
+                                            {({ active }) => (
+                                              <a
+                                                href="#"
+                                                className={cx(
+                                                  active
+                                                    ? "bg-gray-100 text-gray-900"
+                                                    : "text-gray-700",
+                                                  "flex px-4 py-2 text-sm"
+                                                )}
+                                              >
+                                                <FlagIcon
+                                                  className="mr-3 h-5 w-5 text-gray-400"
+                                                  aria-hidden="true"
+                                                />
+                                                <span>Report content</span>
+                                              </a>
+                                            )}
+                                          </Menu.Item>
+                                          {/* only show delete option on user's pins */}
+                                          {session?.user.id === pin.user?.id ? (
+                                            <Menu.Item>
+                                              {({ active }) => (
+                                                <button
+                                                  onClick={() =>
+                                                    deletePin.mutate(pin.id)
+                                                  }
+                                                  className={cx(
+                                                    active
+                                                      ? "bg-gray-100 text-gray-900"
+                                                      : "text-gray-700",
+                                                    "flex w-full px-4 py-2 text-sm"
+                                                  )}
+                                                >
+                                                  <TrashIcon
+                                                    className="mr-3 h-5 w-5 text-gray-400"
+                                                    aria-hidden="true"
+                                                  />
+                                                  <span>Delete</span>
+                                                </button>
+                                              )}
+                                            </Menu.Item>
+                                          ) : null}
+                                        </div>
+                                      </Menu.Items>
+                                    </Transition>
+                                  </Menu>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                          <div
-                            className="mt-4 text-sm text-gray-700"
-                            // className="mt-2 space-y-4 text-sm text-gray-700"
-                            dangerouslySetInnerHTML={{
-                              __html: pin.description || "",
-                            }}
-                          />
-                          <div className="mt-6 flex justify-between space-x-8">
-                            <div className="flex space-x-6">
-                              <span className="inline-flex items-center text-sm">
-                                {/* TODO: apply a background to the button if a pin is already liked */}
-                                <button
-                                  type="button"
-                                  className="inline-flex space-x-2 text-gray-400 hover:text-gray-500"
-                                  onClick={() => likePin.mutate(pin.id)}
-                                >
-                                  <HandThumbUpIcon
-                                    className="h-5 w-5"
-                                    aria-hidden="true"
-                                  />
-                                  <span className="font-medium text-gray-900">
-                                    {pin._count.likedBy}
-                                  </span>
-                                  <span className="sr-only">likes</span>
-                                </button>
-                              </span>
-                              <span className="inline-flex items-center text-sm">
-                                <button
-                                  type="button"
-                                  className="inline-flex space-x-2 text-gray-400 hover:text-gray-500"
-                                >
-                                  <ChatBubbleLeftEllipsisIcon
-                                    className="h-5 w-5"
-                                    aria-hidden="true"
-                                  />
-                                  <span className="font-medium text-gray-900">
-                                    {pin.comments.length}
-                                  </span>
-                                  <span className="sr-only">replies</span>
-                                </button>
-                              </span>
-                              <span className="inline-flex items-center text-sm">
-                                <button
-                                  type="button"
-                                  className="inline-flex space-x-2 text-gray-400 hover:text-gray-500"
-                                >
-                                  <EyeIcon
-                                    className="h-5 w-5"
-                                    aria-hidden="true"
-                                  />
-                                  <span className="font-medium text-gray-900">
-                                    {pin.views}
-                                  </span>
-                                  <span className="sr-only">views</span>
-                                </button>
-                              </span>
+                            <div
+                              className="mt-4 text-sm text-gray-700"
+                              // className="mt-2 space-y-4 text-sm text-gray-700"
+                              dangerouslySetInnerHTML={{
+                                __html: pin.description || "",
+                              }}
+                            />
+                            <div className="mt-6 flex justify-between space-x-8">
+                              <div className="flex space-x-6">
+                                <span className="inline-flex items-center text-sm">
+                                  {/* TODO: apply a background to the button if a pin is already liked */}
+                                  <button
+                                    type="button"
+                                    className="inline-flex space-x-2 text-gray-400 hover:text-gray-500"
+                                    onClick={() => likePin.mutate(pin.id)}
+                                  >
+                                    <HandThumbUpIcon
+                                      className="h-5 w-5"
+                                      aria-hidden="true"
+                                    />
+                                    <span className="font-medium text-gray-900">
+                                      {pin._count.likedBy}
+                                    </span>
+                                    <span className="sr-only">likes</span>
+                                  </button>
+                                </span>
+                                <span className="inline-flex items-center text-sm">
+                                  <button
+                                    type="button"
+                                    className="inline-flex space-x-2 text-gray-400 hover:text-gray-500"
+                                  >
+                                    <ChatBubbleLeftEllipsisIcon
+                                      className="h-5 w-5"
+                                      aria-hidden="true"
+                                    />
+                                    <span className="font-medium text-gray-900">
+                                      {pin.comments.length}
+                                    </span>
+                                    <span className="sr-only">replies</span>
+                                  </button>
+                                </span>
+                                <span className="inline-flex items-center text-sm">
+                                  <button
+                                    type="button"
+                                    className="inline-flex space-x-2 text-gray-400 hover:text-gray-500"
+                                  >
+                                    <EyeIcon
+                                      className="h-5 w-5"
+                                      aria-hidden="true"
+                                    />
+                                    <span className="font-medium text-gray-900">
+                                      {pin.views}
+                                    </span>
+                                    <span className="sr-only">views</span>
+                                  </button>
+                                </span>
+                              </div>
+                              <div className="flex text-sm">
+                                <span className="inline-flex items-center text-sm">
+                                  <button
+                                    type="button"
+                                    className="inline-flex space-x-2 text-gray-400 hover:text-gray-500"
+                                  >
+                                    <ShareIcon
+                                      className="h-5 w-5"
+                                      aria-hidden="true"
+                                    />
+                                    <span className="font-medium text-gray-900">
+                                      Share
+                                    </span>
+                                  </button>
+                                </span>
+                              </div>
                             </div>
-                            <div className="flex text-sm">
-                              <span className="inline-flex items-center text-sm">
-                                <button
-                                  type="button"
-                                  className="inline-flex space-x-2 text-gray-400 hover:text-gray-500"
-                                >
-                                  <ShareIcon
-                                    className="h-5 w-5"
-                                    aria-hidden="true"
-                                  />
-                                  <span className="font-medium text-gray-900">
-                                    Share
-                                  </span>
-                                </button>
-                              </span>
-                            </div>
-                          </div>
-                        </article>
-                      </li>
-                    ))}
-                  </Fragment>
-                ))}
-                {isFetching && !isFetchingNextPage ? (
-                  <li className="bg-white px-4 py-6 text-center shadow sm:rounded-lg sm:p-6">
-                    Background Updating...
-                  </li>
-                ) : (
-                  <li className="bg-white px-4 py-6 text-center shadow sm:rounded-lg sm:p-6">
-                    <button
-                      ref={ref}
-                      onClick={() => fetchNextPage()}
-                      disabled={!hasNextPage || isFetchingNextPage}
-                    >
-                      {isFetchingNextPage
-                        ? "Loading more..."
-                        : hasNextPage
-                        ? "Load Newer"
-                        : "Nothing more to load"}
-                    </button>
-                  </li>
-                )}
-              </>
-            )}
-          </ul>
-        </div>
+                          </article>
+                        </li>
+                      ))}
+                    </Fragment>
+                  ))}
+                  {isFetching && !isFetchingNextPage ? (
+                    <li className="bg-white px-4 py-6 text-center shadow sm:rounded-lg sm:p-6">
+                      Background Updating...
+                    </li>
+                  ) : (
+                    <li className="bg-white px-4 py-6 text-center shadow sm:rounded-lg sm:p-6">
+                      <button
+                        ref={ref}
+                        onClick={() => fetchNextPage()}
+                        disabled={!hasNextPage || isFetchingNextPage}
+                      >
+                        {isFetchingNextPage
+                          ? "Loading more..."
+                          : hasNextPage
+                          ? "Load Newer"
+                          : "Nothing more to load"}
+                      </button>
+                    </li>
+                  )}
+                </>
+              )}
+            </Tab.Panel>
+          </Tab.Panels>
+        </Tab.Group>
       </main>
       <aside className="hidden xl:col-span-4 xl:block">
         <div className="sticky top-4 space-y-4">
@@ -676,7 +710,7 @@ export default function PinsHomepage() {
                   Who to follow
                 </h2>
                 <div className="mt-6 flow-root">
-                  <ul role="list" className="-my-4 divide-y divide-gray-200">
+                  <ul className="-my-4 divide-y divide-gray-200">
                     {whoToFollow.map((user) => (
                       <li
                         key={user.handle}
