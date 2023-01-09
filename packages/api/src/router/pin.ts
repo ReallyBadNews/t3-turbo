@@ -10,6 +10,7 @@ export const pinRouter = router({
       z.object({
         limit: z.number().min(1).max(100).nullish(),
         cursor: z.string().cuid().nullish(),
+        order: z.enum(["asc", "desc", "likes"]).optional(),
       })
     )
     .query(async ({ ctx, input }) => {
@@ -20,7 +21,15 @@ export const pinRouter = router({
         take: limit + 1, // get an extra item at the end which we'll use as the next cursor
         cursor: cursor ? { id: cursor } : undefined,
         orderBy: {
-          createdAt: "desc",
+          ...(input.order === "likes"
+            ? {
+                likedBy: {
+                  _count: "desc",
+                },
+              }
+            : {
+                createdAt: input.order ?? "desc",
+              }),
         },
         select: {
           // count number of likes
