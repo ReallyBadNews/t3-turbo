@@ -106,54 +106,14 @@ export default function PinsHomepage() {
   const likePin = trpc.pin.like.useMutation({
     async onSettled() {
       // Sync with server once mutation has settled
-      await utils.pin.all.invalidate();
+      await utils.pin.infinite.invalidate();
     },
     async onMutate(id) {
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-      await utils.pin.all.cancel();
+      await utils.pin.infinite.cancel();
 
       // Get the data from the queryCache
-      const prevData = utils.pin.all.getData();
-
-      /**
-       * find the pin and increment the likes by one
-       * Then optimistically update the data with the new like
-       * If the pin is already liked, subtract one from the likes
-       */
-      utils.pin.all.setData(undefined, (old) => {
-        // if the user has already liked the pin, subtract one from the likes
-        if (
-          old
-            ?.find((pin) => pin.id === id)
-            ?.likedBy.find((user) => user.id === session?.user.id)
-        ) {
-          return old?.map((pin) => {
-            if (pin.id === id) {
-              return {
-                ...pin,
-                _count: {
-                  likedBy: pin._count.likedBy - 1,
-                },
-              };
-            }
-
-            return pin;
-          });
-        }
-
-        return old?.map((pin) => {
-          if (pin.id === id) {
-            return {
-              ...pin,
-              _count: {
-                likedBy: pin._count.likedBy + 1,
-              },
-            };
-          }
-
-          return pin;
-        });
-      });
+      const prevData = utils.pin.infinite.getData();
 
       /**
        * find the pin and increment the likes by one in the infinite query
