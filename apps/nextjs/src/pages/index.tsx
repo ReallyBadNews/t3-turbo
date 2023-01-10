@@ -56,11 +56,13 @@ const navigation = [
   { name: "Trending", href: "#", icon: ArrowTrendingUpIcon, current: false },
   { name: "Favorites", href: "#", icon: StarIcon, current: false },
 ];
+
 const tabs = [
   { name: "Recent", href: "/recent", order: "desc", current: true },
   { name: "Popular", href: "/popular", order: "likes", current: false },
   { name: "Map", href: "/map", order: "asc", current: false },
 ] satisfies Tabs[];
+
 const whoToFollow = [
   {
     name: "Leonard Krasner",
@@ -71,6 +73,7 @@ const whoToFollow = [
   },
   // More people...
 ];
+
 const trendingPosts = [
   {
     id: 1,
