@@ -182,7 +182,7 @@ export default function PinsHomepage() {
           <div className="hidden px-4 sm:block sm:px-0">
             <Tab.List
               as="nav"
-              className="isolate flex divide-x divide-gray-200 rounded-lg shadow"
+              className="isolate flex divide-x divide-gray-200 rounded-lg shadow dark:divide-gray-700"
               aria-label="Tabs"
             >
               {tabs.map((tab, tabIdx) => (
@@ -191,11 +191,11 @@ export default function PinsHomepage() {
                     <span
                       className={cx(
                         selected
-                          ? "text-gray-900"
-                          : "text-gray-500 hover:text-gray-700",
+                          ? "text-gray-900 dark:text-gray-50"
+                          : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200",
                         tabIdx === 0 ? "rounded-l-lg" : "",
                         tabIdx === tabs.length - 1 ? "rounded-r-lg" : "",
-                        "group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-6 text-center text-sm font-medium hover:bg-gray-50 focus:z-10"
+                        "group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-6 text-center text-sm font-medium hover:bg-gray-50 focus:z-10 dark:bg-gray-800 dark:hover:bg-gray-700"
                       )}
                     >
                       <span>{tab.name}</span>

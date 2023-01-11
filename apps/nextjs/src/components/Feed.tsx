@@ -42,7 +42,7 @@ export const Feed = ({ order = "desc" }: FeedProps) => {
         Array.from({ length: 7 }).map((_, index) => (
           <li
             key={index}
-            className="min-h-[188px] bg-white px-4 py-6 shadow sm:rounded-lg sm:p-6"
+            className="min-h-[188px] bg-white px-4 py-6 shadow dark:bg-gray-800 sm:rounded-lg sm:p-6"
           />
         ))
       ) : status === "error" ? (
