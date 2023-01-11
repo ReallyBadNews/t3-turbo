@@ -21,7 +21,6 @@
   }
   ```
 */
-import type { AppRouter } from "@badnews/api";
 import { Tab } from "@headlessui/react";
 import {
   ChatBubbleLeftEllipsisIcon,
@@ -34,13 +33,11 @@ import {
   HomeIcon,
   UserGroupIcon,
 } from "@heroicons/react/24/outline";
-import type { inferProcedureInput } from "@trpc/server";
 import { cx } from "class-variance-authority";
 import { Fragment, useState } from "react";
 import { Feed } from "../components/Feed";
+import type { FeedOrder } from "../types";
 import { trpc } from "../utils/trpc";
-
-type FeedOrder = inferProcedureInput<AppRouter["pin"]["infinite"]>["order"];
 
 interface Tabs {
   name: string;
@@ -105,7 +102,7 @@ export default function PinsHomepage() {
       <div className="hidden lg:col-span-3 lg:block xl:col-span-2">
         <nav
           aria-label="Sidebar"
-          className="sticky top-4 divide-y divide-gray-300"
+          className="sticky top-4 divide-y divide-gray-300 dark:divide-gray-700"
         >
           <div className="space-y-1 pb-8">
             {navigation.map((item) => (
@@ -114,8 +111,8 @@ export default function PinsHomepage() {
                 href={item.href}
                 className={cx(
                   item.current
-                    ? "bg-gray-200 text-gray-900"
-                    : "text-gray-700 hover:bg-gray-50",
+                    ? "bg-gray-200 text-gray-900 dark:bg-gray-800 dark:text-gray-50"
+                    : "text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-700",
                   "group flex items-center rounded-md px-3 py-2 text-sm font-medium"
                 )}
                 aria-current={item.current ? "page" : undefined}
@@ -123,8 +120,8 @@ export default function PinsHomepage() {
                 <item.icon
                   className={cx(
                     item.current
-                      ? "text-gray-500"
-                      : "text-gray-400 group-hover:text-gray-500",
+                      ? "text-gray-500 dark:text-gray-400"
+                      : "text-gray-400 group-hover:text-gray-500 dark:text-gray-600 dark:group-hover:text-gray-400",
                     "-ml-1 mr-3 h-6 w-6 flex-shrink-0"
                   )}
                   aria-hidden="true"

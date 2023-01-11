@@ -1,17 +1,14 @@
-import type { AppRouter } from "@badnews/api";
-import type { inferProcedureInput } from "@trpc/server";
 import { Fragment, useEffect } from "react";
 import { useInView } from "react-intersection-observer";
+import type { FeedOrder } from "../types";
 import { trpc } from "../utils/trpc";
 import { PinPost } from "./Pin";
-
-type FeedOrder = inferProcedureInput<AppRouter["pin"]["infinite"]>["order"];
 
 interface FeedProps {
   order: FeedOrder;
 }
 
-export const Feed = ({ order }: FeedProps) => {
+export const Feed = ({ order = "desc" }: FeedProps) => {
   const { ref, inView } = useInView();
 
   const {
@@ -55,12 +52,7 @@ export const Feed = ({ order }: FeedProps) => {
           {data.pages.map((group, index) => (
             <Fragment key={index}>
               {group.pins.map((pin) => (
-                <li
-                  key={pin.id}
-                  className="bg-white px-4 py-6 shadow sm:rounded-lg sm:p-6"
-                >
-                  <PinPost data={pin} />
-                </li>
+                <PinPost key={pin.id} data={pin} />
               ))}
             </Fragment>
           ))}
