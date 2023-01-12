@@ -47,7 +47,9 @@ export function Sidebar({
   const dropZoneRef = useRef<HTMLFormElement>(null);
   const photoPreviewRef = useRef<HTMLDivElement>(null);
 
-  const { data: session } = trpc.auth.getSession.useQuery();
+  const { data: session } = trpc.auth.getSession.useQuery(undefined, {
+    refetchOnWindowFocus: false,
+  });
   const utils = trpc.useContext();
   const create = trpc.pin.create.useMutation({
     // async onMutate(newPin) {

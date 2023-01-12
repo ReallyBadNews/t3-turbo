@@ -65,9 +65,13 @@ interface LayoutProps {
 
 export const Layout: FC<LayoutProps> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const communities = trpc.community.all.useQuery();
+  const communities = trpc.community.all.useQuery(undefined, {
+    refetchOnWindowFocus: false,
+  });
 
-  const { data: session } = trpc.auth.getSession.useQuery();
+  const { data: session } = trpc.auth.getSession.useQuery(undefined, {
+    refetchOnWindowFocus: false,
+  });
 
   return (
     <>

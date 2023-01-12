@@ -23,7 +23,9 @@ interface PinProps {
 }
 
 export const PinPost = ({ data, order }: PinProps) => {
-  const { data: session } = trpc.auth.getSession.useQuery();
+  const { data: session } = trpc.auth.getSession.useQuery(undefined, {
+    refetchOnWindowFocus: false,
+  });
   const utils = trpc.useContext();
 
   const likePin = trpc.pin.like.useMutation({

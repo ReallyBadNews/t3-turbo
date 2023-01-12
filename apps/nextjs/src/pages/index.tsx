@@ -87,7 +87,9 @@ const trendingPosts = [
 
 export default function PinsHomepage() {
   const [selectedTab, setSelectedTab] = useState(tabs[0]?.order);
-  const communities = trpc.community.all.useQuery();
+  const communities = trpc.community.all.useQuery(undefined, {
+    refetchOnWindowFocus: false,
+  });
 
   return (
     <>
