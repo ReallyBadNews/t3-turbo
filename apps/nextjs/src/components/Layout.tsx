@@ -127,7 +127,10 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                           <input
                             id="search"
                             name="search"
-                            className="block w-full rounded-md border border-gray-300 bg-white py-2 pl-10 pr-3 text-sm placeholder-gray-500 focus:border-rose-500 focus:text-gray-900 focus:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-rose-500 sm:text-sm"
+                            className={cx(
+                              "block w-full rounded-md border border-gray-300 bg-white py-2 pl-10 pr-3 text-sm placeholder-gray-500 focus:border-rose-500 focus:text-gray-900 focus:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-rose-500 sm:text-sm",
+                              "dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:placeholder-gray-400 dark:focus:border-rose-500 dark:focus:placeholder-gray-300 dark:focus:ring-rose-500"
+                            )}
                             placeholder="Search"
                             type="search"
                           />
@@ -155,13 +158,19 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                   <div className="hidden lg:flex lg:items-center lg:justify-end xl:col-span-4">
                     <Link
                       href="#"
-                      className="text-sm font-medium text-gray-900 hover:underline"
+                      className="text-sm font-medium text-gray-900 hover:underline dark:text-gray-50"
                     >
                       Go Premium
                     </Link>
                     <Link
                       href="#"
-                      className="ml-5 flex-shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2"
+                      className={cx(
+                        "ml-5 flex-shrink-0 rounded-full bg-white p-1 text-gray-400",
+                        "hover:text-gray-500",
+                        "focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2",
+                        "dark:bg-gray-800 dark:hover:text-gray-300",
+                        "dark:focus:ring-offset-gray-900"
+                      )}
                     >
                       <span className="sr-only">View notifications</span>
                       <BellIcon className="h-6 w-6" aria-hidden="true" />
@@ -171,7 +180,13 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                     {session?.user ? (
                       <Menu as="div" className="relative ml-5 flex-shrink-0">
                         <div>
-                          <Menu.Button className="flex rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2">
+                          <Menu.Button
+                            className={cx(
+                              "flex rounded-full bg-white",
+                              "focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2",
+                              "dark:bg-gray-800 dark:focus:ring-offset-gray-900"
+                            )}
+                          >
                             <span className="sr-only">Open user menu</span>
                             {session.user.image?.publicId ? (
                               <Image
@@ -237,7 +252,13 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                     ) : (
                       <button
                         onClick={() => signIn("credentials")}
-                        className="ml-6 inline-flex items-center rounded-md border border-transparent bg-rose-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2"
+                        className={cx(
+                          "ml-6 inline-flex items-center rounded-md border border-transparent bg-rose-600 px-4 py-2 text-sm font-medium text-white shadow-sm",
+                          "hover:bg-rose-700",
+                          "focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2",
+                          "dark:bg-rose-700 dark:hover:bg-rose-600",
+                          "dark:focus:ring-offset-rose-900"
+                        )}
                       >
                         Sign In
                       </button>
@@ -246,7 +267,13 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                     {session?.user ? (
                       <button
                         onClick={() => setSidebarOpen(true)}
-                        className="ml-6 inline-flex items-center rounded-md border border-transparent bg-rose-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2"
+                        className={cx(
+                          "ml-6 inline-flex items-center rounded-md border border-transparent bg-rose-600 px-4 py-2 text-sm font-medium text-white shadow-sm",
+                          "hover:bg-rose-700",
+                          "focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2",
+                          "dark:bg-rose-700 dark:hover:bg-rose-600",
+                          "dark:focus:ring-offset-rose-900"
+                        )}
                       >
                         New Post
                       </button>
