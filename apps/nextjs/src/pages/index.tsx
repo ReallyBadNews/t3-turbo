@@ -34,6 +34,7 @@ import {
   UserGroupIcon,
 } from "@heroicons/react/24/outline";
 import { cx } from "class-variance-authority";
+import Link from "next/link";
 import { Fragment, useState } from "react";
 import { Feed } from "../components/Feed";
 import type { FeedOrder } from "../types";
@@ -231,16 +232,16 @@ export default function PinsHomepage() {
       <aside className="hidden xl:col-span-4 xl:block">
         <div className="sticky top-4 space-y-4">
           <section aria-labelledby="who-to-follow-heading">
-            <div className="rounded-lg bg-white shadow">
+            <div className="rounded-lg bg-white shadow dark:bg-gray-800">
               <div className="p-6">
                 <h2
                   id="who-to-follow-heading"
-                  className="text-base font-medium text-gray-900"
+                  className="text-base font-medium text-gray-900 dark:text-gray-50"
                 >
                   Who to follow
                 </h2>
                 <div className="mt-6 flow-root">
-                  <ul className="-my-4 divide-y divide-gray-200">
+                  <ul className="-my-4 divide-y divide-gray-200 dark:divide-gray-700">
                     {whoToFollow.map((user) => (
                       <li
                         key={user.handle}
@@ -254,7 +255,7 @@ export default function PinsHomepage() {
                           />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p className="text-sm font-medium text-gray-900">
+                          <p className="text-sm font-medium text-gray-900 dark:text-gray-50">
                             <a href={user.href}>{user.name}</a>
                           </p>
                           <p className="text-sm text-gray-500">
@@ -264,10 +265,14 @@ export default function PinsHomepage() {
                         <div className="flex-shrink-0">
                           <button
                             type="button"
-                            className="inline-flex items-center rounded-full bg-rose-50 px-3 py-0.5 text-sm font-medium text-rose-700 hover:bg-rose-100"
+                            className={cx(
+                              "inline-flex items-center rounded-full bg-rose-50 px-3 py-0.5 text-sm font-medium text-rose-700",
+                              "hover:bg-rose-100",
+                              "dark:bg-rose-700 dark:text-rose-50 dark:hover:bg-rose-600"
+                            )}
                           >
                             <PlusIcon
-                              className="-ml-1 mr-0.5 h-5 w-5 text-rose-400"
+                              className="-ml-1 mr-0.5 h-5 w-5 text-rose-400 dark:text-rose-300"
                               aria-hidden="true"
                             />
                             <span>Follow</span>
@@ -278,12 +283,16 @@ export default function PinsHomepage() {
                   </ul>
                 </div>
                 <div className="mt-6">
-                  <a
+                  <Link
                     href="#"
-                    className="block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
+                    className={cx(
+                      "block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-700 shadow-sm",
+                      "hover:bg-gray-50",
+                      "dark:border-gray-600 dark:bg-gray-700 dark:text-gray-50 dark:hover:bg-gray-600"
+                    )}
                   >
                     View all
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
