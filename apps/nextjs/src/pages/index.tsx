@@ -307,7 +307,7 @@ export default function PinsHomepage() {
                   Trending
                 </h2>
                 <div className="mt-6 flow-root">
-                  <ul role="list" className="-my-4 divide-y divide-gray-200">
+                  <ul className="-my-4 divide-y divide-gray-200">
                     {trendingPosts.map((post) => (
                       <li key={post.id} className="flex space-x-3 py-4">
                         <div className="flex-shrink-0">
