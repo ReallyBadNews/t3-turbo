@@ -27,7 +27,7 @@ import {
   LinkIcon,
   QuestionMarkCircleIcon,
 } from "@heroicons/react/20/solid";
-import { trpc } from "../utils/trpc";
+import { api } from "../utils/api";
 import { cx } from "class-variance-authority";
 import { Combobox } from "./Combobox";
 import type { Community } from "@badnews/db";
@@ -47,11 +47,11 @@ export function Sidebar({
   const dropZoneRef = useRef<HTMLFormElement>(null);
   const photoPreviewRef = useRef<HTMLDivElement>(null);
 
-  const { data: session } = trpc.auth.getSession.useQuery(undefined, {
+  const { data: session } = api.auth.getSession.useQuery(undefined, {
     refetchOnWindowFocus: false,
   });
-  const utils = trpc.useContext();
-  const create = trpc.pin.create.useMutation({
+  const utils = api.useContext();
+  const create = api.pin.create.useMutation({
     // async onMutate(newPin) {
     //   await utils.pin.all.cancel();
 

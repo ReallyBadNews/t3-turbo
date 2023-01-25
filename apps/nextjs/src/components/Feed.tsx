@@ -1,7 +1,7 @@
 import { Fragment, useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import type { FeedOrder } from "../types";
-import { trpc } from "../utils/trpc";
+import { api } from "../utils/api";
 import { PinPost } from "./Pin";
 
 interface FeedProps {
@@ -19,7 +19,7 @@ export const Feed = ({ order = "desc" }: FeedProps) => {
     isFetching,
     isFetchingNextPage,
     status,
-  } = trpc.pin.infinite.useInfiniteQuery(
+  } = api.pin.infinite.useInfiniteQuery(
     { limit: 10, order },
     { getNextPageParam: (lastPage) => lastPage.nextCursor }
   );

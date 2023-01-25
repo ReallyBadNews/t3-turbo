@@ -14,7 +14,7 @@ import { cx } from "class-variance-authority";
 import Link from "next/link";
 import { Fragment } from "react";
 import type { FeedOrder, Pin } from "../types";
-import { trpc } from "../utils/trpc";
+import { api } from "../utils/api";
 import { Image } from "./Image";
 
 interface PinProps {
@@ -23,12 +23,12 @@ interface PinProps {
 }
 
 export const PinPost = ({ data, order }: PinProps) => {
-  const { data: session } = trpc.auth.getSession.useQuery(undefined, {
+  const { data: session } = api.auth.getSession.useQuery(undefined, {
     refetchOnWindowFocus: false,
   });
-  const utils = trpc.useContext();
+  const utils = api.useContext();
 
-  const likePin = trpc.pin.like.useMutation({
+  const likePin = api.pin.like.useMutation({
     async onSettled() {
       // Sync with server once mutation has settled
       await utils.pin.infinite.invalidate();
@@ -153,7 +153,7 @@ export const PinPost = ({ data, order }: PinProps) => {
     },
   });
 
-  const deletePin = trpc.pin.delete.useMutation({
+  const deletePin = api.pin.delete.useMutation({
     async onSettled() {
       // Sync with server once mutation has settled
       await utils.pin.infinite.invalidate();
