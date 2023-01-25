@@ -17,9 +17,8 @@
  *
  */
 import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
-import { type Session } from "next-auth";
 
-import { getServerSession } from "@badnews/auth";
+import { getServerSession, type Session } from "@badnews/auth";
 import { prisma } from "@badnews/db";
 
 type CreateContextOptions = {

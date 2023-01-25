@@ -2,9 +2,9 @@ import { TRPCError } from "@trpc/server";
 import { v2 as cloudinary } from "cloudinary";
 import { getPlaiceholder } from "plaiceholder";
 import { z } from "zod";
-import { protectedProcedure, publicProcedure, router } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
-export const pinRouter = router({
+export const pinRouter = createTRPCRouter({
   infinite: publicProcedure
     .input(
       z.object({

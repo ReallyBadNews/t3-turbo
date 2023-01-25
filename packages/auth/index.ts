@@ -1,5 +1,5 @@
-import type { DefaultSession, DefaultUser } from "next-auth";
 import type { Role } from "@badnews/db";
+import type { DefaultSession, DefaultUser } from "next-auth";
 
 /**
  * Module augmentation for `next-auth` types
@@ -31,3 +31,7 @@ declare module "next-auth" {
     } | null;
   }
 }
+
+export type { Session } from "next-auth";
+export { authOptions } from "./src/auth-options";
+export { getServerSession } from "./src/get-session";
