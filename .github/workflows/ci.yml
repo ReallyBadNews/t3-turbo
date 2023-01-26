@@ -34,6 +34,7 @@ jobs:
         id: pnpm-cache
         run: |
           echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
+
       - name: Setup pnpm cache
         uses: actions/cache@v3
         with:
@@ -41,6 +42,7 @@ jobs:
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
+
       - name: Install deps (with cache)
         run: pnpm install
 
@@ -53,12 +55,13 @@ jobs:
       # Normally, this would be done as part of the turbo pipeline - however since the Expo app doesn't depend on `@acme/db` it doesn't care.
       # TODO: Free for all to find a better solution here.
       - name: Generate Prisma Client
-        run: pnpm turbo db:generate
+        run: pnpm turbo db-generate
 
       - name: Build, lint and type-check
         run: pnpm turbo build lint type-check
         env:
           SKIP_ENV_VALIDATION: true
 
-      - name: Check workspaces
-        run: pnpm manypkg check
+      # FIXME: Add this back once we have an Expo SDK supporting React 18.2
+      # - name: Check workspaces
+      #   run: pnpm manypkg check

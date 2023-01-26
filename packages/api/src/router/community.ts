@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { publicProcedure, router } from "../trpc";
+import { createTRPCRouter, publicProcedure } from "../trpc";
 
-export const communityRouter = router({
+export const communityRouter = createTRPCRouter({
   all: publicProcedure.query(async ({ ctx }) => {
     return ctx.prisma.community.findMany({ orderBy: { name: "asc" } });
   }),

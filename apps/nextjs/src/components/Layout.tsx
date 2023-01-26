@@ -43,7 +43,7 @@ import Link from "next/link";
 import type { FC, ReactNode } from "react";
 import { Fragment, useState } from "react";
 import { Sidebar } from "../components/Sidebar";
-import { trpc } from "../utils/trpc";
+import { api } from "../utils/api";
 import { Image } from "../components/Image";
 
 const navigation = [
@@ -65,11 +65,11 @@ interface LayoutProps {
 
 export const Layout: FC<LayoutProps> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const communities = trpc.community.all.useQuery(undefined, {
+  const communities = api.community.all.useQuery(undefined, {
     refetchOnWindowFocus: false,
   });
 
-  const { data: session } = trpc.auth.getSession.useQuery(undefined, {
+  const { data: session } = api.auth.getSession.useQuery(undefined, {
     refetchOnWindowFocus: false,
   });
 

@@ -38,7 +38,7 @@ import Link from "next/link";
 import { Fragment, useState } from "react";
 import { Feed } from "../components/Feed";
 import type { FeedOrder } from "../types";
-import { trpc } from "../utils/trpc";
+import { api } from "../utils/api";
 
 interface Tabs {
   name: string;
@@ -88,7 +88,7 @@ const trendingPosts = [
 
 export default function PinsHomepage() {
   const [selectedTab, setSelectedTab] = useState(tabs[0]?.order);
-  const communities = trpc.community.all.useQuery(undefined, {
+  const communities = api.community.all.useQuery(undefined, {
     refetchOnWindowFocus: false,
   });
 

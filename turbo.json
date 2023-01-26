@@ -26,6 +26,7 @@
       "dependsOn": ["^build", "^db-generate"],
       "env": [
         "VERCEL_URL",
+        "VERCEL_ENV",
         "PORT",
         "CLOUDINARY_URL",
         "CLOUDINARY_BASE_PUBLIC_ID",

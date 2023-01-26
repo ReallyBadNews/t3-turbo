@@ -22,9 +22,13 @@ export const serverSchema = z.object({
   CLOUDINARY_URL: z.string(),
   CLOUDINARY_BASE_PUBLIC_ID: z.string(),
   IDENTITY_SBX:
-    process.env.NODE_ENV === "production" ? z.string().optional() : z.string(),
+    process.env.VERCEL_ENV === "production"
+      ? z.string().optional()
+      : z.string(),
   IDENTITY_PROD:
-    process.env.NODE_ENV === "production" ? z.string() : z.string().optional(),
+    process.env.VERCEL_ENV === "production"
+      ? z.string()
+      : z.string().optional(),
 });
 
 /**
