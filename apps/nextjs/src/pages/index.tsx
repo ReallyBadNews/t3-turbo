@@ -146,7 +146,7 @@ export default function PinsHomepage() {
             >
               <a
                 href="/communities/all"
-                className="group flex items-center rounded-md bg-gray-200 px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50 hover:text-gray-900"
+                className="group flex items-center rounded-md bg-gray-200 px-3 py-2 text-sm font-medium text-gray-900 dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-700"
               >
                 <span className="truncate">All</span>
               </a>
@@ -155,7 +155,7 @@ export default function PinsHomepage() {
                   <a
                     key={community.name}
                     href={community.slug}
-                    className="group flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                    className="group flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-gray-200"
                   >
                     <span className="truncate">{community.name}</span>
                   </a>
