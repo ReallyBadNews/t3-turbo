@@ -51,17 +51,21 @@ export const Feed = ({ order = "desc" }: FeedProps) => {
         <>
           {data.pages.map((group, index) => (
             <Fragment key={index}>
-              {group.pins.map((pin) => (
-                <PinPost key={pin.id} data={pin} />
+              {group.pins.map((pin, pinIdx) => (
+                <PinPost
+                  key={pin.id}
+                  data={pin}
+                  ref={pinIdx === group.pins.length - 2 ? ref : undefined}
+                />
               ))}
             </Fragment>
           ))}
           {isFetching && !isFetchingNextPage ? (
-            <li className="bg-white px-4 py-6 text-center shadow sm:rounded-lg sm:p-6">
+            <li className="bg-white px-4 py-6 text-center shadow dark:bg-gray-800 dark:text-gray-200 sm:rounded-lg sm:p-6">
               Background Updating...
             </li>
           ) : (
-            <li className="bg-white px-4 py-6 text-center shadow sm:rounded-lg sm:p-6">
+            <li className="bg-white px-4 py-6 text-center shadow dark:bg-gray-800 dark:text-gray-200 sm:rounded-lg sm:p-6">
               <button
                 ref={ref}
                 onClick={() => fetchNextPage()}

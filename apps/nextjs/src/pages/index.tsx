@@ -298,16 +298,16 @@ export default function PinsHomepage() {
             </div>
           </section>
           <section aria-labelledby="trending-heading">
-            <div className="rounded-lg bg-white shadow">
+            <div className="rounded-lg bg-white shadow dark:bg-gray-800">
               <div className="p-6">
                 <h2
                   id="trending-heading"
-                  className="text-base font-medium text-gray-900"
+                  className="text-base font-medium text-gray-900 dark:text-gray-50"
                 >
                   Trending
                 </h2>
                 <div className="mt-6 flow-root">
-                  <ul className="-my-4 divide-y divide-gray-200">
+                  <ul className="-my-4 divide-y divide-gray-200 dark:divide-gray-700">
                     {trendingPosts.map((post) => (
                       <li key={post.id} className="flex space-x-3 py-4">
                         <div className="flex-shrink-0">
@@ -318,18 +318,20 @@ export default function PinsHomepage() {
                           />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p className="text-sm text-gray-800">{post.body}</p>
+                          <p className="text-sm text-gray-800 dark:text-gray-50">
+                            {post.body}
+                          </p>
                           <div className="mt-2 flex">
                             <span className="inline-flex items-center text-sm">
                               <button
                                 type="button"
-                                className="inline-flex space-x-2 text-gray-400 hover:text-gray-500"
+                                className="inline-flex space-x-2 text-gray-400 hover:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400"
                               >
                                 <ChatBubbleLeftEllipsisIcon
                                   className="h-5 w-5"
                                   aria-hidden="true"
                                 />
-                                <span className="font-medium text-gray-900">
+                                <span className="font-medium text-gray-900 dark:text-gray-50">
                                   {post.comments}
                                 </span>
                               </button>
@@ -341,12 +343,16 @@ export default function PinsHomepage() {
                   </ul>
                 </div>
                 <div className="mt-6">
-                  <a
+                  <Link
                     href="#"
-                    className="block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
+                    className={cx(
+                      "block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-700 shadow-sm",
+                      "hover:bg-gray-50",
+                      "dark:border-gray-600 dark:bg-gray-700 dark:text-gray-50 dark:hover:bg-gray-600"
+                    )}
                   >
                     View all
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
