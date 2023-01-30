@@ -1,22 +1,24 @@
-// src/pages/_app.tsx
-import "../styles/globals.css";
-import { SessionProvider } from "next-auth/react";
 import type { Session } from "next-auth";
+import { SessionProvider } from "next-auth/react";
+import { ThemeProvider } from "next-themes";
 import type { AppType } from "next/app";
+import "../styles/globals.css";
 
-import { api } from "../utils/api";
 import { Layout } from "../components/Layout";
+import { api } from "../utils/api";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
   return (
-    <SessionProvider session={session}>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
-    </SessionProvider>
+    <ThemeProvider forcedTheme={Component.theme || undefined} attribute="class">
+      <SessionProvider session={session}>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </SessionProvider>
+    </ThemeProvider>
   );
 };
 

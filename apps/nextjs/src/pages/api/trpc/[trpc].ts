@@ -1,6 +1,7 @@
 import { appRouter, createTRPCContext } from "@badnews/api";
 import { createNextApiHandler } from "@trpc/server/adapters/next";
-import { env } from "../../../env/server.mjs";
+// import { env } from "../../../env/server.mjs";
+import { env } from "@/env.mjs";
 
 // export API handler
 export default createNextApiHandler({
