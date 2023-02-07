@@ -94,14 +94,6 @@ export default function PinsHomepage() {
 
   return (
     <>
-      {/*
-        This example requires updating your template:
-
-        ```
-        <html class="h-full bg-gray-100">
-        <body class="h-full">
-        ```
-      */}
       <div className="hidden lg:col-span-3 lg:block xl:col-span-2">
         <nav
           aria-label="Sidebar"
