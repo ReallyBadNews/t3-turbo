@@ -186,11 +186,11 @@ export function Sidebar({
                       event.preventDefault();
                       setDragActive(true);
                     }}
-                    className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl"
+                    className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl dark:divide-gray-700 dark:bg-gray-900"
                     onSubmit={submitHandler}
                   >
                     <div className="h-0 flex-1 overflow-y-auto">
-                      <div className="bg-indigo-700 py-6 px-4 sm:px-6">
+                      <div className="bg-gray-700 py-6 px-4 dark:bg-gray-700 sm:px-6">
                         <div className="flex items-center justify-between">
                           <Dialog.Title className="text-lg font-medium text-white">
                             Add a New Pin
@@ -198,7 +198,7 @@ export function Sidebar({
                           <div className="ml-3 flex h-7 items-center">
                             <button
                               type="button"
-                              className="rounded-md bg-indigo-700 text-indigo-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
+                              className="rounded-md bg-gray-700 text-gray-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white dark:bg-gray-800 dark:text-gray-400"
                               onClick={closeHandler}
                             >
                               <span className="sr-only">Close panel</span>
@@ -210,7 +210,7 @@ export function Sidebar({
                           </div>
                         </div>
                         <div className="mt-1">
-                          <p className="text-sm text-indigo-300">
+                          <p className="text-sm text-gray-300 dark:text-gray-200">
                             Fill in the information below to add a new pin.
                             Required fields are marked with an asterisk.
                           </p>
@@ -228,13 +228,13 @@ export function Sidebar({
                               </label>
                               <div
                                 className={cx(
-                                  "flex justify-center rounded-md border-2 border-dashed px-6 pt-5 pb-6",
+                                  "flex justify-center rounded-md border-2 border-dashed px-6 pt-5 pb-6 dark:bg-gray-800",
                                   dragActive
                                     ? "border-indigo-300"
                                     : "border-gray-300"
                                 )}
                               >
-                                <div className="text-cente flex flex-col items-center space-y-1">
+                                <div className="flex flex-col items-center space-y-1 text-center">
                                   <div
                                     ref={photoPreviewRef}
                                     className={cx(
@@ -255,10 +255,10 @@ export function Sidebar({
                                       strokeLinejoin="round"
                                     />
                                   </svg>
-                                  <div className="flex text-sm text-gray-600">
+                                  <div className="flex text-sm text-gray-600 dark:text-gray-300">
                                     <label
                                       htmlFor="file-upload"
-                                      className="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
+                                      className="relative cursor-pointer rounded-md bg-white font-medium text-gray-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-gray-500 focus-within:ring-offset-2 hover:text-gray-500 dark:bg-gray-700 dark:text-gray-200"
                                     >
                                       <span>Upload a file</span>
                                       <input
@@ -272,7 +272,7 @@ export function Sidebar({
                                     </label>
                                     <p className="pl-1">or drag and drop</p>
                                   </div>
-                                  <p className="text-xs text-gray-500">
+                                  <p className="text-xs text-gray-500 dark:text-gray-400">
                                     PNG, JPG, GIF up to 10MB
                                   </p>
                                 </div>
