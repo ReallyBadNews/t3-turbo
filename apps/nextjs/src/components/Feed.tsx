@@ -55,6 +55,7 @@ export const Feed = ({ order = "desc" }: FeedProps) => {
                 <PinPost
                   key={pin.id}
                   data={pin}
+                  order={order}
                   ref={pinIdx === group.pins.length - 2 ? ref : undefined}
                 />
               ))}
