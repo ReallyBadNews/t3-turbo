@@ -15,7 +15,7 @@ import { FlashList } from "@shopify/flash-list";
 import type { inferProcedureOutput } from "@trpc/server";
 import type { AppRouter } from "@badnews/api";
 
-import { trpc } from "../utils/trpc";
+import { trpc } from "../utils/api";
 
 const PostCard: FC<{
   pin: inferProcedureOutput<AppRouter["pin"]["all"]>[number];

@@ -34,5 +34,17 @@ module.exports = {
     react: {
       version: "detect",
     },
+    "import/resolver": {
+      typescript: true,
+      node: true,
+    },
   },
+  // overrides: [
+  //   {
+  //     files: ["**/*.ts", "**/*.tsx"],
+  //     rules: {
+  //       "import/no-unresolved": "off",
+  //     },
+  //   },
+  // ],
 };

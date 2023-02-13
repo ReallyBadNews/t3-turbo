@@ -31,6 +31,7 @@
         "CLOUDINARY_URL",
         "CLOUDINARY_BASE_PUBLIC_ID",
         "IDENTITY_SBX",
+        "IDENTITY_PROD",
         "NEXTAUTH_JWT_SECRET"
       ],
       "outputs": [".next/**", ".expo/**", ".dist/**"]

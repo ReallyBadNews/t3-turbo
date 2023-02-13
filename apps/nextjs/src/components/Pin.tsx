@@ -39,7 +39,7 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
         await utils.pin.infinite.cancel();
 
         // Get the data from the queryCache
-        const prevData = utils.pin.infinite.getData();
+        const prevData = utils.pin.infinite.getData({ limit: 10, order });
 
         /**
          * find the pin and increment the likes by one in the infinite query
@@ -164,7 +164,7 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
     return (
       <li
         ref={ref}
-        className="bg-white px-4 py-6 shadow dark:bg-gray-800 sm:rounded-lg sm:p-6"
+        className="bg-white px-4 py-6 shadow dark:border dark:border-gray-700 dark:bg-gray-800 sm:rounded-lg sm:p-6"
       >
         <article aria-labelledby={`pin-post-${data.id}`}>
           {data.image ? (
