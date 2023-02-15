@@ -225,7 +225,7 @@ export default function PinsHomepage() {
       <aside className="hidden xl:col-span-4 xl:block">
         <div className="sticky top-4 space-y-4">
           <section aria-labelledby="who-to-follow-heading">
-            <div className="rounded-lg bg-white shadow dark:bg-gray-800">
+            <div className="rounded-lg bg-white shadow dark:border dark:border-gray-700 dark:bg-gray-800">
               <div className="p-6">
                 <h2
                   id="who-to-follow-heading"
@@ -291,7 +291,7 @@ export default function PinsHomepage() {
             </div>
           </section>
           <section aria-labelledby="trending-heading">
-            <div className="rounded-lg bg-white shadow dark:bg-gray-800">
+            <div className="rounded-lg bg-white shadow dark:border dark:border-gray-700 dark:bg-gray-800">
               <div className="p-6">
                 <h2
                   id="trending-heading"
