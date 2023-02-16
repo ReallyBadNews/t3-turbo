@@ -5,11 +5,11 @@
       "inputs": ["prisma/schema.prisma"],
       "cache": false
     },
-    "db-push": {
+    "db:push": {
       "inputs": ["prisma/schema.prisma"],
       "cache": false
     },
-    "db-seed": {
+    "db:seed": {
       "cache": false
     },
     "dev": {
