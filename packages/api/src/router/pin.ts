@@ -10,7 +10,7 @@ export const pinRouter = createTRPCRouter({
       z.object({
         limit: z.number().min(1).max(100).nullish(),
         cursor: z.string().cuid().nullish(),
-        order: z.enum(["asc", "desc", "likes", "media"]).optional(),
+        order: z.enum(["asc", "desc", "likes"]).optional(),
       })
     )
     .query(async ({ ctx, input }) => {
