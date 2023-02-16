@@ -6,7 +6,7 @@
     "build": "turbo build",
     "clean": "rm -rf node_modules",
     "clean:workspaces": "turbo clean",
-    "db-generate": "dotenv -- turbo db-generate",
+    "db:generate": "dotenv -- turbo db:generate",
     "db-push": "dotenv -- turbo db-push",
     "db-seed": "dotenv -- turbo db-seed",
     "dev": "dotenv -- turbo dev --parallel",

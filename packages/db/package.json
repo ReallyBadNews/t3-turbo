@@ -7,7 +7,7 @@
     "clean": "rm -rf .turbo node_modules dist",
     "dev": "pnpm prisma studio --port 5556",
     "db-push": "pnpm prisma db push",
-    "db-generate": "pnpm prisma generate",
+    "db:generate": "pnpm prisma generate",
     "db-seed": "pnpm tsx seed.ts"
   },
   "dependencies": {
