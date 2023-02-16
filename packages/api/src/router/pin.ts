@@ -11,7 +11,7 @@ export const pinRouter = createTRPCRouter({
         limit: z.number().min(1).max(100).nullish(),
         cursor: z.string().cuid().nullish(),
         order: z.enum(["asc", "desc", "likes"]).optional(),
-      })
+      }),
     )
     .query(async ({ ctx, input }) => {
       const limit = input.limit ?? 50;
@@ -152,7 +152,7 @@ export const pinRouter = createTRPCRouter({
         userId: z.string().cuid(),
         imgSrc: z.string().optional(),
         imgAlt: z.string().optional(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const cloudinaryResp = input.imgSrc

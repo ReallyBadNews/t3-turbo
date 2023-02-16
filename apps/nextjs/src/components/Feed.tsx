@@ -21,7 +21,7 @@ export const Feed = ({ order = "desc" }: FeedProps) => {
     status,
   } = api.pin.infinite.useInfiniteQuery(
     { limit: 10, order },
-    { getNextPageParam: (lastPage) => lastPage.nextCursor }
+    { getNextPageParam: (lastPage) => lastPage.nextCursor },
   );
 
   useEffect(() => {

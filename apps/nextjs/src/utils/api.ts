@@ -1,9 +1,9 @@
 // src/utils/trpc.ts
-import { createTRPCNext } from "@trpc/next";
-import { httpBatchLink, loggerLink } from "@trpc/client";
-import type { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
 import type { AppRouter } from "@badnews/api";
 import { transformer } from "@badnews/api/transformer";
+import { httpBatchLink, loggerLink } from "@trpc/client";
+import { createTRPCNext } from "@trpc/next";
+import type { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
 
 const getBaseUrl = () => {
   if (typeof window !== "undefined") return ""; // browser should use relative url

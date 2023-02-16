@@ -1,11 +1,11 @@
-import { useState } from "react";
-import ExpoConstants from "expo-constants";
+import type { AppRouter } from "@badnews/api";
+import { transformer } from "@badnews/api/transformer";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
 import { createTRPCReact } from "@trpc/react-query";
 import type { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
-import type { AppRouter } from "@badnews/api";
-import { transformer } from "@badnews/api/transformer";
+import ExpoConstants from "expo-constants";
+import { useState } from "react";
 
 /**
  * A set of typesafe hooks for consuming your API.
@@ -56,7 +56,7 @@ export const TRPCProvider: React.FC<{ children: React.ReactNode }> = ({
           url: `${getBaseUrl()}/api/trpc`,
         }),
       ],
-    })
+    }),
   );
 
   return (

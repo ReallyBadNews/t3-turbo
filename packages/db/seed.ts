@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
-import { getPlaiceholder } from "plaiceholder";
 import { v2 as cloudinary } from "cloudinary";
+import { getPlaiceholder } from "plaiceholder";
 import { prisma } from ".";
 
-import type { Community, Comment, Image, Pin } from "@prisma/client";
+import type { Comment, Community, Image, Pin } from "@prisma/client";
 
 const DEFAULT_COMMUNITIES = [
   {

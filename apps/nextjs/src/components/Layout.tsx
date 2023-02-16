@@ -25,8 +25,8 @@ import { Menu, Popover, Transition } from "@headlessui/react";
 import {
   MagnifyingGlassIcon,
   StarIcon,
-  UserIcon,
   SunIcon,
+  UserIcon,
 } from "@heroicons/react/20/solid";
 import {
   ArrowTrendingUpIcon,
@@ -43,9 +43,9 @@ import { signIn, signOut } from "next-auth/react";
 import Link from "next/link";
 import type { FC, ReactNode } from "react";
 import { Fragment, useState } from "react";
+import { Image } from "../components/Image";
 import { Sidebar } from "../components/Sidebar";
 import { api } from "../utils/api";
-import { Image } from "../components/Image";
 
 const navigation = [
   { name: "Home", href: "#", icon: HomeIcon, current: true },
@@ -91,7 +91,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
           className={({ open }) =>
             cx(
               open ? "fixed inset-0 z-40 overflow-y-auto" : "",
-              "bg-white shadow-sm dark:bg-gray-800 lg:static lg:overflow-y-visible"
+              "bg-white shadow-sm dark:bg-gray-800 lg:static lg:overflow-y-visible",
             )
           }
         >
@@ -130,7 +130,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                             name="search"
                             className={cx(
                               "block w-full rounded-md border border-gray-300 bg-white py-2 pl-10 pr-3 text-sm placeholder-gray-500 focus:border-rose-500 focus:text-gray-900 focus:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-rose-500 sm:text-sm",
-                              "dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:placeholder-gray-400 dark:focus:border-rose-500 dark:focus:placeholder-gray-300 dark:focus:ring-rose-500"
+                              "dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:placeholder-gray-400 dark:focus:border-rose-500 dark:focus:placeholder-gray-300 dark:focus:ring-rose-500",
                             )}
                             placeholder="Search"
                             type="search"
@@ -170,7 +170,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                         "hover:text-gray-500",
                         "focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2",
                         "dark:bg-gray-800 dark:hover:text-gray-300",
-                        "dark:focus:ring-offset-gray-900"
+                        "dark:focus:ring-offset-gray-900",
                       )}
                     >
                       <span className="sr-only">View notifications</span>
@@ -183,7 +183,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                         "hover:text-gray-500",
                         "focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2",
                         "dark:bg-gray-800 dark:hover:text-gray-300",
-                        "dark:focus:ring-offset-gray-900"
+                        "dark:focus:ring-offset-gray-900",
                       )}
                     >
                       <span className="sr-only">Change theme</span>
@@ -197,7 +197,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                             className={cx(
                               "flex rounded-full bg-white",
                               "focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2",
-                              "dark:bg-gray-800 dark:focus:ring-offset-gray-900"
+                              "dark:bg-gray-800 dark:focus:ring-offset-gray-900",
                             )}
                           >
                             <span className="sr-only">Open user menu</span>
@@ -238,7 +238,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                                         onClick={() => item.onClick()}
                                         className={cx(
                                           active ? "bg-gray-100" : "",
-                                          "block w-full py-2 px-4 text-left text-sm text-gray-700"
+                                          "block w-full py-2 px-4 text-left text-sm text-gray-700",
                                         )}
                                       >
                                         {item.name}
@@ -250,7 +250,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                                       href={item.href}
                                       className={cx(
                                         active ? "bg-gray-100" : "",
-                                        "block py-2 px-4 text-sm text-gray-700"
+                                        "block py-2 px-4 text-sm text-gray-700",
                                       )}
                                     >
                                       {item.name}
@@ -270,7 +270,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                           "hover:bg-rose-700",
                           "focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2",
                           "dark:bg-rose-700 dark:hover:bg-rose-600",
-                          "dark:focus:ring-offset-rose-900"
+                          "dark:focus:ring-offset-rose-900",
                         )}
                       >
                         Sign In
@@ -285,7 +285,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                           "hover:bg-rose-700",
                           "focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2",
                           "dark:bg-rose-700 dark:hover:bg-rose-600",
-                          "dark:focus:ring-offset-rose-900"
+                          "dark:focus:ring-offset-rose-900",
                         )}
                       >
                         New Post
@@ -311,7 +311,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                         item.current
                           ? "bg-gray-100 text-gray-900"
                           : "hover:bg-gray-50",
-                        "block rounded-md py-2 px-3 text-base font-medium"
+                        "block rounded-md py-2 px-3 text-base font-medium",
                       )}
                     >
                       {item.name}

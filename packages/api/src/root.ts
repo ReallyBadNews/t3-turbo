@@ -1,7 +1,7 @@
-import { createTRPCRouter } from "./trpc";
-import { pinRouter } from "./router/pin";
-import { communityRouter } from "./router/community";
 import { authRouter } from "./router/auth";
+import { communityRouter } from "./router/community";
+import { pinRouter } from "./router/pin";
+import { createTRPCRouter } from "./trpc";
 
 export const appRouter = createTRPCRouter({
   pin: pinRouter,

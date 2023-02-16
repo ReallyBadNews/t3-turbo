@@ -1,7 +1,7 @@
 import { v2 as cloudinary } from "cloudinary";
-import { getPlaiceholder } from "plaiceholder";
-import CredentialsProvider from "next-auth/providers/credentials";
 import { type NextAuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { getPlaiceholder } from "plaiceholder";
 
 import type { Image } from "@badnews/db";
 import { prisma } from "@badnews/db";
@@ -47,7 +47,7 @@ export const authOptions: NextAuthOptions = {
               credentials: credentials?.password,
             }),
             headers: { "Content-Type": "application/json" },
-          }
+          },
         );
 
         const user = (await loginRes.json()) as APIErrorResponse | UserIdentity;
@@ -94,7 +94,7 @@ export const authOptions: NextAuthOptions = {
               headers: {
                 Authorization: `Bearer ${user.accessToken}`,
               },
-            }
+            },
           );
 
           const userProfile = (await profileRes.json()) as
@@ -118,7 +118,7 @@ export const authOptions: NextAuthOptions = {
                     env: process.env.CLOUDINARY_BASE_PUBLIC_ID,
                     cloudinaryUrl: process.env.CLOUDINARY_URL,
                     photo: userProfile.picture,
-                  }
+                  },
                 );
                 const { secure_url: secureURL, public_id: publicId } =
                   await cloudinary.uploader.upload(userProfile.picture, {
