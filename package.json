@@ -11,9 +11,8 @@
     "db:seed": "dotenv -- turbo db:seed",
     "dev": "dotenv -- turbo dev --parallel",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "lint": "turbo lint --parallel",
-    "type-check": "turbo type-check",
-    "postinstall": "manypkg check"
+    "lint": "turbo lint --continue --parallel && manypkg check",
+    "type-check": "turbo type-check"
   },
   "dependencies": {
     "@manypkg/cli": "^0.20.0",
