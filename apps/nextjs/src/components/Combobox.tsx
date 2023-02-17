@@ -12,10 +12,10 @@
   }
   ```
 */
-import { useState } from "react";
-import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { Combobox as HUICombobox } from "@headlessui/react";
+import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { cx } from "class-variance-authority";
+import { useState } from "react";
 
 // function getProperty<Type, Key extends keyof Type>(obj: Type, key: Key) {
 //   return obj[key];
@@ -82,7 +82,7 @@ export const Combobox = ({ label, options }: ComboboxProps) => {
                 className={({ active }) =>
                   cx(
                     "relative cursor-default select-none py-2 pl-8 pr-4",
-                    active ? "bg-indigo-600 text-white" : "text-gray-900"
+                    active ? "bg-indigo-600 text-white" : "text-gray-900",
                   )
                 }
               >
@@ -91,7 +91,7 @@ export const Combobox = ({ label, options }: ComboboxProps) => {
                     <span
                       className={cx(
                         "block truncate",
-                        selected ? "font-semibold" : undefined
+                        selected ? "font-semibold" : undefined,
                       )}
                     >
                       {option.name}
@@ -101,7 +101,7 @@ export const Combobox = ({ label, options }: ComboboxProps) => {
                       <span
                         className={cx(
                           "absolute inset-y-0 left-0 flex items-center pl-1.5",
-                          active ? "text-white" : "text-indigo-600"
+                          active ? "text-white" : "text-indigo-600",
                         )}
                       >
                         <CheckIcon className="h-5 w-5" aria-hidden="true" />

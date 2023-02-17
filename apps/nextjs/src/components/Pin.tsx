@@ -55,7 +55,7 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
           }
 
           const likedByUser = data.likedBy.some(
-            (user) => user.id === session?.user.id
+            (user) => user.id === session?.user.id,
           );
 
           return {
@@ -70,7 +70,7 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
                       return {
                         ...pin,
                         likedBy: pin.likedBy.filter(
-                          (user) => user.id !== session?.user.id
+                          (user) => user.id !== session?.user.id,
                         ),
                         _count: {
                           likedBy: pin._count.likedBy - 1,
@@ -133,7 +133,7 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
                     return {
                       ...pin,
                       likedBy: pin.likedBy.filter(
-                        (user) => user.id !== session?.user.id
+                        (user) => user.id !== session?.user.id,
                       ),
                       _count: {
                         likedBy: pin._count.likedBy - 1,
@@ -244,7 +244,7 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
                                 active
                                   ? "bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-50"
                                   : "text-gray-700 dark:text-gray-200",
-                                "flex w-full px-4 py-2 text-sm"
+                                "flex w-full px-4 py-2 text-sm",
                               )}
                             >
                               <StarIcon
@@ -263,7 +263,7 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
                                 active
                                   ? "bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-50"
                                   : "text-gray-700 dark:text-gray-200",
-                                "flex w-full px-4 py-2 text-sm"
+                                "flex w-full px-4 py-2 text-sm",
                               )}
                             >
                               <CodeBracketIcon
@@ -282,7 +282,7 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
                                 active
                                   ? "bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-50"
                                   : "text-gray-700 dark:text-gray-200",
-                                "flex w-full px-4 py-2 text-sm"
+                                "flex w-full px-4 py-2 text-sm",
                               )}
                             >
                               <FlagIcon
@@ -303,7 +303,7 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
                                   active
                                     ? "bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-50"
                                     : "text-gray-700 dark:text-gray-200",
-                                  "flex w-full px-4 py-2 text-sm"
+                                  "flex w-full px-4 py-2 text-sm",
                                 )}
                               >
                                 <TrashIcon
@@ -389,7 +389,7 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
         </article>
       </li>
     );
-  }
+  },
 );
 
 PinPost.displayName = "Pin";

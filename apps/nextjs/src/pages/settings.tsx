@@ -3,7 +3,7 @@ import {
   KeyIcon,
   SquaresPlusIcon,
   UserCircleIcon,
-  UserGroupIcon
+  UserGroupIcon,
 } from "@heroicons/react/24/outline";
 import { cx } from "class-variance-authority";
 
@@ -28,7 +28,7 @@ export default function Settings() {
                 item.current
                   ? "bg-gray-50 text-indigo-700 hover:bg-white hover:text-indigo-700"
                   : "text-gray-900 hover:bg-gray-50 hover:text-gray-900",
-                "group flex items-center rounded-md px-3 py-2 text-sm font-medium"
+                "group flex items-center rounded-md px-3 py-2 text-sm font-medium",
               )}
               aria-current={item.current ? "page" : undefined}
             >
@@ -37,7 +37,7 @@ export default function Settings() {
                   item.current
                     ? "text-indigo-500 group-hover:text-indigo-500"
                     : "text-gray-400 group-hover:text-gray-500",
-                  "-ml-1 mr-3 h-6 w-6 flex-shrink-0"
+                  "-ml-1 mr-3 h-6 w-6 flex-shrink-0",
                 )}
                 aria-hidden="true"
               />

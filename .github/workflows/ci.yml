@@ -5,6 +5,7 @@ on:
     branches: ["*"]
   push:
     branches: ["main"]
+  merge_group:
 
 # You can leverage Vercel Remote Caching with Turbo to speed up your builds
 # @link https://turborepo.org/docs/core-concepts/remote-caching#remote-caching-on-vercel-builds
@@ -56,6 +57,5 @@ jobs:
         env:
           SKIP_ENV_VALIDATION: true
 
-      # FIXME: Add this back once we have an Expo SDK supporting React 18.2
-      # - name: Check workspaces
-      #   run: pnpm manypkg check
+      - name: Check workspaces
+        run: pnpm manypkg check

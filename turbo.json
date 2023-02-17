@@ -1,19 +1,19 @@
 {
   "$schema": "https://turborepo.org/schema.json",
   "pipeline": {
-    "db-generate": {
+    "db:generate": {
       "inputs": ["prisma/schema.prisma"],
       "cache": false
     },
-    "db-push": {
+    "db:push": {
       "inputs": ["prisma/schema.prisma"],
       "cache": false
     },
-    "db-seed": {
+    "db:seed": {
       "cache": false
     },
     "dev": {
-      "dependsOn": ["^db-generate"],
+      "dependsOn": ["^db:generate"],
       "env": [
         "VERCEL_URL",
         "PORT",
@@ -23,7 +23,7 @@
       "cache": false
     },
     "build": {
-      "dependsOn": ["^build", "^db-generate"],
+      "dependsOn": ["^build", "^db:generate"],
       "env": [
         "VERCEL_URL",
         "VERCEL_ENV",
@@ -46,7 +46,7 @@
       "cache": false
     },
     "type-check": {
-      "dependsOn": ["^db-generate"],
+      "dependsOn": ["^db:generate"],
       "cache": false
     }
   },

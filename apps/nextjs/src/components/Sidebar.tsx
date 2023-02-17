@@ -12,6 +12,15 @@
   }
   ```
 */
+import type { Community } from "@badnews/db";
+import { Dialog, Transition } from "@headlessui/react";
+import {
+  InformationCircleIcon,
+  LinkIcon,
+  QuestionMarkCircleIcon,
+} from "@heroicons/react/20/solid";
+import { XMarkIcon } from "@heroicons/react/24/outline";
+import { cx } from "class-variance-authority";
 import type {
   ChangeEventHandler,
   Dispatch,
@@ -19,18 +28,9 @@ import type {
   FormEventHandler,
   SetStateAction,
 } from "react";
-import { useState, useRef, Fragment } from "react";
-import { Dialog, Transition } from "@headlessui/react";
-import { XMarkIcon } from "@heroicons/react/24/outline";
-import {
-  InformationCircleIcon,
-  LinkIcon,
-  QuestionMarkCircleIcon,
-} from "@heroicons/react/20/solid";
+import { Fragment, useRef, useState } from "react";
 import { api } from "../utils/api";
-import { cx } from "class-variance-authority";
 import { Combobox } from "./Combobox";
-import type { Community } from "@badnews/db";
 
 export function Sidebar({
   communities,
@@ -87,7 +87,7 @@ export function Sidebar({
     const description = formData.get("description") as string;
     const communityName = formData.get("community") as string;
     const commmunityId = communities?.find(
-      (community) => community.name === communityName
+      (community) => community.name === communityName,
     )?.id as string;
 
     // convert `fileInfo` to a base64 string
@@ -231,14 +231,14 @@ export function Sidebar({
                                   "flex justify-center rounded-md border-2 border-dashed px-6 pt-5 pb-6 dark:bg-gray-800",
                                   dragActive
                                     ? "border-indigo-300"
-                                    : "border-gray-300"
+                                    : "border-gray-300",
                                 )}
                               >
                                 <div className="flex flex-col items-center space-y-1 text-center">
                                   <div
                                     ref={photoPreviewRef}
                                     className={cx(
-                                      fileInfo ? undefined : "hidden"
+                                      fileInfo ? undefined : "hidden",
                                     )}
                                   />
                                   <svg
@@ -296,12 +296,12 @@ export function Sidebar({
                                     </p>
                                     <p className="mt-1 text-xs text-blue-700">
                                       {`Size: ${Math.round(
-                                        fileInfo.size / 1000
+                                        fileInfo.size / 1000,
                                       )} KB`}
                                     </p>
                                     <p className="mt-1 text-xs text-blue-700">
                                       {`Last Modified: ${new Date(
-                                        fileInfo.lastModified
+                                        fileInfo.lastModified,
                                       ).toLocaleDateString()}`}
                                     </p>
                                   </div>

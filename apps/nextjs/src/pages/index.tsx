@@ -108,7 +108,7 @@ export default function PinsHomepage() {
                   item.current
                     ? "bg-gray-200 text-gray-900 dark:bg-gray-800 dark:text-gray-50"
                     : "text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-700",
-                  "group flex items-center rounded-md px-3 py-2 text-sm font-medium"
+                  "group flex items-center rounded-md px-3 py-2 text-sm font-medium",
                 )}
                 aria-current={item.current ? "page" : undefined}
               >
@@ -117,7 +117,7 @@ export default function PinsHomepage() {
                     item.current
                       ? "text-gray-500 dark:text-gray-400"
                       : "text-gray-400 group-hover:text-gray-500 dark:text-gray-600 dark:group-hover:text-gray-400",
-                    "-ml-1 mr-3 h-6 w-6 flex-shrink-0"
+                    "-ml-1 mr-3 h-6 w-6 flex-shrink-0",
                   )}
                   aria-hidden="true"
                 />
@@ -191,7 +191,7 @@ export default function PinsHomepage() {
                         tabIdx === 0 ? "rounded-l-lg" : "",
                         tabIdx === tabs.length - 1 ? "rounded-r-lg" : "",
                         "group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-6 text-center text-sm font-medium hover:bg-gray-50 focus:z-10 dark:bg-gray-800 dark:hover:bg-gray-700",
-                        "focus-visible:outline-0"
+                        "focus-visible:outline-0",
                       )}
                     >
                       <span>{tab.name}</span>
@@ -199,7 +199,7 @@ export default function PinsHomepage() {
                         aria-hidden="true"
                         className={cx(
                           selected ? "bg-rose-500" : "bg-transparent",
-                          "absolute inset-x-0 bottom-0 h-0.5"
+                          "absolute inset-x-0 bottom-0 h-0.5",
                         )}
                       />
                     </span>
@@ -261,7 +261,7 @@ export default function PinsHomepage() {
                             className={cx(
                               "inline-flex items-center rounded-full bg-rose-50 px-3 py-0.5 text-sm font-medium text-rose-700",
                               "hover:bg-rose-100",
-                              "dark:bg-rose-700 dark:text-rose-50 dark:hover:bg-rose-600"
+                              "dark:bg-rose-700 dark:text-rose-50 dark:hover:bg-rose-600",
                             )}
                           >
                             <PlusIcon
@@ -281,7 +281,7 @@ export default function PinsHomepage() {
                     className={cx(
                       "block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-700 shadow-sm",
                       "hover:bg-gray-50",
-                      "dark:border-gray-600 dark:bg-gray-700 dark:text-gray-50 dark:hover:bg-gray-600"
+                      "dark:border-gray-600 dark:bg-gray-700 dark:text-gray-50 dark:hover:bg-gray-600",
                     )}
                   >
                     View all
@@ -341,7 +341,7 @@ export default function PinsHomepage() {
                     className={cx(
                       "block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-700 shadow-sm",
                       "hover:bg-gray-50",
-                      "dark:border-gray-600 dark:bg-gray-700 dark:text-gray-50 dark:hover:bg-gray-600"
+                      "dark:border-gray-600 dark:bg-gray-700 dark:text-gray-50 dark:hover:bg-gray-600",
                     )}
                   >
                     View all

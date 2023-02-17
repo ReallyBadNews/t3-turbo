@@ -6,6 +6,12 @@
  * tl;dr - this is where all the tRPC server stuff is created and plugged in.
  * The pieces you will need to use are documented accordingly near the end
  */
+import { getServerSession, type Session } from "@badnews/auth";
+import { prisma } from "@badnews/db";
+import { initTRPC, TRPCError } from "@trpc/server";
+import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
+import superjson from "superjson";
+import { ZodError } from "zod";
 
 /**
  * 1. CONTEXT
@@ -16,10 +22,6 @@
  * processing a request
  *
  */
-import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
-
-import { getServerSession, type Session } from "@badnews/auth";
-import { prisma } from "@badnews/db";
 
 type CreateContextOptions = {
   session: Session | null;
@@ -32,7 +34,7 @@ type CreateContextOptions = {
  * Examples of things you may need it for:
  * - testing, so we dont have to mock Next.js' req/res
  * - trpc's `createSSGHelpers` where we don't have req/res
- * @see https://create.t3.gg/en/usage/trpc#-servertrpccontextts
+ * @see https://create.t3.gg/en/usage/trpc#-serverapitrpcts
  */
 const createInnerTRPCContext = (opts: CreateContextOptions) => {
   return {
@@ -63,13 +65,18 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
  * This is where the trpc api is initialized, connecting the context and
  * transformer
  */
-import { initTRPC, TRPCError } from "@trpc/server";
-import superjson from "superjson";
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
-  errorFormatter({ shape }) {
-    return shape;
+  errorFormatter({ shape, error }) {
+    return {
+      ...shape,
+      data: {
+        ...shape.data,
+        zodError:
+          error.cause instanceof ZodError ? error.cause.flatten() : null,
+      },
+    };
   },
 });
 
@@ -124,7 +131,7 @@ const enforceUserIsAdmin = t.middleware(async ({ ctx, next }) => {
 });
 
 /**
- * Protected (authed) procedure
+ * Protected (authed) procedures
  *
  * If you want a query or mutation to ONLY be accessible to logged in users, use
  * this. It verifies the session is valid and guarantees ctx.session.user is not

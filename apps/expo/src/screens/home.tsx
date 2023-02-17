@@ -11,9 +11,9 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import type { AppRouter } from "@badnews/api";
 import { FlashList } from "@shopify/flash-list";
 import type { inferProcedureOutput } from "@trpc/server";
-import type { AppRouter } from "@badnews/api";
 
 import { trpc } from "../utils/api";
 
@@ -54,11 +54,11 @@ const CreatePost: FC = () => {
   useEffect(() => {
     keyboardDidShowListener.current = Keyboard.addListener(
       "keyboardWillShow",
-      onKeyboardShow
+      onKeyboardShow,
     );
     keyboardDidHideListener.current = Keyboard.addListener(
       "keyboardWillHide",
-      onKeyboardHide
+      onKeyboardHide,
     );
 
     return () => {
