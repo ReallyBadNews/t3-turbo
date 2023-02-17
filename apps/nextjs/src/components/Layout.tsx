@@ -209,7 +209,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                                 height={32}
                                 alt={`Avatar of ${
                                   session?.user.name || "user"
-                                }}`}
+                                }`}
                               />
                             ) : (
                               <UserIcon
