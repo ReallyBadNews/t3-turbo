@@ -164,7 +164,7 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
     return (
       <li
         ref={ref}
-        className="bg-white px-4 py-6 shadow dark:border dark:border-gray-700 dark:bg-gray-800 sm:rounded-lg sm:p-6"
+        className="border border-transparent bg-white px-4 py-6 shadow dark:border-gray-700 dark:bg-gray-800 sm:rounded-lg sm:p-6"
       >
         <article aria-labelledby={`pin-post-${data.id}`}>
           {data.image ? (
