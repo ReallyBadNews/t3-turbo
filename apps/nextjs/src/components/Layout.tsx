@@ -25,7 +25,6 @@ import { Menu, Popover, Transition } from "@headlessui/react";
 import {
   MagnifyingGlassIcon,
   StarIcon,
-  SunIcon,
   UserIcon,
 } from "@heroicons/react/20/solid";
 import {
@@ -46,6 +45,7 @@ import { Fragment, useState } from "react";
 import { Image } from "../components/Image";
 import { Sidebar } from "../components/Sidebar";
 import { api } from "../utils/api";
+import { ThemeToggle } from "./ThemeToggle";
 
 const navigation = [
   { name: "Home", href: "#", icon: HomeIcon, current: true },
@@ -176,19 +176,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                       <span className="sr-only">View notifications</span>
                       <BellIcon className="h-6 w-6" aria-hidden="true" />
                     </Link>
-                    {/* Theme toggle */}
-                    <button
-                      className={cx(
-                        "ml-4 flex-shrink-0 rounded-full bg-white p-1 text-gray-400",
-                        "hover:text-gray-500",
-                        "focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2",
-                        "dark:bg-gray-800 dark:hover:text-gray-300",
-                        "dark:focus:ring-offset-gray-900",
-                      )}
-                    >
-                      <span className="sr-only">Change theme</span>
-                      <SunIcon className="h-6 w-6" />
-                    </button>
+                    <ThemeToggle />
                     {/* Profile dropdown */}
                     {session?.user ? (
                       <Menu as="div" className="relative ml-5 flex-shrink-0">
