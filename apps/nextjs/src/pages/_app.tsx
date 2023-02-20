@@ -1,3 +1,4 @@
+import "@total-typescript/ts-reset";
 import type { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
@@ -6,6 +7,9 @@ import "../styles/globals.css";
 
 import { Layout } from "../components/Layout";
 import { api } from "../utils/api";
+
+// .filter just got smarter!
+// const filteredArray = [1, 2, undefined].filter(Boolean); // number[]
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
