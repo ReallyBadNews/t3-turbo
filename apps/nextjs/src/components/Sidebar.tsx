@@ -100,12 +100,16 @@ export function Sidebar({
         })
       : undefined;
 
-    await create.mutateAsync({
-      description,
-      userId: session?.user.id,
-      imgSrc: file,
-      communityId: commmunityId,
-    });
+    await create
+      .mutateAsync({
+        description,
+        userId: session?.user.id,
+        imgSrc: file,
+        communityId: commmunityId,
+      })
+      .catch((err) => {
+        console.error(err);
+      });
 
     closeHandler();
   };
