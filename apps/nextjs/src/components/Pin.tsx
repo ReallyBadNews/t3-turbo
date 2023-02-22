@@ -30,10 +30,6 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
     const utils = api.useContext();
 
     const likePin = api.pin.like.useMutation({
-      async onSettled() {
-        // Sync with server once mutation has settled
-        await utils.pin.infinite.invalidate();
-      },
       async onMutate(id) {
         // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
         await utils.pin.infinite.cancel();
@@ -113,7 +109,7 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
         // Return the previous data so we can revert if something goes wrong
         return { prevData };
       },
-      onError(err, newPin) {
+      onError(err, newPin, ctx) {
         // If the mutation fails, use the context-value from onMutate
         utils.pin.infinite.setInfiniteData({ limit: 10 }, (old) => {
           if (!old) {
@@ -148,8 +144,8 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
           };
         });
       },
-      onSuccess: async () => {
-        // Invalidate and refetch
+      async onSettled() {
+        // Sync with server once mutation has settled
         await utils.pin.infinite.invalidate();
       },
     });
