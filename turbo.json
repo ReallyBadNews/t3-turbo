@@ -34,7 +34,7 @@
         "IDENTITY_PROD",
         "NEXTAUTH_JWT_SECRET"
       ],
-      "outputs": [".next/**", ".expo/**", ".dist/**"]
+      "outputs": [".next/**", ".expo/**", ".dist/**", "storybook-static/**"]
     },
     "lint": {
       "outputs": []
