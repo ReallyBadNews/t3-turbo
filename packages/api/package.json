@@ -12,8 +12,8 @@
     "@badnews/auth": "workspace:*",
     "@badnews/db": "workspace:*",
     "@badnews/utils": "workspace:*",
-    "@trpc/client": "10.12.0",
-    "@trpc/server": "10.12.0",
+    "@trpc/client": "10.13.0",
+    "@trpc/server": "10.13.0",
     "cloudinary": "^1.34.0",
     "plaiceholder": "^2.5.0",
     "sharp": "^0.31.2",
@@ -21,7 +21,7 @@
     "zod": "^3.20.6"
   },
   "devDependencies": {
-    "eslint": "^8.34.0",
+    "eslint": "^8.35.0",
     "typescript": "^4.9.5"
   }
 }
