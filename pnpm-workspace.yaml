@@ -1,3 +1,11 @@
 packages:
-  - "apps/*"
-  - "packages/*"
+  - apps/expo
+  - apps/nextjs
+  - apps/workshop
+  - packages/api
+  - packages/auth
+  - packages/db
+  - packages/config/*
+  - packages/utils
+  - packages/tsconfig
+  - packages/eslint-config-badnews
