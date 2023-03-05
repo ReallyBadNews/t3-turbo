@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "eslint": "^8.35.0",
+    "tsconfig": "workspace:*",
     "typescript": "^4.9.5"
   }
 }

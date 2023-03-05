@@ -7,4 +7,5 @@ packages:
   - packages/db
   - packages/config/*
   - packages/utils
+  - packages/tsconfig
   - packages/eslint-config-badnews

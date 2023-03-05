@@ -1,4 +1,4 @@
-import { Menu, Transition } from "@headlessui/react";
+import { Menu, Popover, Transition } from "@headlessui/react";
 import {
   ChatBubbleLeftEllipsisIcon,
   CodeBracketIcon,
@@ -15,6 +15,7 @@ import Link from "next/link";
 import { forwardRef, Fragment } from "react";
 import type { FeedOrder, Pin } from "../types";
 import { api } from "../utils/api";
+import { Comments } from "./Comment";
 import { Image } from "./Image";
 
 interface PinProps {
@@ -340,8 +341,8 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
                   <span className="sr-only">likes</span>
                 </button>
               </span>
-              <span className="inline-flex items-center text-sm">
-                <button
+              <Popover className="inline-flex items-center text-sm">
+                <Popover.Button
                   type="button"
                   className="inline-flex space-x-2 text-gray-400 hover:text-gray-500 dark:text-gray-600"
                 >
@@ -353,8 +354,20 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
                     {data.comments.length}
                   </span>
                   <span className="sr-only">replies</span>
-                </button>
-              </span>
+                </Popover.Button>
+                <Transition
+                  enter="transition duration-100 ease-out"
+                  enterFrom="transform scale-95 opacity-0"
+                  enterTo="transform scale-100 opacity-100"
+                  leave="transition duration-75 ease-out"
+                  leaveFrom="transform scale-100 opacity-100"
+                  leaveTo="transform scale-95 opacity-0"
+                >
+                  <Popover.Panel className="absolute z-10 w-64 rounded-md border border-x-gray-300 bg-slate-50 p-4 dark:border-gray-700 dark:bg-slate-800">
+                    <Comments />
+                  </Popover.Panel>
+                </Transition>
+              </Popover>
               <span className="inline-flex items-center text-sm">
                 <button
                   type="button"

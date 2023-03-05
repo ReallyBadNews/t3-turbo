@@ -8,11 +8,6 @@ datasource db {
   relationMode = "prisma"
 }
 
-model Views {
-  slug  String @id @db.VarChar(128)
-  count BigInt @default(1)
-}
-
 model Pin {
   id                 String     @id @default(cuid())
   createdAt          DateTime   @default(now())
