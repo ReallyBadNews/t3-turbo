@@ -363,7 +363,7 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
                   leaveFrom="transform scale-100 opacity-100"
                   leaveTo="transform scale-95 opacity-0"
                 >
-                  <Popover.Panel className="absolute z-10">
+                  <Popover.Panel className="absolute z-10 w-64 rounded-md border border-x-gray-300 bg-slate-50 p-4 dark:border-gray-700 dark:bg-slate-800">
                     <Comments />
                   </Popover.Panel>
                 </Transition>
