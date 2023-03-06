@@ -311,4 +311,33 @@ export const pinRouter = createTRPCRouter({
         },
       });
     }),
+  comment: protectedProcedure
+    .input(
+      z.object({
+        pinId: z.string().cuid(),
+        userId: z.string().cuid(),
+        content: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.prisma.comment.create({
+        data: {
+          // content: input.content,
+          body: input.content,
+          pin: {
+            connect: {
+              id: input.pinId,
+            },
+          },
+          user: {
+            connect: {
+              id: input.userId,
+            },
+          },
+        },
+        include: {
+          user: true,
+        },
+      });
+    }),
 });
