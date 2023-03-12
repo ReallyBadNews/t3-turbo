@@ -43,7 +43,20 @@ export const pinRouter = createTRPCRouter({
           latitude: true,
           longitude: true,
           city: true,
-          comments: true,
+          comments: {
+            select: {
+              id: true,
+              body: true,
+              createdAt: true,
+              user: {
+                select: {
+                  id: true,
+                  image: true,
+                  displayName: true,
+                },
+              },
+            },
+          },
           community: true,
           image: true,
           createdAt: true,
@@ -322,7 +335,6 @@ export const pinRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       return ctx.prisma.comment.create({
         data: {
-          // content: input.content,
           body: input.content,
           pin: {
             connect: {

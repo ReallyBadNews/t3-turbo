@@ -365,7 +365,30 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
                 >
                   <Popover.Panel className="absolute z-10 w-96">
                     {session?.user.id ? (
-                      <Comment pinId={data.id} userId={session.user.id} />
+                      <div>
+                        {data.comments.map((comment) => (
+                          <div key={comment.id}>
+                            <div className="flex items-center space-x-3">
+                              {/* <div className="flex-shrink-0">
+                                <img
+                                  className="h-10 w-10 rounded-full"
+                                  src={comment.user.image}
+                                  alt=""
+                                />
+                              </div> */}
+                              <div className="min-w-0 flex-1">
+                                {/* <p className="text-sm font-medium text-gray-900 dark:text-gray-50">
+                                  {comment.user.name}
+                                </p> */}
+                                <p className="text-sm text-gray-500 dark:text-gray-200">
+                                  {comment.body}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                        <Comment pinId={data.id} userId={session.user.id} />
+                      </div>
                     ) : null}
                   </Popover.Panel>
                 </Transition>

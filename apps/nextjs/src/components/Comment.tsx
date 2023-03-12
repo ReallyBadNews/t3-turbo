@@ -1,17 +1,3 @@
-/*
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
-*/
 import { Listbox, Transition } from "@headlessui/react";
 import {
   FaceFrownIcon,
@@ -24,7 +10,8 @@ import {
 } from "@heroicons/react/20/solid";
 import { cx } from "class-variance-authority";
 import { Fragment, useState } from "react";
-import { api } from "../utils/api";
+import { useForm } from "react-hook-form";
+import { api, type RouterInputs } from "../utils/api";
 
 const moods = [
   {
@@ -76,40 +63,63 @@ interface CommentProps {
   userId: string;
 }
 
+type FormData = RouterInputs["pin"]["comment"];
+
 export function Comment({ pinId, userId }: CommentProps) {
   const [selected, setSelected] = useState(moods[5]);
 
+  const {
+    handleSubmit,
+    register,
+    reset,
+    formState: { errors },
+  } = useForm<FormData>();
+
   const utils = api.useContext();
 
-  const { mutate, error } = api.pin.comment.useMutation({
+  const { mutate, error, isLoading } = api.pin.comment.useMutation({
     async onSuccess() {
       await utils.pin.infinite.invalidate();
+      reset();
     },
   });
 
-  const submitHandler: React.FormEventHandler<HTMLFormElement> = (event) => {
-    event.preventDefault();
-    const target = event.target as typeof event.target & {
-      comment: { value: string };
-    };
-    const comment = target.comment.value;
-    mutate({ pinId, userId, content: comment });
-  };
+  function onSubmit(data: FormData) {
+    mutate({
+      pinId,
+      userId,
+      content: data.content,
+    });
+  }
+
+  // const submitHandler: React.FormEventHandler<HTMLFormElement> = (event) => {
+  //   event.preventDefault();
+  //   const target = event.target as typeof event.target & {
+  //     comment: { value: string };
+  //   };
+  //   const comment = target.comment.value;
+  //   mutate({ pinId, userId, content: comment });
+  // };
 
   return (
     <div className="min-w-0 flex-1 rounded-md bg-slate-50 dark:bg-slate-800">
-      <form action="#" className="relative" onSubmit={submitHandler}>
+      <form action="#" className="relative" onSubmit={handleSubmit(onSubmit)}>
         <div className="overflow-hidden rounded-lg shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-slate-600 dark:ring-gray-600 dark:focus-within:ring-slate-400">
           <label htmlFor="comment" className="sr-only">
             Add your comment
           </label>
           <textarea
             rows={3}
-            name="comment"
-            id="comment"
             className="block w-full resize-none border-0 bg-transparent text-gray-900 placeholder:text-gray-400 focus:ring-0 dark:text-gray-50 sm:py-1.5 sm:text-sm sm:leading-6"
             placeholder="Add your comment..."
-            defaultValue={""}
+            // defaultValue={""}
+            {...register("content", {
+              required: "Comment is required",
+              minLength: {
+                value: 3,
+                message: "Comment must be at least 3 characters",
+              },
+            })}
           />
 
           {/* Spacer element to match the height of the toolbar */}
@@ -220,7 +230,7 @@ export function Comment({ pinId, userId }: CommentProps) {
               type="submit"
               className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Post
+              {isLoading ? "Sending..." : "Send"}
             </button>
           </div>
         </div>
