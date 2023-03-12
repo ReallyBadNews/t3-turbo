@@ -15,7 +15,7 @@ import Link from "next/link";
 import { forwardRef, Fragment } from "react";
 import type { FeedOrder, Pin } from "../types";
 import { api } from "../utils/api";
-import { Comments } from "./Comment";
+import { Comment } from "./Comment";
 import { Image } from "./Image";
 
 interface PinProps {
@@ -363,8 +363,33 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
                   leaveFrom="transform scale-100 opacity-100"
                   leaveTo="transform scale-95 opacity-0"
                 >
-                  <Popover.Panel className="absolute z-10 w-64 rounded-md border border-x-gray-300 bg-slate-50 p-4 dark:border-gray-700 dark:bg-slate-800">
-                    <Comments />
+                  <Popover.Panel className="absolute z-10 w-96">
+                    {session?.user.id ? (
+                      <div>
+                        {data.comments.map((comment) => (
+                          <div key={comment.id}>
+                            <div className="flex items-center space-x-3">
+                              {/* <div className="flex-shrink-0">
+                                <img
+                                  className="h-10 w-10 rounded-full"
+                                  src={comment.user.image}
+                                  alt=""
+                                />
+                              </div> */}
+                              <div className="min-w-0 flex-1">
+                                {/* <p className="text-sm font-medium text-gray-900 dark:text-gray-50">
+                                  {comment.user.name}
+                                </p> */}
+                                <p className="text-sm text-gray-500 dark:text-gray-200">
+                                  {comment.body}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                        <Comment pinId={data.id} userId={session.user.id} />
+                      </div>
+                    ) : null}
                   </Popover.Panel>
                 </Transition>
               </Popover>

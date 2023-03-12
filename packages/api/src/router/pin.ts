@@ -43,7 +43,20 @@ export const pinRouter = createTRPCRouter({
           latitude: true,
           longitude: true,
           city: true,
-          comments: true,
+          comments: {
+            select: {
+              id: true,
+              body: true,
+              createdAt: true,
+              user: {
+                select: {
+                  id: true,
+                  image: true,
+                  displayName: true,
+                },
+              },
+            },
+          },
           community: true,
           image: true,
           createdAt: true,
@@ -308,6 +321,34 @@ export const pinRouter = createTRPCRouter({
               id: true,
             },
           },
+        },
+      });
+    }),
+  comment: protectedProcedure
+    .input(
+      z.object({
+        pinId: z.string().cuid(),
+        userId: z.string().cuid(),
+        content: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.prisma.comment.create({
+        data: {
+          body: input.content,
+          pin: {
+            connect: {
+              id: input.pinId,
+            },
+          },
+          user: {
+            connect: {
+              id: input.userId,
+            },
+          },
+        },
+        include: {
+          user: true,
         },
       });
     }),
