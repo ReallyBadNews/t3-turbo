@@ -97,8 +97,23 @@ model User {
   pins          Pin[]
   comments      Comment[]
   likedPins     Pin[]      @relation("LikedBy")
+  following     Follow[]   @relation("UserFollowing")
+  followedBy    Follow[]
 
   @@index([email])
+}
+
+model Follow {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  follower    User     @relation(fields: [followerId], references: [id])
+  followerId  String   @map("follower_id")
+  following   User     @relation(fields: [followingId], references: [id], name: "UserFollowing")
+  followingId String   @map("following_id")
+
+  @@unique([followerId, followingId])
+  @@index([followerId])
+  @@index([followingId])
 }
 
 enum UserStatus {
