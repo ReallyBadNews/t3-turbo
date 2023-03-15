@@ -134,7 +134,51 @@ export const pinRouter = createTRPCRouter({
       where: {
         id: input,
       },
-      include: { community: true, user: true },
+      select: {
+        // count number of likes
+        _count: {
+          select: { likedBy: true },
+        },
+        id: true,
+        administrativeArea: true,
+        country: true,
+        description: true,
+        latitude: true,
+        longitude: true,
+        city: true,
+        comments: {
+          select: {
+            id: true,
+            body: true,
+            createdAt: true,
+            user: {
+              select: {
+                id: true,
+                image: true,
+                displayName: true,
+              },
+            },
+          },
+        },
+        community: true,
+        image: true,
+        createdAt: true,
+        updatedAt: true,
+        user: {
+          select: {
+            id: true,
+            image: true,
+            displayName: true,
+          },
+        },
+        views: true,
+        status: true,
+        likedBy: {
+          select: {
+            id: true,
+          },
+        },
+      },
     });
   }),
   byCommunity: publicProcedure

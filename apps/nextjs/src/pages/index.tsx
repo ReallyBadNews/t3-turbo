@@ -38,7 +38,6 @@ import Link from "next/link";
 import { Fragment, useState } from "react";
 import { Feed } from "../components/Feed";
 import type { FeedOrder } from "../types";
-import { api } from "../utils/api";
 
 interface Tabs {
   name: string;
@@ -88,75 +87,9 @@ const trendingPosts = [
 
 export default function PinsHomepage() {
   const [selectedTab, setSelectedTab] = useState(tabs[0]?.order);
-  const communities = api.community.all.useQuery(undefined, {
-    refetchOnWindowFocus: false,
-  });
 
   return (
     <>
-      <div className="hidden lg:col-span-3 lg:block xl:col-span-2">
-        <nav
-          aria-label="Sidebar"
-          className="sticky top-4 divide-y divide-gray-300 dark:divide-gray-700"
-        >
-          <div className="space-y-1 pb-8">
-            {navigation.map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                className={cx(
-                  item.current
-                    ? "bg-gray-200 text-gray-900 dark:bg-gray-800 dark:text-gray-50"
-                    : "text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-700",
-                  "group flex items-center rounded-md px-3 py-2 text-sm font-medium",
-                )}
-                aria-current={item.current ? "page" : undefined}
-              >
-                <item.icon
-                  className={cx(
-                    item.current
-                      ? "text-gray-500 dark:text-gray-400"
-                      : "text-gray-400 group-hover:text-gray-500 dark:text-gray-600 dark:group-hover:text-gray-400",
-                    "-ml-1 mr-3 h-6 w-6 flex-shrink-0",
-                  )}
-                  aria-hidden="true"
-                />
-                <span className="truncate">{item.name}</span>
-              </a>
-            ))}
-          </div>
-          <div className="pt-10">
-            <p
-              className="px-3 text-sm font-medium text-gray-500"
-              id="communities-headline"
-            >
-              Communities
-            </p>
-            <div
-              className="mt-3 space-y-2"
-              aria-labelledby="communities-headline"
-            >
-              <a
-                href="/communities/all"
-                className="group flex items-center rounded-md bg-gray-200 px-3 py-2 text-sm font-medium text-gray-900 dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-700"
-              >
-                <span className="truncate">All</span>
-              </a>
-              {communities.data?.map((community) => {
-                return (
-                  <a
-                    key={community.name}
-                    href={community.slug}
-                    className="group flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-gray-200"
-                  >
-                    <span className="truncate">{community.name}</span>
-                  </a>
-                );
-              })}
-            </div>
-          </div>
-        </nav>
-      </div>
       <main className="lg:col-span-9 xl:col-span-6">
         {/* <div className="px-4 sm:px-0"> */}
         <div className="sm:hidden">
