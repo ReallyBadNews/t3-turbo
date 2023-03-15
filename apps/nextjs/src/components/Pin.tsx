@@ -21,10 +21,11 @@ import { Image } from "./Image";
 interface PinProps {
   data: Pin;
   order?: FeedOrder;
+  className?: string;
 }
 
 export const PinPost = forwardRef<HTMLLIElement, PinProps>(
-  ({ data, order }, ref) => {
+  ({ data, order, className }, ref) => {
     const { data: session } = api.auth.getSession.useQuery(undefined, {
       refetchOnWindowFocus: false,
     });
@@ -161,7 +162,10 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
     return (
       <li
         ref={ref}
-        className="border border-transparent bg-white px-4 py-6 shadow dark:border-gray-700 dark:bg-gray-800 sm:rounded-lg sm:p-6"
+        className={cx(
+          "border border-transparent bg-white px-4 py-6 shadow dark:border-gray-700 dark:bg-gray-800 sm:rounded-lg sm:p-6",
+          className,
+        )}
       >
         <article aria-labelledby={`pin-post-${data.id}`}>
           {data.image ? (

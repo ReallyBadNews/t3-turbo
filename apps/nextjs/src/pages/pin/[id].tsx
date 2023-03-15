@@ -1,20 +1,27 @@
-import { api } from "@/utils/api";
-import type { GetStaticPropsContext } from "next";
+import { PinPost } from "@/components/Pin";
+import { useRouter } from "next/router";
+import { api } from "../../utils/api";
 
-export async function getStaticPaths() {
-  return {
-    paths: [],
-    fallback: "blocking",
-  };
-}
+export default function PinPage() {
+  const {
+    query: { id = "" },
+  } = useRouter();
 
-export async function getStaticProps({ params }: GetStaticPropsContext) {
-  const { id } = params;
+  console.log("[id].tsx query", id);
 
-  const pin = await api.pin.byId.useQuery({ id: id as string });
+  const { data, error, isLoading } = api.pin.byId.useQuery(id);
 
-  return {
-    props: {},
-    revalidate: 1,
-  };
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  return (
+    <ul className="lg:col-span-9 xl:col-span-6">
+      <PinPost data={data} />
+    </ul>
+  );
 }
