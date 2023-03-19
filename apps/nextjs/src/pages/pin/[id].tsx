@@ -1,5 +1,5 @@
-import { PinPost } from "@/components/Pin";
 import { useRouter } from "next/router";
+import { PinPost } from "../../components/Pin";
 import { api } from "../../utils/api";
 
 export default function PinPage() {
@@ -7,16 +7,14 @@ export default function PinPage() {
     query: { id = "" },
   } = useRouter();
 
-  console.log("[id].tsx query", id);
-
-  const { data, error, isLoading } = api.pin.byId.useQuery(id);
+  const { data, error, isLoading } = api.pin.byId.useQuery(id as string);
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
   if (error) {
-    return <div>Error: {error.message}</div>;
+    return <div>{`Error: ${error.message}`}</div>;
   }
 
   return (
