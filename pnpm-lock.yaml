@@ -39,10 +39,10 @@ importers:
       '@badnews/api': workspace:*
       '@badnews/tailwind-config': workspace:*
       '@shopify/flash-list': ^1.4.1
-      '@tanstack/react-query': ^4.24.10
-      '@trpc/client': 10.13.0
-      '@trpc/react-query': 10.13.0
-      '@trpc/server': 10.13.0
+      '@tanstack/react-query': ^4.27.0
+      '@trpc/client': 10.16.0
+      '@trpc/react-query': 10.16.0
+      '@trpc/server': 10.16.0
       '@types/react': ^18.0.28
       '@types/react-native': ~0.71.3
       eslint: ^8.35.0
@@ -62,10 +62,10 @@ importers:
       '@badnews/api': link:../../packages/api
       '@badnews/tailwind-config': link:../../packages/config/tailwind
       '@shopify/flash-list': 1.4.1_guwohi4nlpi5pltiuinnykzlhi
-      '@tanstack/react-query': 4.24.10_bblof3d6od7kdqr2urb3dykbey
-      '@trpc/client': 10.13.0_@trpc+server@10.13.0
-      '@trpc/react-query': 10.13.0_rdrc3kwtpssp5n4c2j5j4hbyvm
-      '@trpc/server': 10.13.0
+      '@tanstack/react-query': 4.27.0_bblof3d6od7kdqr2urb3dykbey
+      '@trpc/client': 10.16.0_@trpc+server@10.16.0
+      '@trpc/react-query': 10.16.0_xqgqjjeu4juncpfqrbxjw3t7rq
+      '@trpc/server': 10.16.0
       expo: 48.0.5_@babel+core@7.21.0
       expo-status-bar: 1.4.4
       nativewind: 2.0.11_dmdrd7wro7is5ymtgffolhsaq4
@@ -97,12 +97,12 @@ importers:
       '@heroicons/react': ^2.0.16
       '@hookform/resolvers': ^2.9.11
       '@plaiceholder/next': ^2.5.0
-      '@tanstack/react-query': ^4.24.10
-      '@tanstack/react-query-devtools': ^4.24.12
-      '@trpc/client': 10.13.0
-      '@trpc/next': 10.13.0
-      '@trpc/react-query': 10.13.0
-      '@trpc/server': 10.13.0
+      '@tanstack/react-query': ^4.27.0
+      '@tanstack/react-query-devtools': ^4.27.0
+      '@trpc/client': 10.16.0
+      '@trpc/next': 10.16.0
+      '@trpc/react-query': 10.16.0
+      '@trpc/server': 10.16.0
       '@types/node': ^18.14.2
       '@types/react': ^18.0.28
       '@types/react-dom': ^18.0.11
@@ -124,7 +124,7 @@ importers:
       tailwindcss: ^3.2.7
       tsconfig: workspace:*
       typescript: ^4.9.5
-      zod: ^3.20.6
+      zod: ^3.21.4
     dependencies:
       '@badnews/api': link:../../packages/api
       '@badnews/auth': link:../../packages/auth
@@ -135,12 +135,12 @@ importers:
       '@heroicons/react': 2.0.16_react@18.2.0
       '@hookform/resolvers': 2.9.11_react-hook-form@7.43.4
       '@plaiceholder/next': 2.5.0_next@13.2.1+sharp@0.31.3
-      '@tanstack/react-query': 4.24.10_biqbaboplfbrettd7655fr4n2y
-      '@tanstack/react-query-devtools': 4.24.13_636dldj5wfr5vkyyqzs5k363kq
-      '@trpc/client': 10.13.0_@trpc+server@10.13.0
-      '@trpc/next': 10.13.0_jclvnrsahv7cakwvrjb7ye6vca
-      '@trpc/react-query': 10.13.0_rdrc3kwtpssp5n4c2j5j4hbyvm
-      '@trpc/server': 10.13.0
+      '@tanstack/react-query': 4.27.0_biqbaboplfbrettd7655fr4n2y
+      '@tanstack/react-query-devtools': 4.27.0_afol4acuzfd3u4ta37ddqdpntu
+      '@trpc/client': 10.16.0_@trpc+server@10.16.0
+      '@trpc/next': 10.16.0_45jkz3d66amro7zh5ux7tslaem
+      '@trpc/react-query': 10.16.0_xqgqjjeu4juncpfqrbxjw3t7rq
+      '@trpc/server': 10.16.0
       class-variance-authority: 0.4.0_typescript@4.9.5
       next: 13.2.1_biqbaboplfbrettd7655fr4n2y
       next-auth: 4.20.1_qgtcjgzkkjtbiyvnx7d32fl5vu
@@ -151,7 +151,7 @@ importers:
       react-hook-form: 7.43.4_react@18.2.0
       react-intersection-observer: 9.4.3_react@18.2.0
       sharp: 0.31.3
-      zod: 3.20.6
+      zod: 3.21.4
     devDependencies:
       '@types/node': 18.14.6
       '@types/react': 18.0.28
@@ -209,8 +209,8 @@ importers:
       '@badnews/auth': workspace:*
       '@badnews/db': workspace:*
       '@badnews/utils': workspace:*
-      '@trpc/client': 10.13.0
-      '@trpc/server': 10.13.0
+      '@trpc/client': 10.16.0
+      '@trpc/server': 10.16.0
       cloudinary: ^1.34.0
       eslint: ^8.35.0
       plaiceholder: ^2.5.0
@@ -218,18 +218,18 @@ importers:
       superjson: ^1.12.1
       tsconfig: workspace:*
       typescript: ^4.9.5
-      zod: ^3.20.6
+      zod: ^3.21.4
     dependencies:
       '@badnews/auth': link:../auth
       '@badnews/db': link:../db
       '@badnews/utils': link:../utils
-      '@trpc/client': 10.13.0_@trpc+server@10.13.0
-      '@trpc/server': 10.13.0
+      '@trpc/client': 10.16.0_@trpc+server@10.16.0
+      '@trpc/server': 10.16.0
       cloudinary: 1.35.0
       plaiceholder: 2.5.0_sharp@0.31.3
       sharp: 0.31.3
       superjson: 1.12.2
-      zod: 3.20.6
+      zod: 3.21.4
     devDependencies:
       eslint: 8.35.0
       tsconfig: link:../tsconfig
@@ -4975,27 +4975,27 @@ packages:
       remove-accents: 0.4.2
     dev: false
 
-  /@tanstack/query-core/4.24.10:
-    resolution: {integrity: sha512-2QywqXEAGBIUoTdgn1lAB4/C8QEqwXHj2jrCLeYTk2xVGtLiPEUD8jcMoeB2noclbiW2mMt4+Fq7fZStuz3wAQ==}
+  /@tanstack/query-core/4.27.0:
+    resolution: {integrity: sha512-sm+QncWaPmM73IPwFlmWSKPqjdTXZeFf/7aEmWh00z7yl2FjqophPt0dE1EHW9P1giMC5rMviv7OUbSDmWzXXA==}
     dev: false
 
-  /@tanstack/react-query-devtools/4.24.13_636dldj5wfr5vkyyqzs5k363kq:
-    resolution: {integrity: sha512-PGacX7J8Ututd81FtOO599K+1ZCrhFer/Tqx6ffYXpe4nJrvbkPXK6USsuOYlD95DGPBLSd4S4StZiNo/9wmgw==}
+  /@tanstack/react-query-devtools/4.27.0_afol4acuzfd3u4ta37ddqdpntu:
+    resolution: {integrity: sha512-DWtW1V2hG+I92ixr7uS3z70IMa4Yz4xwDiqyd7Af+qXGSD0cbcsnvBMyIcU20KaXW6PY1OdceX/SBkiioQUjCA==}
     peerDependencies:
-      '@tanstack/react-query': 4.24.10
+      '@tanstack/react-query': 4.27.0
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
       '@tanstack/match-sorter-utils': 8.7.6
-      '@tanstack/react-query': 4.24.10_biqbaboplfbrettd7655fr4n2y
+      '@tanstack/react-query': 4.27.0_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       superjson: 1.12.2
       use-sync-external-store: 1.2.0_react@18.2.0
     dev: false
 
-  /@tanstack/react-query/4.24.10_bblof3d6od7kdqr2urb3dykbey:
-    resolution: {integrity: sha512-FY1DixytOcNNCydPQXLxuKEV7VSST32CAuJ55BjhDNqASnMLZn+6c30yQBMrODjmWMNwzfjMZnq0Vw7C62Fwow==}
+  /@tanstack/react-query/4.27.0_bblof3d6od7kdqr2urb3dykbey:
+    resolution: {integrity: sha512-9S49LTFenWbxVHx0iR6qUXP+MKL5kwz/mV9pzfNXvdIM1R0vT+hiecCCL+ox/tD2glAQ51JHHMffQaRuH7wYRA==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
@@ -5006,15 +5006,15 @@ packages:
       react-native:
         optional: true
     dependencies:
-      '@tanstack/query-core': 4.24.10
+      '@tanstack/query-core': 4.27.0
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-native: 0.71.3_raab37p3ikkajcivlo24zcd7ie
       use-sync-external-store: 1.2.0_react@18.2.0
     dev: false
 
-  /@tanstack/react-query/4.24.10_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-FY1DixytOcNNCydPQXLxuKEV7VSST32CAuJ55BjhDNqASnMLZn+6c30yQBMrODjmWMNwzfjMZnq0Vw7C62Fwow==}
+  /@tanstack/react-query/4.27.0_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-9S49LTFenWbxVHx0iR6qUXP+MKL5kwz/mV9pzfNXvdIM1R0vT+hiecCCL+ox/tD2glAQ51JHHMffQaRuH7wYRA==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
@@ -5025,7 +5025,7 @@ packages:
       react-native:
         optional: true
     dependencies:
-      '@tanstack/query-core': 4.24.10
+      '@tanstack/query-core': 4.27.0
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       use-sync-external-store: 1.2.0_react@18.2.0
@@ -5065,53 +5065,53 @@ packages:
     resolution: {integrity: sha512-yXt2BRRVCJVvzWaxac5n0nCXzIrQEBE/MeYlNQ8/Iq7UeelNmm/AdnUAu18ilSS893mbEQ4u6whPt/HvOPc4rw==}
     dev: true
 
-  /@trpc/client/10.13.0_@trpc+server@10.13.0:
-    resolution: {integrity: sha512-r4KuN0os2J194lxg5jn4+o3uNlqunLFYptwTHcVW4Q0XGO0ZoTKLHuxT7c9IeDivkAs6G5oVEPiKhptkag36dQ==}
+  /@trpc/client/10.16.0_@trpc+server@10.16.0:
+    resolution: {integrity: sha512-Hxxi3mOcUyszosj6xpPDIIBV1TOhXKpZ191BW/60r1lXBAfNrDUWHOTol1Dfu+hpcx4bpj3WRyob5cf+6KeCDA==}
     peerDependencies:
-      '@trpc/server': 10.13.0
+      '@trpc/server': 10.16.0
     dependencies:
-      '@trpc/server': 10.13.0
+      '@trpc/server': 10.16.0
     dev: false
 
-  /@trpc/next/10.13.0_jclvnrsahv7cakwvrjb7ye6vca:
-    resolution: {integrity: sha512-Q4rnuuiSUXDYv34f8FNUKhEMQFgLJTTJean78YjhG3Aaci+r4sew4hPmRvDRut8fBpa+EtExq+dv1EUbzlXgJg==}
+  /@trpc/next/10.16.0_45jkz3d66amro7zh5ux7tslaem:
+    resolution: {integrity: sha512-2AohDydvvLk2IjnQ1hTnT8cVmLItYf6cFRwJVYnyi35y2DVKXLiIWuKSTzc9xzR5enYFUQJZivXaWx/i0jjcfQ==}
     peerDependencies:
-      '@tanstack/react-query': ^4.3.8
-      '@trpc/client': 10.13.0
-      '@trpc/react-query': ^10.8.0
-      '@trpc/server': 10.13.0
-      next: 13.2.1
+      '@tanstack/react-query': ^4.18.0
+      '@trpc/client': 10.16.0
+      '@trpc/react-query': 10.16.0
+      '@trpc/server': 10.16.0
+      next: '*'
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
-      '@tanstack/react-query': 4.24.10_biqbaboplfbrettd7655fr4n2y
-      '@trpc/client': 10.13.0_@trpc+server@10.13.0
-      '@trpc/react-query': 10.13.0_rdrc3kwtpssp5n4c2j5j4hbyvm
-      '@trpc/server': 10.13.0
+      '@tanstack/react-query': 4.27.0_biqbaboplfbrettd7655fr4n2y
+      '@trpc/client': 10.16.0_@trpc+server@10.16.0
+      '@trpc/react-query': 10.16.0_xqgqjjeu4juncpfqrbxjw3t7rq
+      '@trpc/server': 10.16.0
       next: 13.2.1_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-ssr-prepass: 1.5.0_react@18.2.0
     dev: false
 
-  /@trpc/react-query/10.13.0_rdrc3kwtpssp5n4c2j5j4hbyvm:
-    resolution: {integrity: sha512-y4jbojrDFdEl1KBejBoMWIofcUXDHQA8wf01eKMEDV7Jwc7lhq6R1dxYtKzeF+s5wqfnPWFOGZDmB3flzv07Dw==}
+  /@trpc/react-query/10.16.0_xqgqjjeu4juncpfqrbxjw3t7rq:
+    resolution: {integrity: sha512-LHLkyYgmmmaqMK33Hil7+DxCRG+8cRl2hF/rY8DQneh7e/u4cBA/wbun5vs8BAJxmYcHsQNPlq5aBy80CyU78g==}
     peerDependencies:
-      '@tanstack/react-query': ^4.3.8
-      '@trpc/client': 10.13.0
-      '@trpc/server': 10.13.0
+      '@tanstack/react-query': ^4.18.0
+      '@trpc/client': 10.16.0
+      '@trpc/server': 10.16.0
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
-      '@tanstack/react-query': 4.24.10_biqbaboplfbrettd7655fr4n2y
-      '@trpc/client': 10.13.0_@trpc+server@10.13.0
-      '@trpc/server': 10.13.0
+      '@tanstack/react-query': 4.27.0_bblof3d6od7kdqr2urb3dykbey
+      '@trpc/client': 10.16.0_@trpc+server@10.16.0
+      '@trpc/server': 10.16.0
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     dev: false
 
-  /@trpc/server/10.13.0:
-    resolution: {integrity: sha512-d/bu6utCC4ALxhTJkolEPAHMOSuCAu3mG79TZswa6wD2ob0/Z3AIvBF/meeSTqDxe4tvXY78lQqOkQI81dgi/g==}
+  /@trpc/server/10.16.0:
+    resolution: {integrity: sha512-lCUq7AB7vcgrNbaN+xP/AN62OjKDgrRyG7fTDPv5K633ut7KJ3m57qs60VRBOgp9vow6elAg51pKFFDtPHbTRA==}
     dev: false
 
   /@types/aria-query/5.0.1:
@@ -17367,8 +17367,8 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
 
-  /zod/3.20.6:
-    resolution: {integrity: sha512-oyu0m54SGCtzh6EClBVqDDlAYRz4jrVtKwQ7ZnsEmMI9HnzuZFj8QFwAY1M5uniIYACdGvv0PBWPF2kO0aNofA==}
+  /zod/3.21.4:
+    resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
     dev: false
 
   /zwitch/1.0.5:
