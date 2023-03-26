@@ -23,9 +23,10 @@ declare module "next-auth" {
 
   interface User extends DefaultUser {
     /** The user's permissions role. `ADMIN` | `USER`. */
-    role: Role;
     accessToken?: string;
     refreshToken?: string;
+    displayName: string;
+    role: Role;
     image: {
       src: string;
     } | null;
