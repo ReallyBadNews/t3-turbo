@@ -149,6 +149,7 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
       async onSettled() {
         // Sync with server once mutation has settled
         await utils.pin.infinite.invalidate();
+        await utils.pin.byId.invalidate(data.id);
       },
     });
 
@@ -205,10 +206,7 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
                 </p>
                 <p className="text-sm text-gray-500 dark:text-gray-600">
                   {/* // FIXME: The user should always be defined for a pin */}
-                  <Link
-                    href={`/pins/${data.user?.id as string}/${data.id}`}
-                    className="hover:underline"
-                  >
+                  <Link href={`/pin/${data.id}`} className="hover:underline">
                     <time dateTime={data.createdAt.toLocaleDateString()}>
                       {data.createdAt.toLocaleDateString()}
                     </time>
