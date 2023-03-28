@@ -15,7 +15,7 @@ import type { AppRouter } from "@badnews/api";
 import { FlashList } from "@shopify/flash-list";
 import type { inferProcedureOutput } from "@trpc/server";
 
-import { trpc } from "../utils/api";
+import { api } from "../utils/api";
 
 const PostCard: FC<{
   pin: inferProcedureOutput<AppRouter["pin"]["all"]>[number];
@@ -32,12 +32,12 @@ const PostCard: FC<{
 };
 
 const CreatePost: FC = () => {
-  const utils = trpc.useContext();
-  const { mutate } = trpc.pin.create.useMutation({
-    async onSuccess() {
-      await utils.pin.all.invalidate();
-    },
-  });
+  // const utils = api.useContext();
+  // const { mutate } = api.pin.create.useMutation({
+  //   async onSuccess() {
+  //     await utils.pin.all.invalidate();
+  //   },
+  // });
 
   const [url, onChangeURL] = useState("");
   const [title, onChangeTitle] = useState("");
@@ -90,11 +90,11 @@ const CreatePost: FC = () => {
       <TouchableOpacity
         className="rounded bg-[#cc66ff] p-2"
         onPress={() => {
-          mutate({
-            title,
-            description,
-            url,
-          });
+          // mutate({
+          //   title,
+          //   description,
+          //   url,
+          // });
         }}
       >
         <Text className="font-semibold text-white">Publish post</Text>
@@ -104,7 +104,7 @@ const CreatePost: FC = () => {
 };
 
 export const HomeScreen = () => {
-  const pinQuery = trpc.pin.all.useQuery();
+  const pinQuery = api.pin.all.useQuery();
   const [showPost, setShowPost] = useState<string | null>(null);
 
   return (
