@@ -1,5 +1,6 @@
 import type { Role } from "@badnews/db";
 import type { DefaultSession, DefaultUser } from "next-auth";
+import type { DefaultJWT } from "next-auth/jwt";
 
 /**
  * Module augmentation for `next-auth` types
@@ -14,6 +15,9 @@ declare module "next-auth" {
       id: string;
       /** The user's permissions role. `ADMIN` | `USER`. */
       role: Role;
+      accessToken?: string;
+      refreshToken?: string;
+      accessTokenExpires: string;
       image?: {
         src: string;
         publicId: string;
@@ -25,11 +29,20 @@ declare module "next-auth" {
     /** The user's permissions role. `ADMIN` | `USER`. */
     accessToken?: string;
     refreshToken?: string;
-    displayName: string;
+    displayName: string | null;
     role: Role;
     image: {
       src: string;
     } | null;
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT extends DefaultJWT {
+    id: string;
+    accessToken?: string;
+    refreshToken?: string;
+    accessTokenExpires: string;
   }
 }
 
