@@ -106,6 +106,8 @@ export default function Settings() {
                 </div>
 
                 <div className="col-span-3">
+                  {/* TODO: attach to input */}
+                  {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
                   <label className="block text-sm font-medium text-gray-700">
                     Photo
                   </label>
@@ -129,6 +131,8 @@ export default function Settings() {
                 </div>
 
                 <div className="col-span-3">
+                  {/* TODO: attach to input */}
+                  {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
                   <label className="block text-sm font-medium text-gray-700">
                     Cover photo
                   </label>

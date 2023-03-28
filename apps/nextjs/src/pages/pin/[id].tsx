@@ -17,6 +17,10 @@ export default function PinPage() {
     return <div>{`Error: ${error.message}`}</div>;
   }
 
+  if (!data) {
+    return <div>Not found</div>;
+  }
+
   return (
     <ul className="lg:col-span-9 xl:col-span-6">
       <PinPost data={data} />

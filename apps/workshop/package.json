@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "start-storybook -p 6006",
-    "build": "build-storybook"
+    "build": "NODE_OPTIONS=--openssl-legacy-provider build-storybook"
   },
   "dependencies": {
     "react": "^18.2.0",

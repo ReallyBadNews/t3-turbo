@@ -111,7 +111,7 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
         // Return the previous data so we can revert if something goes wrong
         return { prevData };
       },
-      onError(err, newPin, ctx) {
+      onError(err, newPin) {
         // If the mutation fails, use the context-value from onMutate
         utils.pin.infinite.setInfiniteData({ limit: 10 }, (old) => {
           if (!old) {
