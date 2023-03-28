@@ -21,6 +21,7 @@ import {
 } from "@heroicons/react/20/solid";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { cx } from "class-variance-authority";
+import Link from "next/link";
 import type {
   ChangeEventHandler,
   Dispatch,
@@ -423,7 +424,7 @@ export function Sidebar({
                           </div>
                           <div className="pt-4 pb-6">
                             <div className="flex text-sm">
-                              <a
+                              <Link
                                 href="#"
                                 className="group inline-flex items-center font-medium text-indigo-600 hover:text-indigo-900"
                               >
@@ -432,10 +433,10 @@ export function Sidebar({
                                   aria-hidden="true"
                                 />
                                 <span className="ml-2">Copy link</span>
-                              </a>
+                              </Link>
                             </div>
                             <div className="mt-4 flex text-sm">
-                              <a
+                              <Link
                                 href="#"
                                 className="group inline-flex items-center text-gray-500 hover:text-gray-900"
                               >
@@ -447,7 +448,7 @@ export function Sidebar({
                                   By uploading a photo or video, you agree to
                                   our Terms of Use and Privacy Policy.
                                 </span>
-                              </a>
+                              </Link>
                             </div>
                           </div>
                         </div>

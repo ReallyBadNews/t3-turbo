@@ -65,6 +65,7 @@ interface CommentProps {
 
 type FormData = RouterInputs["pin"]["comment"];
 
+// TODO: add error handling and validation
 export function Comment({ pinId, userId }: CommentProps) {
   const [selected, setSelected] = useState(moods[5]);
 
@@ -72,12 +73,12 @@ export function Comment({ pinId, userId }: CommentProps) {
     handleSubmit,
     register,
     reset,
-    formState: { errors },
+    // formState: { errors },
   } = useForm<FormData>();
 
   const utils = api.useContext();
 
-  const { mutate, error, isLoading } = api.pin.comment.useMutation({
+  const { mutate, isLoading } = api.pin.comment.useMutation({
     async onSuccess() {
       await utils.pin.infinite.invalidate();
       reset();

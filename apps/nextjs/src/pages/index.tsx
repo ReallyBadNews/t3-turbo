@@ -25,14 +25,7 @@ import { Tab } from "@headlessui/react";
 import {
   ChatBubbleLeftEllipsisIcon,
   PlusIcon,
-  StarIcon,
 } from "@heroicons/react/20/solid";
-import {
-  ArrowTrendingUpIcon,
-  FireIcon,
-  HomeIcon,
-  UserGroupIcon,
-} from "@heroicons/react/24/outline";
 import { cx } from "class-variance-authority";
 import Link from "next/link";
 import { Fragment, useState } from "react";
@@ -45,14 +38,6 @@ interface Tabs {
   order: FeedOrder;
   current: boolean;
 }
-
-const navigation = [
-  { name: "Home", href: "#", icon: HomeIcon, current: true },
-  { name: "Popular", href: "#", icon: FireIcon, current: false },
-  { name: "Communities", href: "#", icon: UserGroupIcon, current: false },
-  { name: "Trending", href: "#", icon: ArrowTrendingUpIcon, current: false },
-  { name: "Favorites", href: "#", icon: StarIcon, current: false },
-];
 
 const tabs = [
   { name: "Recent", href: "/recent", order: "desc", current: true },
@@ -174,6 +159,8 @@ export default function PinsHomepage() {
                         className="flex items-center space-x-3 py-4"
                       >
                         <div className="flex-shrink-0">
+                          {/* TODO: use next/image */}
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             className="h-8 w-8 rounded-full"
                             src={user.imageUrl}
@@ -237,6 +224,8 @@ export default function PinsHomepage() {
                     {trendingPosts.map((post) => (
                       <li key={post.id} className="flex space-x-3 py-4">
                         <div className="flex-shrink-0">
+                          {/* TODO: use next/image */}
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             className="h-8 w-8 rounded-full"
                             src={post.user.imageUrl}
