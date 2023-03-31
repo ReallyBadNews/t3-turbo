@@ -1,8 +1,16 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "strict": true,
-    "jsx": "react-native"
+    "jsx": "react-native",
+    "types": ["nativewind/types", "webpack-env"]
   },
-  "include": ["src", "index.ts", "metro.config.js", "./.eslintrc.cjs"]
+  "include": [
+    "expo-plugins",
+    "src",
+    "*.ts",
+    "**/*.js",
+    "index.tsx",
+    "tailwind.config.cjs"
+  ],
+  "exclude": ["node_modules"]
 }

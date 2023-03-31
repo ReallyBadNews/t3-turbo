@@ -1,8 +1,5 @@
 // Learn more: https://docs.expo.dev/guides/monorepos/
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { getDefaultConfig } = require("expo/metro-config");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { getDefaultConfig } = require("@expo/metro-config");
 const path = require("path");
 
 const projectRoot = __dirname;
@@ -22,6 +19,6 @@ config.resolver.nodeModulesPaths = [
   path.resolve(workspaceRoot, "node_modules"),
 ];
 // 3. Force Metro to resolve (sub)dependencies only from the `nodeModulesPaths`
-config.resolver.disableHierarchicalLookup = true;
+// config.resolver.disableHierarchicalLookup = true;
 
 module.exports = config;
