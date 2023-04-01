@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+
 // Learn more: https://docs.expo.dev/guides/monorepos/
 const { getDefaultConfig } = require("@expo/metro-config");
 const path = require("path");
@@ -9,6 +11,7 @@ const workspaceRoot = path.resolve(projectRoot, "../..");
 const config = getDefaultConfig(projectRoot);
 
 // Add the additional `cjs` extension to the resolver
+// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 config.resolver.sourceExts.push("cjs");
 
 // 1. Watch all files within the monorepo

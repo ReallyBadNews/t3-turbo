@@ -1,21 +1,27 @@
-import { SafeAreaView, Text, View } from "react-native";
 import { SplashScreen, Stack, useSearchParams } from "expo-router";
+import { SafeAreaView, Text, View } from "react-native";
 
 import { api } from "../../utils/api";
 
 const Post: React.FC = () => {
   const { id } = useSearchParams();
-  if (!id) throw new Error("unreachable");
-  const { data } = api.post.byId.useQuery({ id });
+  if (!id || typeof id !== "string") throw new Error("unreachable");
+  const { data } = api.pin.byId.useQuery(id);
 
   if (!data) return <SplashScreen />;
 
   return (
     <SafeAreaView className="bg-[#1F104A]">
-      <Stack.Screen options={{ title: data.title }} />
+      {data.description && (
+        <Stack.Screen options={{ title: data.description }} />
+      )}
       <View className="h-full w-full p-4">
-        <Text className="py-2 text-3xl font-bold text-white">{data.title}</Text>
-        <Text className="py-4 text-white">{data.content}</Text>
+        {data.user?.displayName && (
+          <Text className="py-2 text-3xl font-bold text-white">
+            {data.user.displayName}
+          </Text>
+        )}
+        <Text className="py-4 text-white">{data.description}</Text>
       </View>
     </SafeAreaView>
   );

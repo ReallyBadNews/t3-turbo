@@ -1,13 +1,13 @@
-import React from "react";
+import { FlashList } from "@shopify/flash-list";
+import { Stack, useRouter } from "expo-router";
+import { useState } from "react";
 import { Button, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Stack, useRouter } from "expo-router";
-import { FlashList } from "@shopify/flash-list";
 
 import { api, type RouterOutputs } from "../utils/api";
 
 const PostCard: React.FC<{
-  post: RouterOutputs["post"]["all"][number];
+  post: RouterOutputs["pin"]["all"][number];
   onDelete: () => void;
 }> = ({ post, onDelete }) => {
   const router = useRouter();
@@ -16,10 +16,7 @@ const PostCard: React.FC<{
     <View className="flex flex-row rounded-lg bg-white/10 p-4">
       <View className="flex-grow">
         <TouchableOpacity onPress={() => router.push(`/post/${post.id}`)}>
-          <Text className="text-xl font-semibold text-pink-400">
-            {post.title}
-          </Text>
-          <Text className="mt-2 text-white">{post.content}</Text>
+          <Text className="mt-2 text-white">{post.description}</Text>
         </TouchableOpacity>
       </View>
       <TouchableOpacity onPress={onDelete}>
@@ -32,14 +29,14 @@ const PostCard: React.FC<{
 const CreatePost: React.FC = () => {
   const utils = api.useContext();
 
-  const [title, setTitle] = React.useState("");
-  const [content, setContent] = React.useState("");
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
 
-  const { mutate, error } = api.post.create.useMutation({
+  const { mutate, error } = api.pin.create.useMutation({
     async onSuccess() {
       setTitle("");
       setContent("");
-      await utils.post.all.invalidate();
+      await utils.pin.all.invalidate();
     },
   });
 
@@ -72,10 +69,11 @@ const CreatePost: React.FC = () => {
       <TouchableOpacity
         className="rounded bg-pink-400 p-2"
         onPress={() => {
-          mutate({
-            title,
-            content,
-          });
+          console.log("[TODO] Create post pin");
+          // mutate({
+          //   title,
+          //   content,
+          // });
         }}
       >
         <Text className="font-semibold text-white">Publish post</Text>
@@ -85,9 +83,9 @@ const CreatePost: React.FC = () => {
 };
 
 const Index = () => {
-  const postQuery = api.post.all.useQuery();
+  const postQuery = api.pin.all.useQuery();
 
-  const deletePostMutation = api.post.delete.useMutation({
+  const deletePostMutation = api.pin.delete.useMutation({
     onSettled: () => postQuery.refetch(),
   });
 
@@ -97,7 +95,9 @@ const Index = () => {
       <Stack.Screen options={{ title: "Home Page" }} />
       <View className="h-full w-full p-4">
         <Text className="mx-auto pb-2 text-5xl font-bold text-white">
-          Create <Text className="text-pink-400">T3</Text> Turbo
+          Create
+          <Text className="text-pink-400">T3</Text>
+          Turbo
         </Text>
 
         <Button
