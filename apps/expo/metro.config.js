@@ -1,8 +1,7 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+
 // Learn more: https://docs.expo.dev/guides/monorepos/
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { getDefaultConfig } = require("expo/metro-config");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { getDefaultConfig } = require("@expo/metro-config");
 const path = require("path");
 
 const projectRoot = __dirname;
@@ -12,6 +11,7 @@ const workspaceRoot = path.resolve(projectRoot, "../..");
 const config = getDefaultConfig(projectRoot);
 
 // Add the additional `cjs` extension to the resolver
+// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 config.resolver.sourceExts.push("cjs");
 
 // 1. Watch all files within the monorepo
@@ -22,6 +22,6 @@ config.resolver.nodeModulesPaths = [
   path.resolve(workspaceRoot, "node_modules"),
 ];
 // 3. Force Metro to resolve (sub)dependencies only from the `nodeModulesPaths`
-config.resolver.disableHierarchicalLookup = true;
+// config.resolver.disableHierarchicalLookup = true;
 
 module.exports = config;
