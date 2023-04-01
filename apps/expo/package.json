@@ -15,9 +15,9 @@
     "@expo/metro-config": "^0.7.1",
     "@shopify/flash-list": "1.4.0",
     "@tanstack/react-query": "^4.28.0",
-    "@trpc/client": "^10.18.0",
+    "@trpc/client": "10.18.0",
     "@trpc/react-query": "^10.18.0",
-    "@trpc/server": "^10.18.0",
+    "@trpc/server": "10.18.0",
     "expo": "^48.0.9",
     "expo-constants": "~14.2.1",
     "expo-linking": "~4.0.1",
@@ -30,7 +30,7 @@
     "react-native": "0.71.4",
     "react-native-safe-area-context": "4.5.0",
     "react-native-screens": "~3.20.0",
-    "superjson": "1.12.2"
+    "superjson": "^1.12.2"
   },
   "devDependencies": {
     "@babel/core": "^7.21.3",
@@ -39,13 +39,13 @@
     "@badnews/api": "*",
     "@badnews/tailwind-config": "*",
     "@expo/config-plugins": "^6.0.1",
-    "@types/react": "^18.0.31",
+    "@types/react": "^18.0.28",
     "@types/webpack-env": "^1.18.0",
-    "eslint": "^8.37.0",
+    "eslint": "^8.35.0",
     "eslint-config-badnews": "*",
-    "postcss": "^8.4.21",
-    "tailwindcss": "^3.3.1",
-    "typescript": "^5.0.3"
+    "postcss": "^8.4.20",
+    "tailwindcss": "^3.2.7",
+    "typescript": "^4.9.5"
   },
   "private": true
 }
