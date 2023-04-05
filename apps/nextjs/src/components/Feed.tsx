@@ -24,6 +24,10 @@ export const Feed = ({ order = "desc" }: FeedProps) => {
     { getNextPageParam: (lastPage) => lastPage.nextCursor },
   );
 
+  const { data: session } = api.auth.getSession.useQuery(undefined, {
+    refetchOnWindowFocus: false,
+  });
+
   useEffect(() => {
     const fetchPage = async () => {
       await fetchNextPage();
@@ -55,6 +59,7 @@ export const Feed = ({ order = "desc" }: FeedProps) => {
                 <PinPost
                   key={pin.id}
                   data={pin}
+                  session={session}
                   order={order}
                   ref={pinIdx === group.pins.length - 2 ? ref : undefined}
                 />

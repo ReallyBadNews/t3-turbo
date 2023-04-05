@@ -83,6 +83,7 @@ export const pinRouter = createTRPCRouter({
         const nextPins = pins.pop();
         nextCursor = nextPins?.id ?? undefined;
       }
+
       return {
         pins,
         nextCursor,

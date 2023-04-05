@@ -11,6 +11,7 @@ import {
   TrashIcon,
 } from "@heroicons/react/20/solid";
 import { cx } from "class-variance-authority";
+import type { Session } from "next-auth";
 import Link from "next/link";
 import { forwardRef, Fragment } from "react";
 import type { FeedOrder, Pin } from "../types";
@@ -20,6 +21,7 @@ import { Image } from "./Image";
 
 interface PinProps {
   data: Pin;
+  session?: Session | null;
   order?: FeedOrder;
   className?: string;
 }
@@ -30,6 +32,10 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
       refetchOnWindowFocus: false,
     });
     const utils = api.useContext();
+
+    const likedByUser = data.likedBy.some(
+      (user) => user.id === session?.user.id,
+    );
 
     const likePin = api.pin.like.useMutation({
       async onMutate(id) {
@@ -51,10 +57,6 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
               pageParams: [],
             };
           }
-
-          const likedByUser = data.likedBy.some(
-            (user) => user.id === session?.user.id,
-          );
 
           return {
             ...old,
@@ -333,7 +335,10 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
                 {/* TODO: apply a background to the button if a pin is already liked */}
                 <button
                   type="button"
-                  className="inline-flex space-x-2 text-gray-400 hover:text-gray-500 dark:text-gray-600"
+                  className={cx(
+                    "inline-flex space-x-2 text-gray-400 hover:text-gray-500 dark:text-gray-600",
+                    likedByUser ? "text-blue-500 dark:text-blue-200" : "",
+                  )}
                   onClick={() => likePin.mutate(data.id)}
                 >
                   <HandThumbUpIcon className="h-5 w-5" aria-hidden="true" />
