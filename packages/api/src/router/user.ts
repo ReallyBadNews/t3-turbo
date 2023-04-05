@@ -1,5 +1,6 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 export const userRouter = createTRPCRouter({
   byId: protectedProcedure
@@ -20,21 +21,45 @@ export const userRouter = createTRPCRouter({
               following: true,
             },
           },
-          likedPins: {
+        },
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      return user;
+    }),
+  pins: publicProcedure
+    .input(z.string().cuid())
+    .query(async ({ ctx, input }) => {
+      const pins = await ctx.prisma.pin.findMany({
+        where: {
+          userId: input,
+        },
+        include: {
+          image: true,
+          likedBy: {
             select: {
               id: true,
             },
           },
         },
+        orderBy: {
+          createdAt: "desc",
+        },
       });
 
-      if (!user) {
-        throw new Error("User not found");
+      if (!pins) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Pins not found",
+        });
       }
 
-      return {
-        ...user,
-        likedPins: user.likedPins.map((pin) => pin.id),
-      };
+      return pins;
     }),
 });
