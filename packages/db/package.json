@@ -11,13 +11,13 @@
     "db:seed": "pnpm tsx seed.ts"
   },
   "dependencies": {
-    "@prisma/client": "^4.10.1"
+    "@prisma/client": "^4.12.0"
   },
   "devDependencies": {
     "plaiceholder": "^2.5.0",
-    "prisma": "^4.10.1",
-    "sharp": "^0.31.2",
-    "tsx": "^3.12.3",
-    "typescript": "^4.9.5"
+    "prisma": "^4.12.0",
+    "sharp": "^0.32.0",
+    "tsx": "^3.12.6",
+    "typescript": "^5.0.3"
   }
 }
