@@ -8,7 +8,8 @@ export default function Document() {
      */
     <Html lang="en" className="h-full">
       <Head />
-      <body className="h-full bg-gray-100 text-gray-700 antialiased dark:bg-gray-900 dark:text-gray-200">
+      {/* <body className="h-full bg-slate-100 text-slate-700 antialiased dark:bg-slate-900 dark:text-slate-50"> */}
+      <body className="min-h-screen bg-white font-sans text-slate-900 antialiased dark:bg-slate-900 dark:text-slate-50">
         <Main />
         <NextScript />
       </body>

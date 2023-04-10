@@ -45,6 +45,7 @@ import { Fragment, useState } from "react";
 import { Image } from "../components/Image";
 import { Sidebar } from "../components/Sidebar";
 import { api } from "../utils/api";
+import { Button } from "./Button";
 import { ThemeToggle } from "./ThemeToggle";
 
 const navigation = [
@@ -91,7 +92,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
           className={({ open }) =>
             cx(
               open ? "fixed inset-0 z-40 overflow-y-auto" : "",
-              "bg-white shadow-sm dark:bg-gray-800 lg:static lg:overflow-y-visible",
+              "bg-white shadow-sm dark:border-b dark:border-slate-600 dark:bg-slate-900 lg:static lg:overflow-y-visible",
             )
           }
         >
@@ -266,18 +267,13 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                     )}
 
                     {session?.user ? (
-                      <button
+                      <Button
                         onClick={() => setSidebarOpen(true)}
-                        className={cx(
-                          "ml-6 inline-flex items-center rounded-md border border-transparent bg-rose-600 px-4 py-2 text-sm font-medium text-white shadow-sm",
-                          "hover:bg-rose-700",
-                          "focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2",
-                          "dark:bg-rose-700 dark:hover:bg-rose-600",
-                          "dark:focus:ring-offset-rose-900",
-                        )}
+                        className="ml-6"
+                        variant="default"
                       >
                         New Post
-                      </button>
+                      </Button>
                     ) : null}
                   </div>
                 </div>
@@ -416,8 +412,8 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                       href={item.href}
                       className={cx(
                         item.current
-                          ? "bg-gray-200 text-gray-900 dark:bg-gray-800 dark:text-gray-50"
-                          : "text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-700",
+                          ? "bg-gray-200 text-gray-900 dark:bg-slate-800 dark:text-slate-50"
+                          : "text-gray-700 hover:bg-gray-50 dark:text-slate-200 dark:hover:bg-slate-700",
                         "group flex items-center rounded-md px-3 py-2 text-sm font-medium",
                       )}
                       aria-current={item.current ? "page" : undefined}
@@ -448,7 +444,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                   >
                     <a
                       href="/communities/all"
-                      className="group flex items-center rounded-md bg-gray-200 px-3 py-2 text-sm font-medium text-gray-900 dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-700"
+                      className="group flex items-center rounded-md bg-gray-200 px-3 py-2 text-sm font-medium text-gray-900 dark:bg-slate-800 dark:text-slate-50 dark:hover:bg-slate-700"
                     >
                       <span className="truncate">All</span>
                     </a>
@@ -457,7 +453,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                         <a
                           key={community.name}
                           href={community.slug}
-                          className="group flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-gray-200"
+                          className="group flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900 dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-slate-200"
                         >
                           <span className="truncate">{community.name}</span>
                         </a>
