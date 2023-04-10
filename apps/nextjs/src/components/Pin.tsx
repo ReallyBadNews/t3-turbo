@@ -166,7 +166,7 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
       <li
         ref={ref}
         className={cx(
-          "border border-transparent bg-white px-4 py-6 shadow dark:border-gray-700 dark:bg-gray-800 sm:rounded-lg sm:p-6",
+          "border border-transparent bg-white px-4 py-6 shadow dark:border-slate-700 dark:bg-slate-800 sm:rounded-lg sm:p-6",
           className,
         )}
       >
