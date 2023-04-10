@@ -252,18 +252,12 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                         </Transition>
                       </Menu>
                     ) : (
-                      <button
+                      <Button
                         onClick={() => signIn("credentials")}
-                        className={cx(
-                          "ml-6 inline-flex items-center rounded-md border border-transparent bg-rose-600 px-4 py-2 text-sm font-medium text-white shadow-sm",
-                          "hover:bg-rose-700",
-                          "focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2",
-                          "dark:bg-rose-700 dark:hover:bg-rose-600",
-                          "dark:focus:ring-offset-rose-900",
-                        )}
+                        className="ml-6"
                       >
                         Sign In
-                      </button>
+                      </Button>
                     )}
 
                     {session?.user ? (
@@ -385,12 +379,13 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                   </>
                 ) : (
                   <div className="mx-auto mt-6 max-w-3xl px-4 sm:px-6">
-                    <button
+                    <Button
                       onClick={() => signIn()}
-                      className="flex w-full items-center justify-center rounded-md border border-transparent bg-rose-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-rose-700"
+                      className="w-full"
+                      variant="default"
                     >
                       Sign in
-                    </button>
+                    </Button>
                   </div>
                 )}
               </Popover.Panel>
