@@ -252,10 +252,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                         </Transition>
                       </Menu>
                     ) : (
-                      <Button
-                        onClick={() => signIn("credentials")}
-                        className="ml-6"
-                      >
+                      <Button onClick={() => signIn()} className="ml-6">
                         Sign In
                       </Button>
                     )}
