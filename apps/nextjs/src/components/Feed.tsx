@@ -46,7 +46,7 @@ export const Feed = ({ order = "desc" }: FeedProps) => {
         Array.from({ length: 7 }).map((_, index) => (
           <li
             key={index}
-            className="min-h-[188px] bg-white px-4 py-6 shadow dark:bg-gray-800 sm:rounded-lg sm:p-6"
+            className="min-h-[188px] bg-white px-4 py-6 shadow dark:bg-slate-800 sm:rounded-lg sm:p-6"
           />
         ))
       ) : status === "error" ? (
@@ -67,11 +67,11 @@ export const Feed = ({ order = "desc" }: FeedProps) => {
             </Fragment>
           ))}
           {isFetching && !isFetchingNextPage ? (
-            <li className="bg-white px-4 py-6 text-center shadow dark:bg-gray-800 dark:text-gray-200 sm:rounded-lg sm:p-6">
+            <li className="bg-white px-4 py-6 text-center shadow dark:bg-slate-800 dark:text-slate-200 sm:rounded-lg sm:p-6">
               Background Updating...
             </li>
           ) : (
-            <li className="bg-white px-4 py-6 text-center shadow dark:bg-gray-800 dark:text-gray-200 sm:rounded-lg sm:p-6">
+            <li className="bg-white px-4 py-6 text-center shadow dark:bg-slate-800 dark:text-slate-200 sm:rounded-lg sm:p-6">
               <button
                 ref={ref}
                 onClick={() => fetchNextPage()}

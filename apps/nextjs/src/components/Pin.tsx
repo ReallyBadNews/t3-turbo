@@ -197,7 +197,7 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
                 />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-medium text-gray-900 dark:text-gray-50">
+                <p className="text-sm font-medium text-slate-900 dark:text-slate-50">
                   <Link
                     // FIXME: The user should always be defined for a pin
                     href={`/user/${data.user?.id as string}`}
@@ -206,7 +206,7 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
                     {data.user?.displayName}
                   </Link>
                 </p>
-                <p className="text-sm text-gray-500 dark:text-gray-600">
+                <p className="text-sm text-slate-500 dark:text-slate-600">
                   {/* // FIXME: The user should always be defined for a pin */}
                   <Link href={`/pin/${data.id}`} className="hover:underline">
                     <time dateTime={data.createdAt.toLocaleDateString()}>
@@ -218,7 +218,7 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
               <div className="flex flex-shrink-0 self-center">
                 <Menu as="div" className="relative inline-block text-left">
                   <div>
-                    <Menu.Button className="-m-2 flex items-center rounded-full p-2 text-gray-400 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-400">
+                    <Menu.Button className="-m-2 flex items-center rounded-full p-2 text-slate-400 hover:text-slate-600 dark:text-slate-600 dark:hover:text-slate-400">
                       <span className="sr-only">Open options</span>
                       <EllipsisVerticalIcon
                         className="h-5 w-5"
@@ -236,20 +236,20 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                   >
-                    <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-800 dark:ring-gray-700">
+                    <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-slate-800 dark:ring-slate-700">
                       <div className="py-1">
                         <Menu.Item>
                           {({ active }) => (
                             <button
                               className={cx(
                                 active
-                                  ? "bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-50"
-                                  : "text-gray-700 dark:text-gray-200",
+                                  ? "bg-slate-100 text-slate-900 dark:bg-slate-900 dark:text-slate-50"
+                                  : "text-slate-700 dark:text-slate-200",
                                 "flex w-full px-4 py-2 text-sm",
                               )}
                             >
                               <StarIcon
-                                className="mr-3 h-5 w-5 text-gray-400 dark:text-gray-500"
+                                className="mr-3 h-5 w-5 text-slate-400 dark:text-slate-500"
                                 aria-hidden="true"
                               />
                               <span>Add to favorites</span>
@@ -262,13 +262,13 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
                               href="#"
                               className={cx(
                                 active
-                                  ? "bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-50"
-                                  : "text-gray-700 dark:text-gray-200",
+                                  ? "bg-slate-100 text-slate-900 dark:bg-slate-900 dark:text-slate-50"
+                                  : "text-slate-700 dark:text-slate-200",
                                 "flex w-full px-4 py-2 text-sm",
                               )}
                             >
                               <CodeBracketIcon
-                                className="mr-3 h-5 w-5 text-gray-400 dark:text-gray-500"
+                                className="mr-3 h-5 w-5 text-slate-400 dark:text-slate-500"
                                 aria-hidden="true"
                               />
                               <span>Embed</span>
@@ -281,13 +281,13 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
                               href="#"
                               className={cx(
                                 active
-                                  ? "bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-50"
-                                  : "text-gray-700 dark:text-gray-200",
+                                  ? "bg-slate-100 text-slate-900 dark:bg-slate-900 dark:text-slate-50"
+                                  : "text-slate-700 dark:text-slate-200",
                                 "flex w-full px-4 py-2 text-sm",
                               )}
                             >
                               <FlagIcon
-                                className="mr-3 h-5 w-5 text-gray-400 dark:text-gray-500"
+                                className="mr-3 h-5 w-5 text-slate-400 dark:text-slate-500"
                                 aria-hidden="true"
                               />
                               <span>Report content</span>
@@ -302,13 +302,13 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
                                 onClick={() => deletePin.mutate(data.id)}
                                 className={cx(
                                   active
-                                    ? "bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-50"
-                                    : "text-gray-700 dark:text-gray-200",
+                                    ? "bg-slate-100 text-slate-900 dark:bg-slate-900 dark:text-slate-50"
+                                    : "text-slate-700 dark:text-slate-200",
                                   "flex w-full px-4 py-2 text-sm",
                                 )}
                               >
                                 <TrashIcon
-                                  className="mr-3 h-5 w-5 text-gray-400 dark:text-gray-500"
+                                  className="mr-3 h-5 w-5 text-slate-400 dark:text-slate-500"
                                   aria-hidden="true"
                                 />
                                 <span>Delete</span>
@@ -324,7 +324,7 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
             </div>
           </div>
           <div
-            className="mt-4 text-sm text-gray-700 dark:text-gray-200"
+            className="mt-4 text-sm text-slate-700 dark:text-slate-200"
             dangerouslySetInnerHTML={{
               __html: data.description || "",
             }}
@@ -336,13 +336,13 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
                 <button
                   type="button"
                   className={cx(
-                    "inline-flex space-x-2 text-gray-400 hover:text-gray-500 dark:text-gray-600",
+                    "inline-flex space-x-2 text-slate-400 hover:text-slate-500 dark:text-slate-600",
                     likedByUser ? "text-blue-500 dark:text-blue-200" : "",
                   )}
                   onClick={() => likePin.mutate(data.id)}
                 >
                   <HandThumbUpIcon className="h-5 w-5" aria-hidden="true" />
-                  <span className="dark:text-gray csaq-50 font-medium text-gray-900 dark:text-gray-50">
+                  <span className="dark:text-slate csaq-50 font-medium text-slate-900 dark:text-slate-50">
                     {data._count.likedBy}
                   </span>
                   <span className="sr-only">likes</span>
@@ -351,13 +351,13 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
               <Popover className="inline-flex items-center text-sm">
                 <Popover.Button
                   type="button"
-                  className="inline-flex space-x-2 text-gray-400 hover:text-gray-500 dark:text-gray-600"
+                  className="inline-flex space-x-2 text-slate-400 hover:text-slate-500 dark:text-slate-600"
                 >
                   <ChatBubbleLeftEllipsisIcon
                     className="h-5 w-5"
                     aria-hidden="true"
                   />
-                  <span className="dark:text-gray csaq-50 font-medium text-gray-900 dark:text-gray-50">
+                  <span className="dark:text-slate csaq-50 font-medium text-slate-900 dark:text-slate-50">
                     {data.comments.length}
                   </span>
                   <span className="sr-only">replies</span>
@@ -387,7 +387,7 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
                                 {/* <p className="text-sm font-medium text-gray-900 dark:text-gray-50">
                                   {comment.user.name}
                                 </p> */}
-                                <p className="text-sm text-gray-500 dark:text-gray-200">
+                                <p className="text-sm text-slate-500 dark:text-slate-200">
                                   {comment.body}
                                 </p>
                               </div>
@@ -403,10 +403,10 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
               <span className="inline-flex items-center text-sm">
                 <button
                   type="button"
-                  className="inline-flex space-x-2 text-gray-400 hover:text-gray-500 dark:text-gray-600"
+                  className="inline-flex space-x-2 text-slate-400 hover:text-slate-500 dark:text-slate-600"
                 >
                   <EyeIcon className="h-5 w-5" aria-hidden="true" />
-                  <span className="dark:text-gray csaq-50 font-medium text-gray-900 dark:text-gray-50">
+                  <span className="dark:text-slate csaq-50 font-medium text-slate-900 dark:text-slate-50">
                     {data.views}
                   </span>
                   <span className="sr-only">views</span>
@@ -417,10 +417,10 @@ export const PinPost = forwardRef<HTMLLIElement, PinProps>(
               <span className="inline-flex items-center text-sm">
                 <button
                   type="button"
-                  className="inline-flex space-x-2 text-gray-400 hover:text-gray-500 dark:text-gray-600"
+                  className="inline-flex space-x-2 text-slate-400 hover:text-slate-500 dark:text-slate-600"
                 >
                   <ShareIcon className="h-5 w-5" aria-hidden="true" />
-                  <span className="font-medium text-gray-900 dark:text-gray-50">
+                  <span className="font-medium text-slate-900 dark:text-slate-50">
                     Share
                   </span>
                 </button>
