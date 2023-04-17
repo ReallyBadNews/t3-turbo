@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-// const { fontFamily } = require("tailwindcss/defaultTheme");
+const { fontFamily } = require("tailwindcss/defaultTheme");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -7,9 +7,9 @@ module.exports = {
   darkMode: ["class", "[data-theme='dark']"],
   theme: {
     extend: {
-      // fontFamily: {
-      // sans: ["var(--font-sans)", ...fontFamily.sans],
-      // },
+      fontFamily: {
+        sans: ["var(--font-sans)", ...fontFamily.sans],
+      },
       keyframes: {
         "accordion-down": {
           from: { height: 0 },
