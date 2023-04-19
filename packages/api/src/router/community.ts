@@ -14,4 +14,13 @@ export const communityRouter = createTRPCRouter({
         },
       });
     }),
+  byName: publicProcedure
+    .input(z.string().min(1))
+    .query(async ({ ctx, input }) => {
+      return ctx.prisma.community.findUnique({
+        where: {
+          name: input,
+        },
+      });
+    }),
 });
