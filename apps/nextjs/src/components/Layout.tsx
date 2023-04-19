@@ -227,7 +227,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                                         onClick={() => item.onClick()}
                                         className={cx(
                                           active ? "bg-gray-100" : "",
-                                          "block w-full py-2 px-4 text-left text-sm text-gray-700",
+                                          "block w-full px-4 py-2 text-left text-sm text-gray-700",
                                         )}
                                       >
                                         {item.name}
@@ -239,7 +239,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                                       href={item.href}
                                       className={cx(
                                         active ? "bg-gray-100" : "",
-                                        "block py-2 px-4 text-sm text-gray-700",
+                                        "block px-4 py-2 text-sm text-gray-700",
                                       )}
                                     >
                                       {item.name}
@@ -276,7 +276,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
               />
 
               <Popover.Panel as="nav" className="lg:hidden" aria-label="Global">
-                <div className="mx-auto max-w-3xl space-y-1 px-2 pt-2 pb-3 sm:px-4">
+                <div className="mx-auto max-w-3xl space-y-1 px-2 pb-3 pt-2 sm:px-4">
                   {navigation.map((item) => (
                     <a
                       key={item.name}
@@ -286,7 +286,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                         item.current
                           ? "bg-gray-100 text-gray-900"
                           : "hover:bg-gray-50",
-                        "block rounded-md py-2 px-3 text-base font-medium",
+                        "block rounded-md px-3 py-2 text-base font-medium",
                       )}
                     >
                       {item.name}
@@ -336,7 +336,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                               <button
                                 key={item.name}
                                 onClick={() => item.onClick()}
-                                className="block w-full rounded-md py-2 px-3 text-left text-base font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-900"
+                                className="block w-full rounded-md px-3 py-2 text-left text-base font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-900"
                               >
                                 {item.name}
                               </button>
@@ -347,7 +347,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                             <Link
                               key={item.name}
                               href={item.href}
-                              className="block rounded-md py-2 px-3 text-base font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-900"
+                              className="block rounded-md px-3 py-2 text-base font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-900"
                             >
                               {item.name}
                             </Link>
@@ -434,21 +434,21 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                     className="mt-3 space-y-2"
                     aria-labelledby="communities-headline"
                   >
-                    <a
+                    <Link
                       href="/communities/all"
                       className="group flex items-center rounded-md bg-gray-200 px-3 py-2 text-sm font-medium text-gray-900 dark:bg-slate-800 dark:text-slate-50 dark:hover:bg-slate-700"
                     >
                       <span className="truncate">All</span>
-                    </a>
+                    </Link>
                     {communities.data?.map((community) => {
                       return (
-                        <a
+                        <Link
                           key={community.name}
-                          href={community.slug}
+                          href={`/community/${community.slug}`}
                           className="group flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900 dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-slate-200"
                         >
                           <span className="truncate">{community.name}</span>
-                        </a>
+                        </Link>
                       );
                     })}
                   </div>
