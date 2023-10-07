@@ -48,7 +48,7 @@
     "eslint": "^8.38.0",
     "eslint-config-badnews": "workspace:*",
     "eslint-config-next": "^13.3.0",
-    "postcss": "^8.4.20",
+    "postcss": "^8.4.31",
     "tailwindcss": "^3.3.1",
     "tsconfig": "workspace:*",
     "typescript": "^5.0.4"
